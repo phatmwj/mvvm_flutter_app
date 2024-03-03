@@ -1,5 +1,7 @@
 
 
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:mvvm_flutter_app/data/local/prefs/AppPreferecesService.dart';
 import 'package:mvvm_flutter_app/data/local/prefs/PreferencesService.dart';
@@ -12,9 +14,9 @@ class AuthInterceptor extends Interceptor{
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     // logging
-    print("--> ${options.method} ${options.uri}");
-    print("Headers: ${options.headers}");
-    print("Data: ${options.data}");
+    log("--> ${options.method} ${options.uri}");
+    log("Headers: ${options.headers}");
+    log("Data: ${options.data}");
 
     String isIgnore = options.headers['IgnoreAuth'];
     if (isIgnore != null && isIgnore == '1') {
@@ -69,7 +71,7 @@ class AuthInterceptor extends Interceptor{
   @override
   void onError(DioError err, ErrorInterceptorHandler handler) {
 
-    print("<-- ${err.message}");
+    log("<-- ${err.message}");
 
     handler.next(err);
   }
@@ -82,9 +84,9 @@ class AuthInterceptor extends Interceptor{
       // Gửi broadcast hoặc thực hiện bất kỳ hành động nào khác khi token hết hạn.
     // }
 
-    print("<-- ${response.statusCode} ${response.requestOptions.uri}");
-    print("Headers: ${response.headers}");
-    print("Data: ${response.data}");
+    log("<-- ${response.statusCode} ${response.requestOptions.uri}");
+    log("Headers: ${response.headers}");
+    log("Data: ${response.data}");
     handler.next(response);
   }
 }

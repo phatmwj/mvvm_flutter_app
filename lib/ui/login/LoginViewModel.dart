@@ -1,16 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:mvvm_flutter_app/data/model/api/ApiResponse.dart';
 import 'package:mvvm_flutter_app/data/model/api/request/LoginRequest.dart';
+import 'package:mvvm_flutter_app/repository/Repository.dart';
+import 'package:mvvm_flutter_app/ui/widget/LoadingWidget.dart';
 
-import '../../data/remote/network/ApiEndPoints.dart';
-import '../../data/remote/network/BaseApiService.dart';
-import '../../data/remote/network/NetworkApiService.dart';
+import '../../data/model/api/ResponseWrapper.dart';
+import '../../data/model/api/response/LoginResponse.dart';
 
 class LoginViewModel extends ChangeNotifier {
+
+  final _repo = Repository();
   late String _phoneNumber;
   late String _password;
 
+  bool isLoading = false;
   String get phoneNumber => _phoneNumber;
   String get password => _password;
+
+  ResponseWrapper<LoginResponse> res = ResponseWrapper.loading();
+
+  void _showLoading(bool loading){
+    isLoading = loading;
+    notifyListeners();
+  }
 
   void setPhoneNumber(String value) {
     _phoneNumber = value;
@@ -22,10 +34,25 @@ class LoginViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void _setLoginRes(ResponseWrapper<LoginResponse> res){
+      this.res = res;
+      notifyListeners();
+  }
+
 // Thêm các phương thức xử lý đăng nhập, kiểm tra hợp lệ, v.v.
   Future<void> loginUser() async {
+    _showLoading(true);
     LoginRequest loginRequest = LoginRequest(phone: _phoneNumber, password: _password);
-    BaseApiService apiService = NetworkApiService();
-    apiService.post(ApiEndPoints.USER_LOGIN, loginRequest);
+    dynamic j = loginRequest.toMap();
+    final a = LoginRequest.fromJson(j);
+    print(a.toMap());
+    _setLoginRes(ResponseWrapper.loading());
+    _repo
+        .login(loginRequest)
+        .then((value) => _setLoginRes(ResponseWrapper.completed(value)))
+        .onError((error, stackTrace) => _setLoginRes(ResponseWrapper.error(error.toString())))
+        .whenComplete((){
+          _showLoading(false);
+    });
   }
 }

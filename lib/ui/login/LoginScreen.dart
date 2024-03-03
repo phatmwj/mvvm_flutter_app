@@ -2,7 +2,10 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mvvm_flutter_app/data/model/api/ApiStatus.dart';
 import 'package:mvvm_flutter_app/ui/login/LoginViewModel.dart';
+import 'package:mvvm_flutter_app/ui/widget/LoadingWidget.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget{
   static const String id = "login_screen";
@@ -26,9 +29,11 @@ class _LoginScreenState extends State<LoginScreen>{
       appBar: AppBar(
         title: Text('Login'),
       ),
-      body: Padding(
+      body:
+      Padding(
         padding: EdgeInsets.all(16.0),
-        child: Column(
+        child: vm.isLoading == true ? LoadingWidget()
+            :Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextField(
@@ -44,7 +49,6 @@ class _LoginScreenState extends State<LoginScreen>{
             SizedBox(height: 32.0),
             ElevatedButton(
               onPressed: () {
-                // Thực hiện đăng nhập ở đây
                 vm.loginUser();
                 print('Đăng nhập');
               },
@@ -55,5 +59,4 @@ class _LoginScreenState extends State<LoginScreen>{
       ),
     );
   }
-
 }

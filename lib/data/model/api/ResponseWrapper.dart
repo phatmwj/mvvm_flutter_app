@@ -1,17 +1,31 @@
 
 import 'package:mvvm_flutter_app/data/local/database/User.dart';
 
+import 'ApiStatus.dart';
+
 class ResponseWrapper<T> {
     bool? result;
     T? data;
     String? message;
     String? code;
+    ApiStatus? status;
 
-    ResponseWrapper({required result, required data, required code, required message});
+    ResponseWrapper.loading() : status = ApiStatus.LOADING;
+
+    ResponseWrapper.completed(ResponseWrapper<T> completedResponse)
+        : status = ApiStatus.COMPLETED,
+            result = completedResponse.result,
+            data = completedResponse.data,
+            message = completedResponse.message,
+            code = completedResponse.code;
+
+    ResponseWrapper.error(this.message) : status = ApiStatus.ERROR;
+
+    ResponseWrapper({required this.result, required this.data, required this.code, required this.message});
     
     factory ResponseWrapper.fromJson(Map<String,dynamic> data, T Function(Map<String, dynamic>) fromJsonT)=>ResponseWrapper(
         result:data['result'],
-        data: fromJsonT(data['data']),
+        data:data['data'] == null? null : fromJsonT(data['data']),
         message:data['message'],
         code:data['code']);
 
@@ -23,7 +37,7 @@ class ResponseWrapper<T> {
     };
 
     @override
-  String toString() {
+    String toString() {
     return 'ResponseWrapper{result: $result, data: $data, message: $message, code: $code}';
   }
 }

@@ -41,9 +41,14 @@ dependencies:
   path_provider: any
   #shared_preferences
   shared_preferences: any
+
+  provider: any
   #http
   http: ^0.13.4
   dio: ^4.0.0
+
+  fluttertoast: ^8.2.4
+  another_flushbar: ^1.12.30
 
 dev_dependencies:
   flutter_test:

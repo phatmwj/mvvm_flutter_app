@@ -49,8 +49,13 @@ class LoginViewModel extends ChangeNotifier {
     _setLoginRes(ResponseWrapper.loading());
     _repo
         .login(loginRequest)
-        .then((value) => _setLoginRes(ResponseWrapper.completed(value)))
-        .onError((error, stackTrace) => _setLoginRes(ResponseWrapper.error(error.toString())))
+        .then((value) {
+          _showLoading(false);
+          _setLoginRes(ResponseWrapper.completed(value));
+        })
+        .onError((error, stackTrace) {
+          _showLoading(false);
+          _setLoginRes(ResponseWrapper.error(error.toString()));})
         .whenComplete((){
           _showLoading(false);
     });

@@ -3,7 +3,9 @@ import 'dart:developer';
 
 import 'package:mvvm_flutter_app/data/model/api/ApiResponse.dart';
 import 'package:mvvm_flutter_app/data/model/api/request/LoginRequest.dart';
+import 'package:mvvm_flutter_app/data/model/api/request/register_request.dart';
 import 'package:mvvm_flutter_app/data/model/api/response/LoginResponse.dart';
+import 'package:mvvm_flutter_app/data/model/api/response/register_response.dart';
 import 'package:mvvm_flutter_app/data/remote/network/BaseApiService.dart';
 import 'package:mvvm_flutter_app/data/remote/network/NetworkApiService.dart';
 
@@ -24,4 +26,15 @@ class Repository{
       throw e;
     }
   }
+
+  // Future<ResponseWrapper<RegisterResponse>> register(RegisterRequest registerRequest) async{
+  //   try{
+  //     dynamic res = await _apiService.getResponse(ApiEndPoints.USER_REGISTER, registerRequest);
+  //     final jsonData = ResponseWrapper<LoginResponse>.fromJson(res,(p0) => LoginResponse.fromJson(res['data']));
+  //     log("data login ${jsonData.toMap()}");
+  //     return jsonData;
+  //   }catch(e){
+  //     throw e;
+  //   }
+  // }
 }

@@ -15,7 +15,7 @@ class NetworkApiService extends BaseApiService {
   }
 
   @override
-  Future getResponse(String url, LoginRequest loginRequest) async {
+  Future getResponse(String url, dynamic data) async {
     Options options = Options(
       headers: {
         'IgnoreAuth': '1',
@@ -24,7 +24,7 @@ class NetworkApiService extends BaseApiService {
     dynamic responseJson;
     final dio = createDio();
     try {
-      Response response = await dio.post(BaseApiService.BASE_URL + url,options: options, data: loginRequest.toMap());
+      Response response = await dio.post(BaseApiService.BASE_URL + url,options: options, data: data.toMap());
       responseJson = returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet Connection');
@@ -33,7 +33,7 @@ class NetworkApiService extends BaseApiService {
   }
 
   @override
-  Future post(String url, LoginRequest loginRequest) async {
+  Future post(String url, dynamic data) async {
     Options options = Options(
       headers: {
         'IgnoreAuth': '1', // Thêm header tùy chỉnh
@@ -42,7 +42,7 @@ class NetworkApiService extends BaseApiService {
     dynamic responseJson;
     final dio = createDio();
     try {
-      Response response = await dio.post(BaseApiService.BASE_URL + url,options: options, data: loginRequest.toMap());
+      Response response = await dio.post(BaseApiService.BASE_URL + url,options: options, data: data.toMap());
       responseJson = returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet Connection');

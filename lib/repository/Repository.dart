@@ -31,14 +31,19 @@ class Repository{
     }
   }
 
-  // Future<ResponseWrapper<RegisterResponse>> register(RegisterRequest registerRequest) async{
-  //   try{
-  //     dynamic res = await _apiService.getResponse(ApiEndPoints.USER_REGISTER, registerRequest);
-  //     final jsonData = ResponseWrapper<LoginResponse>.fromJson(res,(p0) => LoginResponse.fromJson(res['data']));
-  //     log("data login ${jsonData.toMap()}");
-  //     return jsonData;
-  //   }catch(e){
-  //     throw e;
-  //   }
-  // }
+  Future<ResponseWrapper<RegisterResponse>> register(RegisterRequest registerRequest) async{
+    Options options = Options(
+        headers: {
+          'IgnoreAuth': '1',
+        }
+    );
+    try{
+      dynamic res = await _apiService.post(ApiEndPoints.USER_REGISTER, registerRequest.toJson(), options);
+      final jsonData = ResponseWrapper<RegisterResponse>.fromJson(res,(p0) => RegisterResponse.fromJson(res['data']));
+      log("data login ${jsonData.toMap()}");
+      return jsonData;
+    }catch(e){
+      throw e;
+    }
+  }
 }

@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:mvvm_flutter_app/data/model/api/request/LoginRequest.dart';
 
 abstract class BaseApiService {

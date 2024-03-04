@@ -26,9 +26,9 @@ class MyApp extends StatelessWidget {
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
           ),
           debugShowCheckedModeBanner: false,
-          initialRoute: RegisterScreen.id,
+          initialRoute: LoginScreen.id,
           routes: {
-            RegisterScreen.id:(context) => RegisterScreen()
+            LoginScreen.id:(context) => LoginScreen()
           },
        ));
   }

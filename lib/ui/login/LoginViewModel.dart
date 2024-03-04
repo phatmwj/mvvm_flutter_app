@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mvvm_flutter_app/data/local/prefs/AppPreferecesService.dart';
 import 'package:mvvm_flutter_app/data/model/api/ApiResponse.dart';
 import 'package:mvvm_flutter_app/data/model/api/request/LoginRequest.dart';
 import 'package:mvvm_flutter_app/repository/Repository.dart';
@@ -10,6 +11,7 @@ import '../../data/model/api/response/LoginResponse.dart';
 class LoginViewModel extends ChangeNotifier {
 
   final _repo = Repository();
+  final _prefs = AppPreferencesService();
   late String _phoneNumber;
   late String _password;
 
@@ -49,8 +51,15 @@ class LoginViewModel extends ChangeNotifier {
     _setLoginRes(ResponseWrapper.loading());
     _repo
         .login(loginRequest)
-        .then((value) => _setLoginRes(ResponseWrapper.completed(value)))
-        .onError((error, stackTrace) => _setLoginRes(ResponseWrapper.error(error.toString())))
+        .then((value) {
+          _showLoading(false);
+          _setLoginRes(ResponseWrapper.completed(value));
+          String? token = value.data?.access_token;
+          _prefs.setToken(token!);
+        })
+        .onError((error, stackTrace) {
+          _showLoading(false);
+          _setLoginRes(ResponseWrapper.error(error.toString()));})
         .whenComplete((){
           _showLoading(false);
     });

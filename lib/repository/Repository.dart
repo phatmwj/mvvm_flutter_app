@@ -1,7 +1,7 @@
 
 import 'dart:developer';
 
-import 'package:mvvm_flutter_app/data/model/api/ApiResponse.dart';
+import 'package:dio/dio.dart';
 import 'package:mvvm_flutter_app/data/model/api/request/LoginRequest.dart';
 import 'package:mvvm_flutter_app/data/model/api/response/LoginResponse.dart';
 import 'package:mvvm_flutter_app/data/remote/network/BaseApiService.dart';
@@ -15,10 +15,14 @@ class Repository{
   final BaseApiService _apiService = NetworkApiService();
 
   Future<ResponseWrapper<LoginResponse>> login(LoginRequest loginRequest) async{
+     Options options = Options(
+      headers: {
+        'IgnoreAuth': '1',
+      }
+    );
     try{
-      dynamic res = await _apiService.getResponse(ApiEndPoints.USER_LOGIN, loginRequest);
+      dynamic res = await _apiService.post(ApiEndPoints.USER_LOGIN, loginRequest.toMap(), options);
       final jsonData = ResponseWrapper<LoginResponse>.fromJson(res,(p0) => LoginResponse.fromJson(res['data']));
-      log("data login ${jsonData.toMap()}");
       return jsonData;
     }catch(e){
       throw e;

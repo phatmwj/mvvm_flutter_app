@@ -33,16 +33,11 @@ class NetworkApiService extends BaseApiService {
   }
 
   @override
-  Future post(String url, LoginRequest loginRequest) async {
-    Options options = Options(
-      headers: {
-        'IgnoreAuth': '1', // Thêm header tùy chỉnh
-      },
-    );
+  Future post(String url, Map<String, dynamic> data, Options options) async {
     dynamic responseJson;
     final dio = createDio();
     try {
-      Response response = await dio.post(BaseApiService.BASE_URL + url,options: options, data: loginRequest.toMap());
+      Response response = await dio.post(BaseApiService.BASE_URL + url,options: options, data: data);
       responseJson = returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet Connection');

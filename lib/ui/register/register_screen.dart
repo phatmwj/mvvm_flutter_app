@@ -13,7 +13,8 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
 
-  bool isVisible = false;
+  bool isPWVisible = false;
+  bool isCPWVisible = false;
   final formKey = GlobalKey<FormState>();
 
   @override
@@ -51,9 +52,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         SizedBox(
                           child: TextFormField(
                             onChanged: (value)=> vm.setFullName(value),
-                            keyboardType: TextInputType.number,
                             decoration: InputDecoration(
-                              hintText: 'Full Name',
+                              counterText: '',
+                              hintText: 'Họ và tên',
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10)
                               ),
@@ -69,14 +70,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                             validator: (value) {
                               if(value!.isEmpty){
-                                return "Please enter your phone number";
+                                return "Vui lòng nhập họ và tên";
                               }
-                              final RegExp phoneReg = RegExp(r'^(0[3|5|7|8|9])+([0-9]{8})$');
-                              if(!phoneReg.hasMatch(value)){
-                                return "Invalid phone number";
-                              }
+
                               return null;
                             },
+                            maxLength: 50,
+                            maxLines: 1,
                           ),
                         ),
 
@@ -89,7 +89,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             onChanged: (value)=> vm.setPhoneNumber(value),
                             keyboardType: TextInputType.number,
                             decoration: InputDecoration(
-                              hintText: 'Phone number',
+                              counterText: '',
+                              hintText: 'Số điện thoại',
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10)
                               ),
@@ -102,14 +103,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 fontWeight: FontWeight.w500,
                                 fontSize: 16
                             ),
-
+                            maxLength: 10,
+                            maxLines: 1,
                             validator: (value) {
                               if(value!.isEmpty){
-                                return "Please enter your phone number";
+                                return "Vui lòng nhập đầy đủ số điện thoại";
                               }
                               final RegExp phoneReg = RegExp(r'^(0[3|5|7|8|9])+([0-9]{8})$');
                               if(!phoneReg.hasMatch(value)){
-                                return "Invalid phone number";
+                                return "Số điện thoại không hợp lệ";
                               }
                               return null;
                             },
@@ -123,9 +125,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         SizedBox(
                           child: TextFormField(
                             onChanged: (value)=> vm.setPassword(value),
-                            obscureText: !isVisible,
+                            obscureText: !isPWVisible,
                             decoration: InputDecoration(
-                              hintText: 'Password',
+                              hintText: 'Mật khẩu',
                               hintStyle: const TextStyle(
                               ),
                               border: OutlineInputBorder(
@@ -138,10 +140,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               suffixIcon: IconButton(
                                   onPressed: () {
                                     setState(() {
-                                      isVisible = !isVisible;
+                                      isPWVisible = !isPWVisible;
                                     });
                                   },
-                                  icon: Icon(isVisible? Icons.visibility_off : Icons.visibility)
+                                  icon: Icon(isPWVisible? Icons.visibility_off : Icons.visibility)
                               ),
                             ),
                             style: const TextStyle(
@@ -151,8 +153,55 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             maxLines: 1,
                             validator: (value) {
                               if(value!.isEmpty){
-                                return "password is required";
+                                return "Vui lòng nhập mật khẩu";
                               }
+                              return null;
+                            },
+                          ),
+                        ),
+
+                        SizedBox(
+                          height: 20,
+                        ),
+
+                        SizedBox(
+                          child: TextFormField(
+                            onChanged: (value)=> vm.setConfirmPassword(value),
+                            obscureText: !isCPWVisible,
+                            decoration: InputDecoration(
+                              hintText: 'Xác nhận mật khẩu',
+                              hintStyle: const TextStyle(
+                              ),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10)
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide: const BorderSide(width: 1, color: Color(0xFF7EA567)),
+                                  borderRadius: BorderRadius.circular(10)
+                              ),
+                              suffixIcon: IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      isCPWVisible = !isCPWVisible;
+                                    });
+                                  },
+                                  icon: Icon(isCPWVisible? Icons.visibility_off : Icons.visibility)
+                              ),
+                            ),
+                            style: const TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16
+                            ),
+                            maxLines: 1,
+                            validator: (value) {
+                              if(value!.isEmpty){
+                                return "Vui lòng nhập mật khẩu";
+                              }
+
+                              if(value.compareTo(vm.password) != 0){
+                                return "Mật khẩu không trùng khớp";
+                              }
+
                               return null;
                             },
                           ),
@@ -161,14 +210,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
 
-                SizedBox(height: 32.0),
+                const SizedBox(
+                    height: 32.0
+                ),
+
                 SizedBox(
                   width: double.infinity,
                   height: 50,
                   child: ElevatedButton(
                     onPressed: () {
                       if(formKey.currentState!.validate()){
-
+                        vm.register(context);
                       }
 
                     },

@@ -25,6 +25,22 @@ class Utils {
     );
   }
 
+  static toastSuccessMessage(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      backgroundColor: Colors.green,
+      textColor: Colors.white,
+    );
+  }
+
+  static toastErrorMessage(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+    );
+  }
+
   //imported this from flush bar package
   // we will utilise this for showing errors or success messages
   static void flushBarErrorMessage(String message, BuildContext context) {

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:mvvm_flutter_app/ui/home/home_screen.dart';
 import 'package:mvvm_flutter_app/ui/login/LoginScreen.dart';
 import 'package:mvvm_flutter_app/ui/login/LoginViewModel.dart';
 import 'package:mvvm_flutter_app/ui/register/register_screen.dart';
 import 'package:mvvm_flutter_app/ui/register/register_view_model.dart';
+import 'package:mvvm_flutter_app/ui/splash/splash_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -26,9 +28,9 @@ class MyApp extends StatelessWidget {
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
           ),
           debugShowCheckedModeBanner: false,
-          initialRoute: RegisterScreen.id,
+          initialRoute: SplashScreen.id,
           routes: {
-            RegisterScreen.id:(context) => RegisterScreen()
+            SplashScreen.id:(context) => SplashScreen()
           },
        ));
   }

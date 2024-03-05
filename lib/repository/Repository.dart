@@ -5,7 +5,9 @@ import 'package:dio/dio.dart';
 import 'package:mvvm_flutter_app/data/model/api/request/LoginRequest.dart';
 import 'package:mvvm_flutter_app/data/model/api/request/register_request.dart';
 import 'package:mvvm_flutter_app/data/model/api/response/LoginResponse.dart';
+import 'package:mvvm_flutter_app/data/model/api/response/history_response.dart';
 import 'package:mvvm_flutter_app/data/model/api/response/register_response.dart';
+import 'package:mvvm_flutter_app/data/model/api/response_list_wrapper.dart';
 import 'package:mvvm_flutter_app/data/remote/network/BaseApiService.dart';
 import 'package:mvvm_flutter_app/data/remote/network/NetworkApiService.dart';
 
@@ -44,6 +46,23 @@ class Repository{
       return jsonData;
     }catch(e){
       throw e;
+    }
+  }
+
+  Future<ResponseWrapper<ResponseListWrapper<HistoryResponse>>> getHistory(String? endDate, String? startDate, int? page, int? size, int? state) async{
+    Options options = Options(
+        headers: {
+
+        }
+    );
+
+    try{
+      dynamic res = await _apiService.get('v1/booking/my-booking?endDate=${endDate ?? ''}&startDate=${startDate ?? ''}&page=$page&size=$size&state=${state ?? ''}', options);
+      final jsonData = ResponseWrapper<ResponseListWrapper<HistoryResponse>>.fromJson(res,(p0) => ResponseListWrapper.fromJson(res['data'], (p0) => HistoryResponse.fromJson(res['data'])));
+      log("data login ${jsonData.toMap()}");
+      return jsonData;
+    }catch(e){
+      throw Exception(e);
     }
   }
 }

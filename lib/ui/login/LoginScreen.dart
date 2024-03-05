@@ -1,11 +1,13 @@
 
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:mvvm_flutter_app/data/model/api/ApiStatus.dart';
 import 'package:mvvm_flutter_app/res/colors/AppColors.dart';
 import 'package:mvvm_flutter_app/res/colors/BaseColors.dart';
 import 'package:mvvm_flutter_app/ui/login/LoginViewModel.dart';
+import 'package:mvvm_flutter_app/ui/register/register_screen.dart';
 import 'package:mvvm_flutter_app/ui/widget/LoadingWidget.dart';
 import 'package:provider/provider.dart';
 
@@ -38,8 +40,7 @@ class _LoginScreenState extends State<LoginScreen>{
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.only(top: 50, left: 16, right: 16),
-            child: vm.isLoading == true ? LoadingWidget()
-                :Column(
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 const SizedBox(
@@ -50,7 +51,7 @@ class _LoginScreenState extends State<LoginScreen>{
                       fontFamily: 'Roboto',
                       fontWeight: FontWeight.w700,
                       color: Colors.black,
-                      fontSize: 30.0,
+                      fontSize: 36.0,
                     ),
                   ),
                 ),
@@ -85,7 +86,7 @@ class _LoginScreenState extends State<LoginScreen>{
                           onChanged: (value)=> vm.setPhoneNumber(value),
                           keyboardType: TextInputType.number,
                           decoration: InputDecoration(
-                              hintText: 'Phone number',
+                              hintText: 'Số điện thoại',
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10)
                               ),
@@ -101,11 +102,11 @@ class _LoginScreenState extends State<LoginScreen>{
 
                           validator: (value) {
                             if(value!.isEmpty){
-                              return "Please enter your phone number";
+                              return "Vui lòng nhập số điện thoại";
                             }
                             final RegExp phoneReg = RegExp(r'^(0[3|5|7|8|9])+([0-9]{8})$');
                             if(!phoneReg.hasMatch(value)){
-                              return "Invalid phone number";
+                              return "Số điện thoại không hợp lệ";
                             }
                             return null;
                           },
@@ -121,7 +122,7 @@ class _LoginScreenState extends State<LoginScreen>{
                           onChanged: (value)=> vm.setPassword(value),
                           obscureText: !isVisible,
                           decoration: InputDecoration(
-                            hintText: 'Password',
+                            hintText: 'Mật khẩu',
                             hintStyle: const TextStyle(
                             ),
                             border: OutlineInputBorder(
@@ -147,7 +148,7 @@ class _LoginScreenState extends State<LoginScreen>{
                           maxLines: 1,
                           validator: (value) {
                             if(value!.isEmpty){
-                              return "password is required";
+                              return "Vui lòng nhập mật khẩu";
                             }
                             return null;
                           },
@@ -164,7 +165,8 @@ class _LoginScreenState extends State<LoginScreen>{
                   child: ElevatedButton(
                     onPressed: () {
                       if(formKey.currentState!.validate()){
-                        vm.loginUser();
+                        vm.loginUser(context);
+                        FocusManager.instance.primaryFocus?.unfocus();
                         print('Đăng nhập');
                       }
 
@@ -176,11 +178,32 @@ class _LoginScreenState extends State<LoginScreen>{
                     child: const Text(
                       'Đăng nhập',
                       style: TextStyle(
-                        fontSize: 16
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500
                       ),
                     ),
                   ),
-                )
+                ),
+
+                SizedBox(
+                  height: 20,
+                ),
+
+                RichText(
+                  text: TextSpan(children: [
+                    TextSpan(
+                        text: 'Chưa có tài khoản? ',
+                        style: TextStyle(color: Colors.green, fontSize: 16, fontFamily: 'Roboto', fontWeight: FontWeight.w500),
+                    ),
+                      TextSpan(
+                          text: 'Đăng ký ngay',
+                          style: TextStyle(color: Colors.black,  fontSize: 16, fontFamily: 'Roboto', fontWeight: FontWeight.w500),
+                          recognizer: TapGestureRecognizer()..onTap = () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => const RegisterScreen()));
+                          }),
+                      // this is invisible
+                    ]),
+                ),
               ],
             ),
           ),

@@ -16,9 +16,11 @@ class AppPreferencesService extends PreferencesService{
   }
 
   @override
-  void setToken(String token) {
+  Future<void> setToken(String token) async {
     // TODO: implement setToken
-    addKey(PreferencesService.KEY_BEARER_TOKEN, token);
+    //addKey(PreferencesService.KEY_BEARER_TOKEN, token);
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString(PreferencesService.KEY_BEARER_TOKEN, token);
   }
 
   Future<void> addKey(String key,dynamic value) async{

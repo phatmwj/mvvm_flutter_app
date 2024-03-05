@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mvvm_flutter_app/ui/home/home_screen.dart';
 import 'package:mvvm_flutter_app/ui/login/LoginScreen.dart';
 import 'package:mvvm_flutter_app/ui/register/register_screen.dart';
 
@@ -20,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen>{
     // TODO: implement initState
     super.initState();
     Future.delayed(Duration(seconds: 2), () {
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const RegisterScreen()));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
     });
   }
   @override

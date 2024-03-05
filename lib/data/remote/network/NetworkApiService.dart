@@ -15,16 +15,11 @@ class NetworkApiService extends BaseApiService {
   }
 
   @override
-  Future getResponse(String url, LoginRequest loginRequest) async {
-    Options options = Options(
-      headers: {
-        'IgnoreAuth': '1',
-      },
-    );
+  Future get(String url, Options options) async {
     dynamic responseJson;
     final dio = createDio();
     try {
-      Response response = await dio.post(BaseApiService.BASE_URL + url,options: options, data: loginRequest.toMap());
+      Response response = await dio.get(BaseApiService.BASE_URL + url,options: options);
       responseJson = returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet Connection');

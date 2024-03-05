@@ -1,6 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:mvvm_flutter_app/data/model/api/request/register_request.dart';
 import 'package:mvvm_flutter_app/data/model/api/response/register_response.dart';
 import 'package:mvvm_flutter_app/ui/login/LoginScreen.dart';
@@ -63,6 +64,7 @@ class RegisterViewModel extends ChangeNotifier{
 
   Future<void> register(BuildContext context) async{
     _showLoading(true);
+    Utils.showLoading();
     RegisterRequest request = RegisterRequest(fullName: fullName, password: password, phone: phoneNumber);
     _setRegisterRes(ResponseWrapper.loading());
 
@@ -70,7 +72,7 @@ class RegisterViewModel extends ChangeNotifier{
         .register(request)
         .then((value) {
           _showLoading(false);
-
+          Utils.dismissLoading();
           if(value.result!){
             Utils.toastSuccessMessage(value.message!);
             Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const LoginScreen()));
@@ -81,9 +83,11 @@ class RegisterViewModel extends ChangeNotifier{
         })
         .onError((error, stackTrace) {
           _showLoading(false);
+          Utils.dismissLoading();
           _setRegisterRes(ResponseWrapper.error(error.toString()));
         })
         .whenComplete((){
+      Utils.dismissLoading();
           _showLoading(false);
         });
   }

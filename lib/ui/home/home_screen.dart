@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:mvvm_flutter_app/ui/navpages/account_page.dart';
 
 class HomeScreen extends StatefulWidget{
   static const String id = "home_screen";
@@ -97,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen>{
   late List<Widget> _pages = <Widget>[
     _homePage(),
     Text('Thu nhập'),
-    Text('Tài khoản'),
+    AccountPage(),
   ];
   @override
   Widget build(BuildContext context) {

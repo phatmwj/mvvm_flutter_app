@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:mvvm_flutter_app/data/local/prefs/AppPreferecesService.dart';
 import 'package:mvvm_flutter_app/data/model/api/ApiResponse.dart';
 import 'package:mvvm_flutter_app/data/model/api/request/LoginRequest.dart';
 import 'package:mvvm_flutter_app/repository/Repository.dart';
+import 'package:mvvm_flutter_app/ui/home/home_screen.dart';
 import 'package:mvvm_flutter_app/ui/widget/LoadingWidget.dart';
+import 'package:mvvm_flutter_app/utils/Utils.dart';
 
 import '../../data/model/api/ResponseWrapper.dart';
 import '../../data/model/api/response/LoginResponse.dart';
@@ -42,8 +45,9 @@ class LoginViewModel extends ChangeNotifier {
   }
 
 // Thêm các phương thức xử lý đăng nhập, kiểm tra hợp lệ, v.v.
-  Future<void> loginUser() async {
+  Future<void> loginUser(BuildContext context) async {
     _showLoading(true);
+    Utils.showLoading();
     LoginRequest loginRequest = LoginRequest(phone: _phoneNumber, password: _password);
     dynamic j = loginRequest.toMap();
     final a = LoginRequest.fromJson(j);
@@ -53,14 +57,24 @@ class LoginViewModel extends ChangeNotifier {
         .login(loginRequest)
         .then((value) {
           _showLoading(false);
-          _setLoginRes(ResponseWrapper.completed(value));
-          String? token = value.data?.access_token;
-          _prefs.setToken(token!);
+          Utils.dismissLoading();
+         if(value.result!){
+           Utils.toastSuccessMessage("Đăng nhập thành công");
+           _setLoginRes(ResponseWrapper.completed(value));
+           String? token = value.data?.access_token;
+           _prefs.setToken(token!);
+           print("token nef $token");
+           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+         }else{
+           Utils.toastErrorMessage("Tên đăng nhập hoặc mật khẩu không đúng");
+         }
         })
         .onError((error, stackTrace) {
+      Utils.dismissLoading();
           _showLoading(false);
           _setLoginRes(ResponseWrapper.error(error.toString()));})
         .whenComplete((){
+      Utils.dismissLoading();
           _showLoading(false);
     });
   }

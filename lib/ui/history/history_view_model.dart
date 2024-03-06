@@ -17,15 +17,41 @@ class HistoryViewModel extends ChangeNotifier{
 
   bool isLoading = false;
 
+  int _totalElements = 0;
+
+  int _page = 0;
+  int _size = 10;
+
+
+  int get page => _page;
+
+  setPage(int value) {
+    _page = value;
+    notifyListeners();
+  }
+
+  int get size => _size;
+
+  setSize(int value) {
+    _size = value;
+    notifyListeners();
+  }
+
+  setTotalElement(int totalElements){
+    _totalElements = totalElements;
+    notifyListeners();
+  }
+
+  int get totalElements => _totalElements;
+
   ResponseWrapper<ResponseListWrapper<HistoryResponse>> res = ResponseWrapper.loading();
 
   List<HistoryResponse> get histories => _histories;
 
-  HistoryViewModel(){
-    getHistory();
-  }
+
   setListHistory(List<HistoryResponse> histories){
-    _histories = histories;
+    _histories.addAll(histories);
+    notifyListeners();
   }
 
 
@@ -40,25 +66,31 @@ class HistoryViewModel extends ChangeNotifier{
   }
 
   Future<void> getHistory() async{
-    Utils.showLoading();
+    if(totalElements == 0){
+      Utils.showLoading();
+    }
+
+    _showLoading(true);
 
     _setLoginRes(ResponseWrapper.loading());
     _repo
-        .getHistory(null, null, 0, 10, null)
+        .getHistory(null, null, page, size, null)
         .then((value) {
       _showLoading(false);
       Utils.dismissLoading();
+
       if(value.result!){
         final List<HistoryResponse>? data = value.data?.content?.map((e) => e).toList();
 
+        setTotalElement(value.data!.totalElements!);
+        log("page $page");
+        setPage(page + 1);
+        log("total $totalElements");
+
         setListHistory(data as List<HistoryResponse>);
 
-        Utils.toastSuccessMessage("Đăng nhập thành công");
         _setLoginRes(ResponseWrapper.completed(value));
 
-      }else{
-        Utils.toastErrorMessage("Tên đăng nhập hoặc mật khẩu không đúng");
-        print(" alo $value");
       }
     })
         .onError((error, stackTrace) {
@@ -71,4 +103,6 @@ class HistoryViewModel extends ChangeNotifier{
       _showLoading(false);
     });
   }
+
+
 }

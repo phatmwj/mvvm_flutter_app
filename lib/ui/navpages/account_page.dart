@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:mvvm_flutter_app/data/local/prefs/AppPreferecesService.dart';
 import 'package:mvvm_flutter_app/ui/history/history_screen.dart';
+import 'package:mvvm_flutter_app/ui/login/LoginScreen.dart';
+
+import '../../data/local/prefs/PreferencesService.dart';
 class AccountPage extends StatefulWidget {
   const AccountPage({super.key});
 
@@ -156,6 +160,41 @@ class _AccountPageState extends State<AccountPage> {
                                 style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 18.0
+                                ),
+                              )),
+
+                              Image(
+                                image: AssetImage('assets/images/icon_arrow.png'),
+                                width: 50.0,
+                                height: 50.0,
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        Divider(
+                          color: Color(0xFFC0C0C0),
+                        ),
+
+                        InkWell(
+                          onTap: (){
+                            AppPreferencesService().remove(PreferencesService.KEY_BEARER_TOKEN);
+                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const LoginScreen()));
+                          },
+                          child: Row(
+                            children: [
+                              Image(
+                                image: AssetImage('assets/images/icon_config.png'),
+                                width: 50.0,
+                                height: 50.0,
+                              ),
+
+
+                              Expanded(child: Text(
+                                'Đăng xuất',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 18.0
                                 ),
                               )),
 

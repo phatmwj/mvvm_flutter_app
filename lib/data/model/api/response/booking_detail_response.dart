@@ -4,10 +4,10 @@ part 'booking_detail_response.g.dart';
 
 @JsonSerializable()
 class BookingDetailResponse{
-  int id;
-  String createdDate;
-  int state;
-  String note;
+  int? id;
+  String? createdDate;
+  int? state;
+  String? note;
 
   BookingDetailResponse(this.id, this.createdDate, this.state, this.note);
 

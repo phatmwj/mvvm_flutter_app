@@ -9,10 +9,10 @@ part of 'booking_detail_response.dart';
 BookingDetailResponse _$BookingDetailResponseFromJson(
         Map<String, dynamic> json) =>
     BookingDetailResponse(
-      json['id'] as int,
-      json['createdDate'] as String,
-      json['state'] as int,
-      json['note'] as String,
+      json['id'] as int?,
+      json['createdDate'] as String?,
+      json['state'] as int?,
+      json['note'] as String?,
     );
 
 Map<String, dynamic> _$BookingDetailResponseToJson(

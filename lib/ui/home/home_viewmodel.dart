@@ -7,4 +7,13 @@ import '../../repository/Repository.dart';
 class HomeViewModel extends ChangeNotifier{
   final _repo = Repository();
   final _prefs = AppPreferencesService();
+
+  bool _isActive = false;
+
+  bool get isActive => _isActive;
+
+  void setActive(bool value) {
+    _isActive = value;
+    notifyListeners();
+  }
 }

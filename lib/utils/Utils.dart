@@ -1,3 +1,4 @@
+
 import 'package:another_flushbar/flushbar.dart';
 import 'package:another_flushbar/flushbar_route.dart';
 import 'package:flutter/cupertino.dart';
@@ -5,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class Utils {
-
 
   // we will use this function to shift focus from one text field to another text field
   // we are using to avoid duplications of code

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:mvvm_flutter_app/ui/home/home_screen.dart';
+import 'package:mvvm_flutter_app/ui/home/home_viewmodel.dart';
 import 'package:mvvm_flutter_app/ui/login/LoginScreen.dart';
 import 'package:mvvm_flutter_app/ui/login/LoginViewModel.dart';
 import 'package:mvvm_flutter_app/ui/register/register_screen.dart';
 import 'package:mvvm_flutter_app/ui/register/register_view_model.dart';
 import 'package:mvvm_flutter_app/ui/splash/splash_screen.dart';
+import 'package:mvvm_flutter_app/ui/welcome/welcome_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -19,7 +21,9 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (_) => LoginViewModel()),
-          ChangeNotifierProvider(create: (_) => RegisterViewModel())
+          ChangeNotifierProvider(create: (_) => RegisterViewModel()),
+          ChangeNotifierProvider(create: (_) => WelcomeViewModel()),
+          ChangeNotifierProvider(create: (_) => HomeViewModel()),
         ],
         child: MaterialApp(
           theme: ThemeData(

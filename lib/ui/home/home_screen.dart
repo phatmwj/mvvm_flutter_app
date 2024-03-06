@@ -4,6 +4,8 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:mvvm_flutter_app/ui/home/home_viewmodel.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget{
   static const String id = "home_screen";
@@ -48,7 +50,8 @@ class _HomeScreenState extends State<HomeScreen>{
     await controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
   }
 
-  Widget _homePage(){
+  Widget _homePage(BuildContext context){
+    final vm = Provider.of<HomeViewModel>(context);
     return Stack(
         children:[
           GoogleMap(
@@ -76,13 +79,27 @@ class _HomeScreenState extends State<HomeScreen>{
                     ),
                     SizedBox(width: 80),
                     Text(
-                      "Online"
+                      "Online",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontFamily: 'Roboto',
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                     SizedBox(width: 80),
-                    Switch(
-                      value: true,
-                      onChanged: (bool value) {
-                      }, // Replace with your switch value
+
+                    SizedBox(
+                      height: 35.0,
+                      child: FittedBox(
+                        fit: BoxFit.fitHeight,
+                        child: Switch(
+                          value: vm.isActive,
+                          activeColor: Color(0xFF7EA567),
+                          onChanged: (bool value) {
+                            vm.setActive(value);
+                          },
+                        ),
+                    ),
                     ),
                   ],
                 ),
@@ -94,15 +111,15 @@ class _HomeScreenState extends State<HomeScreen>{
 
 
   }
-  late List<Widget> _pages = <Widget>[
-    _homePage(),
-    Text('Thu nhập'),
-    Text('Tài khoản'),
-  ];
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-
+    List<Widget> _pages = <Widget>[
+      _homePage(context),
+      Text('Thu nhập'),
+      Text('Tài khoản'),
+    ];
     return
         Scaffold(
           // appBar: AppBar(
@@ -127,7 +144,7 @@ class _HomeScreenState extends State<HomeScreen>{
               ),
             ],
             currentIndex: _selectedIndex,
-            selectedItemColor: Colors.blue,
+            selectedItemColor: Color(0xFF7EA567),
             onTap: _onItemTapped,
           ),
         );

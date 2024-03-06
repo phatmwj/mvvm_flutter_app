@@ -8,11 +8,11 @@ part of 'customer_response.dart';
 
 CustomerResponse _$CustomerResponseFromJson(Map<String, dynamic> json) =>
     CustomerResponse(
-      json['id'] as int,
-      json['name'] as String,
-      json['phone'] as String,
-      json['email'] as String,
-      json['avatar'] as String,
+      json['id'] as int?,
+      json['name'] as String?,
+      json['phone'] as String?,
+      json['email'] as String?,
+      json['avatar'] as String?,
     );
 
 Map<String, dynamic> _$CustomerResponseToJson(CustomerResponse instance) =>

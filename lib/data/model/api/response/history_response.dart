@@ -10,22 +10,22 @@ part 'history_response.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class HistoryResponse{
-  int id;
-  ProfileResponse driver;
-  String code;
-  String status;
-  String createdDate;
-  CustomerResponse customer;
-  ServiceResponse service;
-  int state;
-  String destinationAddress;
-  String pickupAddress;
-  double money;
-  double promotionMoney;
-  int ratioShare;
-  List<BookingDetailResponse> bookingDetails;
-  RatingResponse rating;
-  double distance;
+  int? id;
+  ProfileResponse? driver;
+  String? code;
+  String? status;
+  String? createdDate;
+  CustomerResponse? customer;
+  ServiceResponse? service;
+  int? state;
+  String? destinationAddress;
+  String? pickupAddress;
+  double? money;
+  double? promotionMoney;
+  int? ratioShare;
+  List<BookingDetailResponse>? bookingDetails;
+  RatingResponse? rating;
+  double? distance;
 
   HistoryResponse(
       this.id,

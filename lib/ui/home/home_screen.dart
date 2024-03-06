@@ -119,7 +119,7 @@ class _HomeScreenState extends State<HomeScreen>{
     List<Widget> _pages = <Widget>[
       _homePage(context),
       Text('Thu nhập'),
-      Text('Tài khoản'),
+      AccountPage(),
     ];
     return
         Scaffold(

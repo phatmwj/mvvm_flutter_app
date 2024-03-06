@@ -1,6 +1,6 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mvvm_flutter_app/ui/home/home_screen.dart';
 import 'package:location/location.dart';
 import 'package:mvvm_flutter_app/data/local/prefs/AppPreferecesService.dart';
 import 'package:mvvm_flutter_app/data/local/prefs/PreferencesService.dart';
@@ -31,6 +31,8 @@ class _SplashScreenState extends State<SplashScreen>{
   void initState() {
     // TODO: implement initState
     super.initState();
+    Future.delayed(Duration(seconds: 2), () {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
     Future.delayed(Duration(seconds: 2), () async {
       _permission = await location.hasPermission();
       String? token = await _pref.getToken();

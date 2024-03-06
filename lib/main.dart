@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:mvvm_flutter_app/ui/history/history_view_model.dart';
 import 'package:mvvm_flutter_app/ui/home/home_screen.dart';
 import 'package:mvvm_flutter_app/ui/home/home_viewmodel.dart';
 import 'package:mvvm_flutter_app/ui/login/LoginScreen.dart';
@@ -11,6 +13,7 @@ import 'package:provider/provider.dart';
 
 void main() {
   runApp(const MyApp());
+  configLoading();
 }
 
 class MyApp extends StatelessWidget {
@@ -24,20 +27,39 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(create: (_) => RegisterViewModel()),
           ChangeNotifierProvider(create: (_) => WelcomeViewModel()),
           ChangeNotifierProvider(create: (_) => HomeViewModel()),
+          ChangeNotifierProvider(create: (_) => RegisterViewModel()),
+          ChangeNotifierProvider(create: (_) => HistoryViewModel())
         ],
         child: MaterialApp(
           theme: ThemeData(
             fontFamily: 'Roboto',
             useMaterial3: true,
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
           ),
           debugShowCheckedModeBanner: false,
           initialRoute: SplashScreen.id,
           routes: {
             SplashScreen.id:(context) => SplashScreen()
           },
+          builder: EasyLoading.init(),
        ));
   }
+
+}
+
+void configLoading() {
+  EasyLoading.instance
+    ..indicatorType = EasyLoadingIndicatorType.fadingCircle
+    ..loadingStyle = EasyLoadingStyle.light
+    ..indicatorSize = 45.0
+    ..radius = 10.0
+    ..progressColor = Colors.yellow
+    ..backgroundColor = Colors.white
+    ..indicatorColor = Colors.yellow
+    ..textColor = Colors.black
+    ..maskColor = Colors.blue.withOpacity(0.5)
+    ..userInteractions = true
+    ..dismissOnTap = false;
 }
 
 

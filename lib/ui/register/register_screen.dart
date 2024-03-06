@@ -18,6 +18,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final formKey = GlobalKey<FormState>();
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+  }
+  @override
   Widget build(BuildContext context) {
     final vm = Provider.of<RegisterViewModel>(context);
 
@@ -36,7 +42,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       fontFamily: 'Roboto',
                       fontWeight: FontWeight.w700,
                       color: Colors.black,
-                      fontSize: 30.0,
+                      fontSize: 36.0,
                     ),
                   ),
                 ),
@@ -155,6 +161,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               if(value!.isEmpty){
                                 return "Vui lòng nhập mật khẩu";
                               }
+                              if(value.length < 6){
+                                return "Mật khẩu phải có ít nhất 6 ký tự";
+                              }
                               return null;
                             },
                           ),
@@ -198,6 +207,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 return "Vui lòng nhập mật khẩu";
                               }
 
+                              if(value.length < 6){
+                                return "Mật khẩu phải có ít nhất 6 ký tự";
+                              }
+
                               if(value.compareTo(vm.password) != 0){
                                 return "Mật khẩu không trùng khớp";
                               }
@@ -221,6 +234,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     onPressed: () {
                       if(formKey.currentState!.validate()){
                         vm.register(context);
+                        FocusManager.instance.primaryFocus?.unfocus();
                       }
 
                     },

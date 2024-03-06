@@ -3,6 +3,7 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:another_flushbar/flushbar_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class Utils {
@@ -73,4 +74,11 @@ class Utils {
     );
   }
 
+  static showLoading(){
+    return EasyLoading.show(status: "Loading");
+  }
+
+  static dismissLoading(){
+    return EasyLoading.dismiss();
+  }
 }

@@ -12,13 +12,13 @@ class AuthInterceptor extends Interceptor{
   PreferencesService preferencesService = AppPreferencesService();
 
   @override
-  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
+  Future<void> onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
     // logging
     log("--> ${options.method} ${options.uri}");
     log("Headers: ${options.headers}");
     log("Data: ${options.data}");
 
-    String isIgnore = options.headers['IgnoreAuth'];
+    String? isIgnore = options.headers['IgnoreAuth'];
     if (isIgnore != null && isIgnore == '1') {
       options.headers.remove('IgnoreAuth');
       handler.next(options);
@@ -47,13 +47,15 @@ class AuthInterceptor extends Interceptor{
 
 
     // Thêm Authentication
-    String token = preferencesService.getToken() as String;
+    String? token = await preferencesService.getToken();
+    print(token);
+
     if (token != null && token.isNotEmpty) {
       options.headers['Authorization'] = 'Bearer $token';
     }
 
 
-    String isMediaKind = options.headers['isMedia'];
+    String? isMediaKind = options.headers['isMedia'];
     if (isMediaKind != null && isMediaKind == '1') {
       StringBuffer builder = StringBuffer(BaseApiService.MEDIA_URL);
       builder.write('/');

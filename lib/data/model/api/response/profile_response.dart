@@ -6,12 +6,12 @@ part 'profile_response.g.dart';
 
 @JsonSerializable()
 class ProfileResponse{
-  int id;
-  String fullName;
-  String phone;
-  String address;
-  String avatar;
-  double averageRating;
+  int? id;
+  String? fullName;
+  String? phone;
+  String? address;
+  String? avatar;
+  double? averageRating;
 
   ProfileResponse(
       {required this.id,

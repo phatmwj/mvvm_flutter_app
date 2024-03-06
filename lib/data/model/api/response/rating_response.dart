@@ -5,10 +5,10 @@ part 'rating_response.g.dart';
 
 @JsonSerializable()
 class RatingResponse{
-  int id;
-  String message;
-  int star;
-  String createdDate;
+  int? id;
+  String? message;
+  int? star;
+  String? createdDate;
 
   RatingResponse(this.id, this.message, this.star, this.createdDate);
 

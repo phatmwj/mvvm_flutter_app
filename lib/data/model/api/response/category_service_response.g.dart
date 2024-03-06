@@ -9,11 +9,11 @@ part of 'category_service_response.dart';
 CategoryServiceResponse _$CategoryServiceResponseFromJson(
         Map<String, dynamic> json) =>
     CategoryServiceResponse(
-      id: json['id'] as int,
-      kind: json['kind'] as int,
-      name: json['name'] as String,
-      status: json['status'] as int,
-      image: json['image'] as String,
+      id: json['id'] as int?,
+      kind: json['kind'] as int?,
+      name: json['name'] as String?,
+      status: json['status'] as int?,
+      image: json['image'] as String?,
     );
 
 Map<String, dynamic> _$CategoryServiceResponseToJson(

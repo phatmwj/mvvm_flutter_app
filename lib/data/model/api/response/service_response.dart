@@ -6,13 +6,13 @@ part 'service_response.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class ServiceResponse{
-  int id;
-  int kind;
-  String name;
-  String description;
-  String price;
-  String image;
-  CategoryServiceResponse category;
+  int? id;
+  int? kind;
+  String? name;
+  String? description;
+  String? price;
+  String? image;
+  CategoryServiceResponse? category;
 
   ServiceResponse(this.id, this.kind, this.name, this.description, this.price,
       this.image, this.category);

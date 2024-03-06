@@ -56,13 +56,11 @@ class Repository{
         }
     );
 
-    try{
+
       dynamic res = await _apiService.get('v1/booking/my-booking?endDate=${endDate ?? ''}&startDate=${startDate ?? ''}&page=$page&size=$size&state=${state ?? ''}', options);
-      final jsonData = ResponseWrapper<ResponseListWrapper<HistoryResponse>>.fromJson(res,(p0) => ResponseListWrapper.fromJson(res['data'], (p0) => HistoryResponse.fromJson(res['data'])));
-      log("data login ${jsonData.toMap()}");
+      final jsonData = ResponseWrapper<ResponseListWrapper<HistoryResponse>>.fromJson(res,(p0) => ResponseListWrapper.fromJson(res['data'], (p1) => HistoryResponse.fromJson(p1)));
+      log("data login ${jsonData.data?.content}");
       return jsonData;
-    }catch(e){
-      throw Exception(e);
-    }
+
   }
 }

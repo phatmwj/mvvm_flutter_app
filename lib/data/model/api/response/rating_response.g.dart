@@ -8,10 +8,10 @@ part of 'rating_response.dart';
 
 RatingResponse _$RatingResponseFromJson(Map<String, dynamic> json) =>
     RatingResponse(
-      json['id'] as int,
-      json['message'] as String,
-      json['star'] as int,
-      json['createdDate'] as String,
+      json['id'] as int?,
+      json['message'] as String?,
+      json['star'] as int?,
+      json['createdDate'] as String?,
     );
 
 Map<String, dynamic> _$RatingResponseToJson(RatingResponse instance) =>

@@ -5,11 +5,11 @@ part 'customer_response.g.dart';
 
 @JsonSerializable()
 class CustomerResponse{
-  int id;
-  String name;
-  String phone;
-  String email;
-  String avatar;
+  int? id;
+  String? name;
+  String? phone;
+  String? email;
+  String? avatar;
 
   CustomerResponse(this.id, this.name, this.phone, this.email, this.avatar);
 

@@ -31,8 +31,6 @@ class _SplashScreenState extends State<SplashScreen>{
   void initState() {
     // TODO: implement initState
     super.initState();
-    Future.delayed(Duration(seconds: 2), () {
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
     Future.delayed(Duration(seconds: 2), () async {
       _permission = await location.hasPermission();
       String? token = await _pref.getToken();

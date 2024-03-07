@@ -7,4 +7,5 @@ abstract class BaseApiService {
 
   Future<dynamic> get(String url, Options options);
   Future<dynamic> post(String url, Map<String, dynamic> data, Options options);
+  Future<dynamic> put(String url, Map<String, dynamic> data, Options options);
 }

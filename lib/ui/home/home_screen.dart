@@ -1,15 +1,12 @@
 
-import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:mvvm_flutter_app/ui/home/home_viewmodel.dart';
-import 'package:provider/provider.dart';
+import 'package:mvvm_flutter_app/ui/navpages/home_page.dart';
 import 'package:mvvm_flutter_app/ui/navpages/account_page.dart';
 
 class HomeScreen extends StatefulWidget{
   static const String id = "home_screen";
+  
   const HomeScreen({super.key});
 
   @override
@@ -20,21 +17,9 @@ class HomeScreen extends StatefulWidget{
 
 class _HomeScreenState extends State<HomeScreen>{
 
+  PageController _pageController = PageController();
+
   int _selectedIndex = 0;
-  //ggmaps
-  final Completer<GoogleMapController> _controller = Completer<GoogleMapController>();
-
-
-  static const CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
-    zoom: 14.4746,
-  );
-
-  static const CameraPosition _kLake = CameraPosition(
-      bearing: 192.8334901395799,
-      target: LatLng(37.43296265331129, -122.08832357078792),
-      tilt: 59.440717697143555,
-      zoom: 19.151926040649414);
 
   @override
   void initState() {
@@ -42,93 +27,45 @@ class _HomeScreenState extends State<HomeScreen>{
     super.initState();
   }
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-  Future<void> _goToTheLake() async {
-    final GoogleMapController controller = await _controller.future;
-    await controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
-  }
-
-  Widget _homePage(BuildContext context){
-    final vm = Provider.of<HomeViewModel>(context);
-    return Stack(
-        children:[
-          GoogleMap(
-            mapType: MapType.normal,
-            initialCameraPosition: _kGooglePlex,
-            onMapCreated: (GoogleMapController controller) {
-              _controller.complete(controller);
-            },
-          ),
-          Positioned(
-            top: 40.0,
-            left: 16.0,
-            right: 16.0,
-            child: Card(
-              elevation: 4.0,
-              child: Padding(
-                padding: EdgeInsets.all(10.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image(
-                      image: AssetImage('assets/images/user_avatar.png'),
-                      width: 50.0,
-                      height: 50.0,
-                    ),
-                    SizedBox(width: 80),
-                    Text(
-                      "Online",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontFamily: 'Roboto',
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    SizedBox(width: 80),
-
-                    SizedBox(
-                      height: 35.0,
-                      child: FittedBox(
-                        fit: BoxFit.fitHeight,
-                        child: Switch(
-                          value: vm.isActive,
-                          activeColor: Color(0xFF7EA567),
-                          onChanged: (bool value) {
-                            vm.setActive(value);
-                          },
-                        ),
-                    ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ],
+    _pageController.animateToPage(
+      index,
+      duration: Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
     );
-
-
   }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    List<Widget> _pages = <Widget>[
-      _homePage(context),
-      Text('Thu nhập'),
-      AccountPage(),
-    ];
+
     return
         Scaffold(
-          // appBar: AppBar(
-          //   title: Text('Bottom Navigation Example'),
-          // ),
           body: Center(
-            child: _pages.elementAt(_selectedIndex),
+            child: PageView(
+              physics: NeverScrollableScrollPhysics(),
+              controller: _pageController,
+              allowImplicitScrolling: true,
+              onPageChanged: (int index) {
+                setState(() {
+                  _selectedIndex = index;
+                });
+              },
+              children: [
+                // Your first page widget
+                HomePage(),
+                Text('Thu nhập'),
+                AccountPage(),
+              ],
+            ),
           ),
+
           bottomNavigationBar: BottomNavigationBar(
             items: const <BottomNavigationBarItem>[
               BottomNavigationBarItem(
@@ -145,8 +82,18 @@ class _HomeScreenState extends State<HomeScreen>{
               ),
             ],
             currentIndex: _selectedIndex,
-            selectedItemColor: Color(0xFF7EA567),
+            selectedItemColor: const Color(0xFF7EA567),
             onTap: _onItemTapped,
+            selectedLabelStyle: const TextStyle(
+              fontFamily: 'Roboto',
+              fontWeight: FontWeight.w600,
+              fontSize: 14.0,
+            ),
+            unselectedLabelStyle:const TextStyle(
+              fontFamily: 'Roboto',
+              fontWeight: FontWeight.w500,
+              fontSize: 13.0,
+            ),
           ),
         );
   }

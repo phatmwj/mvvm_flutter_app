@@ -4,14 +4,19 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:mvvm_flutter_app/data/model/api/request/LoginRequest.dart';
 import 'package:mvvm_flutter_app/data/model/api/request/register_request.dart';
+import 'package:mvvm_flutter_app/data/model/api/request/state_request.dart';
 import 'package:mvvm_flutter_app/data/model/api/response/LoginResponse.dart';
 import 'package:mvvm_flutter_app/data/model/api/response/history_response.dart';
+import 'package:mvvm_flutter_app/data/model/api/response/postion_response.dart';
+import 'package:mvvm_flutter_app/data/model/api/response/profile_response.dart';
 import 'package:mvvm_flutter_app/data/model/api/response/register_response.dart';
+import 'package:mvvm_flutter_app/data/model/api/response/service_online_response.dart';
 import 'package:mvvm_flutter_app/data/model/api/response_list_wrapper.dart';
 import 'package:mvvm_flutter_app/data/remote/network/BaseApiService.dart';
 import 'package:mvvm_flutter_app/data/remote/network/NetworkApiService.dart';
 
 import '../data/model/api/ResponseWrapper.dart';
+import '../data/model/api/request/position_request.dart';
 import '../data/remote/network/ApiEndPoints.dart';
 
 class Repository{
@@ -62,5 +67,64 @@ class Repository{
       log("data login ${jsonData.data?.content}");
       return jsonData;
 
+  }
+
+  Future<ResponseWrapper<ProfileResponse>> getProfile() async {
+    Options options = Options(
+        headers: {
+        }
+    );
+    try{
+      dynamic res = await _apiService.get(ApiEndPoints.PROFILE, options);
+      final jsonData = ResponseWrapper<ProfileResponse>.fromJson(res,(p0) => ProfileResponse.fromJson(res['data']));
+      return jsonData;
+    }catch(e){
+      throw e;
+    }
+  }
+
+  Future<ResponseWrapper<ServiceOnlineResponse>> getDriverState() async {
+    Options options = Options(
+        headers: {
+        }
+    );
+    try{
+      dynamic res = await _apiService.get(ApiEndPoints.DRIVER_STATE, options);
+      final jsonData = ResponseWrapper<ServiceOnlineResponse>.fromJson(res,(p0) => ServiceOnlineResponse.fromJson(res['data']));
+      return jsonData;
+    }catch(e){
+      log("Error $e");
+      throw e;
+    }
+  }
+
+  Future<ResponseGeneric> updatePosition(PositionRequest request) async {
+    Options options = Options(
+        headers: {
+        }
+    );
+    try{
+      dynamic res = await _apiService.put(ApiEndPoints.UPDATE_POSITION, request.toJson(), options);
+      final jsonData = ResponseGeneric.fromJson(res);
+      return jsonData;
+    }catch(e){
+      log("UpdatePosition Error: $e");
+      rethrow;
+    }
+  }
+
+  Future<ResponseGeneric> changeDriverState(DriverStateRequest request) async {
+    Options options = Options(
+        headers: {
+        }
+    );
+    try{
+      dynamic res = await _apiService.put(ApiEndPoints.CHANGE_STATE, request.toJson(), options);
+      final jsonData = ResponseGeneric.fromJson(res);
+      return jsonData;
+    }catch(e){
+      log("changeDriverState Error: $e");
+      rethrow;
+    }
   }
 }

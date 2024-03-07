@@ -34,8 +34,10 @@ class DBProvider{
     void _onCreateDB(Database db, int version) async{
         await db.execute("CREATE TABLE User ("
             "id INTEGER PRIMARY KEY,"
-            "username TEXT,"
+            "fullName TEXT,"
             "phone TEXT,"
+            "avatar TEXT,"
+            "averageRating REAL"
             "address TEXT"
             ")");
     }

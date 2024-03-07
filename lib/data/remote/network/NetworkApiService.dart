@@ -57,4 +57,18 @@ class NetworkApiService extends BaseApiService {
         throw FetchDataException('Error occurred while communication with server with status code : ${response.statusCode}');
     }
   }
+
+  @override
+  Future put(String url, Map<String, dynamic> data, Options options) async {
+    // TODO: implement put
+    dynamic responseJson;
+    final dio = createDio();
+    try {
+      Response response = await dio.put(BaseApiService.BASE_URL + url,options: options, data: data);
+      responseJson = returnResponse(response);
+    } on SocketException {
+      throw FetchDataException('No Internet Connection');
+    }
+    return responseJson;
+  }
 }

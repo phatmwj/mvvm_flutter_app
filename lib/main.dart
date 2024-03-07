@@ -71,6 +71,9 @@ class MyApp extends StatelessWidget {
             fontFamily: 'Roboto',
             useMaterial3: true,
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
+            cardTheme: const CardTheme(
+              color: Colors.white,
+            ),
           ),
           debugShowCheckedModeBanner: false,
           initialRoute: SplashScreen.id,

@@ -48,10 +48,10 @@ class AuthInterceptor extends Interceptor{
 
     // Thêm Authentication
     String? token = await preferencesService.getToken();
-    print(token);
 
     if (token != null && token.isNotEmpty) {
       options.headers['Authorization'] = 'Bearer $token';
+      log("Bearer $token");
     }
 
 

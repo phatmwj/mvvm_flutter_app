@@ -52,6 +52,8 @@ dependencies:
 
   #ggmaps
   google_maps_flutter: ^2.0.10
+  flutter_polyline_points: ^1.0.0
+  flutter_svg: ^1.1.0
   #location
   location: ^5.0.0
 

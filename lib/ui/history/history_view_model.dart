@@ -55,6 +55,10 @@ class HistoryViewModel extends ChangeNotifier{
   }
 
 
+  refreshListHistory(){
+    _histories.clear();
+  }
+
   void _showLoading(bool loading){
     isLoading = loading;
     notifyListeners();
@@ -66,9 +70,10 @@ class HistoryViewModel extends ChangeNotifier{
   }
 
   Future<void> getHistory() async{
-    if(totalElements == 0){
+    if(_totalElements == 0){
       Utils.showLoading();
     }
+
 
     _showLoading(true);
 

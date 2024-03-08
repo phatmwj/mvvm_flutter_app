@@ -236,6 +236,7 @@ class _AccountPageState extends State<AccountPage> {
               SizedBox(
                 height: 16,
               ),
+
               Row(
                 children: [
                   Expanded(
@@ -263,6 +264,10 @@ class _AccountPageState extends State<AccountPage> {
                       ),
                       )
                     ),
+
+                  SizedBox(
+                    width: 16,
+                  ),
 
                   Expanded(
                     child: Padding(

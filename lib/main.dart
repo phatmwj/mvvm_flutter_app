@@ -9,6 +9,7 @@ import 'package:mvvm_flutter_app/data/local/prefs/PreferencesService.dart';
 import 'package:mvvm_flutter_app/socket/booking.dart';
 import 'package:mvvm_flutter_app/socket/command.dart';
 import 'package:mvvm_flutter_app/socket/message.dart';
+import 'package:mvvm_flutter_app/ui/history/detail/history_detail_view_model.dart';
 import 'package:mvvm_flutter_app/ui/history/history_view_model.dart';
 import 'package:mvvm_flutter_app/ui/home/home_screen.dart';
 import 'package:mvvm_flutter_app/ui/home/home_viewmodel.dart';
@@ -64,7 +65,8 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(create: (_) => WelcomeViewModel()),
           ChangeNotifierProvider(create: (_) => HomeViewModel()),
           ChangeNotifierProvider(create: (_) => RegisterViewModel()),
-          ChangeNotifierProvider(create: (_) => HistoryViewModel())
+          ChangeNotifierProvider(create: (_) => HistoryViewModel()),
+          ChangeNotifierProvider(create: (_) => HistoryDetailViewModel())
         ],
         child: MaterialApp(
           theme: ThemeData(

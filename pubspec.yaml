@@ -64,6 +64,8 @@ dependencies:
 
   web_socket_channel: ^2.1.0
 
+  flutter_spinkit: ^5.1.0
+
 #  build_runner: ^2.1.5
 #  json_serializable: ^6.0.3
 

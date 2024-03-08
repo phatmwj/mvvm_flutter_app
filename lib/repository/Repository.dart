@@ -60,12 +60,14 @@ class Repository{
 
         }
     );
-
-
+    try{
       dynamic res = await _apiService.get('v1/booking/my-booking?endDate=${endDate ?? ''}&startDate=${startDate ?? ''}&page=$page&size=$size&state=${state ?? ''}', options);
       final jsonData = ResponseWrapper<ResponseListWrapper<HistoryResponse>>.fromJson(res,(p0) => ResponseListWrapper.fromJson(res['data'], (p1) => HistoryResponse.fromJson(p1)));
-      log("data login ${jsonData.data?.content}");
+      log("data history ${jsonData.data?.content}");
       return jsonData;
+    }catch(e){
+      throw e;
+    }
 
   }
 
@@ -126,5 +128,22 @@ class Repository{
       log("changeDriverState Error: $e");
       rethrow;
     }
+  }
+
+  Future<ResponseWrapper<HistoryResponse>> getHistoryDetail(int id) async{
+    Options options = Options(
+        headers: {
+
+        }
+    );
+    try{
+      dynamic res = await _apiService.get('v1/booking/detail-booking/$id', options);
+      final jsonData = ResponseWrapper<HistoryResponse>.fromJson(res,(p0) => HistoryResponse.fromJson(res['data']));
+      log("data history detail ${jsonData.data}");
+      return jsonData;
+    }catch(e){
+      rethrow;
+    }
+
   }
 }

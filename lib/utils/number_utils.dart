@@ -11,4 +11,8 @@ class NumberUtils{
     DateTime dateTime = inputFormat.parse(date).add(Duration(hours: 7));
     return inputFormat.format(dateTime);
   }
+
+  static String formatDistance(double distance){
+    return (distance/1000).toStringAsFixed(2);
+  }
 }

@@ -64,23 +64,21 @@ class HistoryViewModel extends ChangeNotifier{
     notifyListeners();
   }
 
-  void _setLoginRes(ResponseWrapper<ResponseListWrapper<HistoryResponse>> res){
+  void setLoginRes(ResponseWrapper<ResponseListWrapper<HistoryResponse>> res){
     this.res = res;
     notifyListeners();
   }
 
   Future<void> getHistory() async{
-    if(_totalElements == 0){
-      Utils.showLoading();
-    }
+    print("firest ${totalElements}");
 
 
     _showLoading(true);
 
-    _setLoginRes(ResponseWrapper.loading());
     _repo
         .getHistory(null, null, page, size, null)
         .then((value) {
+
       _showLoading(false);
       Utils.dismissLoading();
 
@@ -94,7 +92,7 @@ class HistoryViewModel extends ChangeNotifier{
 
         setListHistory(data as List<HistoryResponse>);
 
-        _setLoginRes(ResponseWrapper.completed(value));
+        setLoginRes(ResponseWrapper.completed(value));
 
       }
     })
@@ -102,7 +100,7 @@ class HistoryViewModel extends ChangeNotifier{
       Utils.dismissLoading();
       log(error.toString());
       _showLoading(false);
-      _setLoginRes(ResponseWrapper.error(error.toString()));})
+      setLoginRes(ResponseWrapper.error(error.toString()));})
         .whenComplete((){
       Utils.dismissLoading();
       _showLoading(false);

@@ -11,5 +11,17 @@ class ApiEndPoints {
   static const String UPDATE_POSITION = "v1/position/update-position";
 
   static const String CHANGE_STATE = "v1/driver/change-state";
+
+  static const String CURRENT_BOOKING = "v1/booking/my-current-booking";
+
+  static const String LOAD_BOOKING_BY_ID = "v1/booking/detail-booking";
+
+  static const String REJECT_BOOKING ="v1/booking/reject";
+
+  static const String UPDATE_STATE_BOOKING = "v1/booking/update-state";
+
+  static const String ACCEPT_BOOKING = "v1/booking/accept";
+
+  static const String CANCEL_BOOKING = "v1/booking/cancel";
 }
 

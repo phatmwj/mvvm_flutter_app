@@ -51,7 +51,7 @@ dependencies:
   another_flushbar: ^1.12.30
 
   #ggmaps
-  google_maps_flutter: ^2.0.10
+  google_maps_flutter: ^2.5.3
   flutter_polyline_points: ^1.0.0
   flutter_svg: ^1.1.0
   #location
@@ -63,6 +63,10 @@ dependencies:
   intl: ^0.19.0
 
   web_socket_channel: ^2.1.0
+
+  get_it: ^7.2.0
+
+  circular_countdown_timer: any
 
 #  build_runner: ^2.1.5
 #  json_serializable: ^6.0.3

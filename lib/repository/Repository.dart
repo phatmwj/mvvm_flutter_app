@@ -3,9 +3,13 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:mvvm_flutter_app/data/model/api/request/LoginRequest.dart';
+import 'package:mvvm_flutter_app/data/model/api/request/cancel_booking_request.dart';
+import 'package:mvvm_flutter_app/data/model/api/request/event_booking_request.dart';
 import 'package:mvvm_flutter_app/data/model/api/request/register_request.dart';
 import 'package:mvvm_flutter_app/data/model/api/request/state_request.dart';
+import 'package:mvvm_flutter_app/data/model/api/request/update_booking_request.dart';
 import 'package:mvvm_flutter_app/data/model/api/response/LoginResponse.dart';
+import 'package:mvvm_flutter_app/data/model/api/response/current_booking.dart';
 import 'package:mvvm_flutter_app/data/model/api/response/history_response.dart';
 import 'package:mvvm_flutter_app/data/model/api/response/postion_response.dart';
 import 'package:mvvm_flutter_app/data/model/api/response/profile_response.dart';
@@ -124,6 +128,96 @@ class Repository{
       return jsonData;
     }catch(e){
       log("changeDriverState Error: $e");
+      rethrow;
+    }
+  }
+
+  Future<ResponseWrapper<CurrentBooking>> getCurrentBooking() async {
+    Options options = Options(
+        headers: {
+        }
+    );
+    try{
+      dynamic res = await _apiService.get(ApiEndPoints.CURRENT_BOOKING, options);
+      final jsonData = ResponseWrapper<CurrentBooking>.fromJson(res,(p0) => CurrentBooking.fromJson(res['data']));
+      return jsonData;
+    }catch(e){
+      log("getCurrentBooking Error: $e");
+      rethrow;
+    }
+  }
+
+  Future<ResponseWrapper<CurrentBooking>> loadBookingById(String bookingId) async {
+    Options options = Options(
+        headers: {
+        }
+    );
+    try{
+      dynamic res = await _apiService.get("${ApiEndPoints.LOAD_BOOKING_BY_ID}/$bookingId" , options);
+      final jsonData = ResponseWrapper<CurrentBooking>.fromJson(res,(p0) => CurrentBooking.fromJson(res['data']));
+      return jsonData;
+    }catch(e){
+      log("LoadBooking Error: $e");
+      rethrow;
+    }
+  }
+
+  Future<ResponseGeneric> rejectBooking(CancelBookingRequest request) async {
+    Options options = Options(
+        headers: {
+        }
+    );
+    try{
+      dynamic res = await _apiService.put(ApiEndPoints.REJECT_BOOKING, request.toJson(), options);
+      final jsonData = ResponseGeneric.fromJson(res);
+      return jsonData;
+    }catch(e){
+      log("RejectBooking Error: $e");
+      rethrow;
+    }
+  }
+
+  Future<ResponseGeneric> updateStateBooking(UpdateBookingRequest request) async {
+    Options options = Options(
+        headers: {
+        }
+    );
+    try{
+      dynamic res = await _apiService.put(ApiEndPoints.UPDATE_STATE_BOOKING, request.toJson(), options);
+      final jsonData = ResponseGeneric.fromJson(res);
+      return jsonData;
+    }catch(e){
+      log("updateStateBooking: $e");
+      rethrow;
+    }
+  }
+
+  Future<ResponseGeneric> acceptBooking(EventBookingRequest request) async {
+    Options options = Options(
+        headers: {
+        }
+    );
+    try{
+      dynamic res = await _apiService.put(ApiEndPoints.ACCEPT_BOOKING, request.toJson(), options);
+      final jsonData = ResponseGeneric.fromJson(res);
+      return jsonData;
+    }catch(e){
+      log("acceptBooking: $e");
+      rethrow;
+    }
+  }
+
+  Future<ResponseGeneric> cancelBooking(CancelBookingRequest request) async {
+    Options options = Options(
+        headers: {
+        }
+    );
+    try{
+      dynamic res = await _apiService.put(ApiEndPoints.CANCEL_BOOKING, request.toJson(), options);
+      final jsonData = ResponseGeneric.fromJson(res);
+      return jsonData;
+    }catch(e){
+      log("cancelBooking Error: $e");
       rethrow;
     }
   }

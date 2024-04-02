@@ -1,8 +1,10 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mvvm_flutter_app/socket/web_socket_viewmodel.dart';
 import 'package:mvvm_flutter_app/ui/navpages/home_page.dart';
 import 'package:mvvm_flutter_app/ui/navpages/account_page.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget{
   static const String id = "home_screen";
@@ -57,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen>{
                   _selectedIndex = index;
                 });
               },
-              children: [
+              children:[
                 // Your first page widget
                 HomePage(),
                 Text('Thu nhập'),

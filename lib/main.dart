@@ -1,33 +1,18 @@
-import 'dart:async';
-import 'dart:convert';
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:mvvm_flutter_app/data/local/prefs/AppPreferecesService.dart';
-import 'package:mvvm_flutter_app/data/local/prefs/PreferencesService.dart';
-import 'package:mvvm_flutter_app/socket/booking.dart';
-import 'package:mvvm_flutter_app/socket/command.dart';
-import 'package:mvvm_flutter_app/socket/message.dart';
 import 'package:mvvm_flutter_app/socket/web_socket_viewmodel.dart';
 import 'package:mvvm_flutter_app/ui/history/history_viewmodel.dart';
-import 'package:mvvm_flutter_app/ui/home/home_screen.dart';
 import 'package:mvvm_flutter_app/ui/home/home_viewmodel.dart';
-import 'package:mvvm_flutter_app/ui/login/login_screen.dart';
 import 'package:mvvm_flutter_app/ui/login/login_viewmodel.dart';
+import 'package:mvvm_flutter_app/ui/navpages/account_page_viewmodel.dart';
 import 'package:mvvm_flutter_app/ui/navpages/home_page_viewmodel.dart';
-import 'package:mvvm_flutter_app/ui/register/register_screen.dart';
 import 'package:mvvm_flutter_app/ui/register/register_viewmodel.dart';
 import 'package:mvvm_flutter_app/ui/splash/splash_screen.dart';
 import 'package:mvvm_flutter_app/ui/welcome/welcome_viewmodel.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:web_socket_channel/io.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
 
 void main() {
-  // WidgetsFlutterBinding.ensureInitialized();
-
   runApp(const MyApp());
   configLoading();
 }
@@ -46,6 +31,7 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(create: (_) => HistoryViewModel()),
           ChangeNotifierProvider(create: (_) => WebSocketViewModel()),
           ChangeNotifierProvider(create: (_) => HomePageViewModel()),
+          ChangeNotifierProvider(create: (_) => AccountPageViewModel()),
         ],
         child: MaterialApp(
           theme: ThemeData(
@@ -59,7 +45,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           initialRoute: SplashScreen.id,
           routes: {
-            SplashScreen.id:(context) => SplashScreen()
+            SplashScreen.id:(context) => const SplashScreen()
           },
           builder: EasyLoading.init(),
        ));

@@ -18,14 +18,15 @@ class HistoryScreen extends StatefulWidget {
 class _HistoryScreenState extends State<HistoryScreen> {
   final ScrollController scrollController = ScrollController();
 
-  HistoryViewModel viewModel = HistoryViewModel();
+  late HistoryViewModel vm;
 
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    viewModel.getHistory();
+    vm = Provider.of<HistoryViewModel>(context, listen: false);
+    vm.getHistory();
     scrollController.addListener(loadMore);
     Utils.dismissLoading();
   }
@@ -50,8 +51,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
               children: [
                 Container(
                   alignment: Alignment.centerLeft,
-                  margin: EdgeInsets.only(top: 20.0),
-                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                  margin: const EdgeInsets.only(top: 20.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Stack(
                     children: [
                       InkWell(
@@ -64,12 +65,13 @@ class _HistoryScreenState extends State<HistoryScreen> {
                           height: 20,
                         ),
                       ),
-                      SizedBox(width: 10),
+                      const SizedBox(width: 10),
                       Container(
                         alignment: Alignment.center,
-                        child: Text(
+                        child: const Text(
                           'Lịch sử chuyến đi',
                           style: TextStyle(
+                              fontFamily: 'Roboto',
                               fontWeight: FontWeight.w500,
                               fontSize: 20.0
                           ),
@@ -78,13 +80,13 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     ],
                   ),
                 ),
-                SizedBox(height: 15),
+                const SizedBox(height: 15),
 
                 ChangeNotifierProvider<HistoryViewModel>(
-                  create: (BuildContext context) => viewModel,
+                  create: (BuildContext context) => vm,
                   child: Consumer<HistoryViewModel>(
                     builder: (context, value, _){
-                      return _ui(viewModel);
+                      return _ui(vm);
                     },
                   )
                 ),
@@ -116,41 +118,45 @@ class _HistoryScreenState extends State<HistoryScreen> {
             return Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(top: 10, bottom: 10, left: 16, right: 16),
+                  padding: const EdgeInsets.only(top: 10, bottom: 0.0, left: 16, right: 16),
                   child: Card(
                     surfaceTintColor: Colors.white,
-                    shadowColor: Colors.lightGreenAccent,
+                    shadowColor: null,
                     elevation: 4.0,
                     child: Padding(
-                      padding: EdgeInsets.all(16.0),
+                      padding: const EdgeInsets.all(16.0),
                       child: Column(
                         children: [
                           Row(
                             children: [
                               Text(
                                 NumberUtils.formatDate(history.createdDate!),
-                                style: TextStyle(
+                                style: const TextStyle(
+                                    fontFamily: 'Roboto',
+                                    color: Color.fromRGBO(0, 0, 0, 0.66),
                                     fontWeight: FontWeight.w500
                                 ),
                               ),
       
-                              SizedBox(
-                                width: 30,
+                              const SizedBox(
+                                width: 15,
                               ),
       
                               Expanded(
                                 child: Text(
-                                  NumberUtils.formatMoneyToString(history.money!) + " đ",
-                                  style: TextStyle(
+                                  "${NumberUtils.formatMoneyToString(history.money!)} đ",
+                                  style: const TextStyle(
+                                      fontFamily: 'Roboto',
                                       fontWeight: FontWeight.w700,
-                                      fontSize: 14
+                                      fontSize: 14,
+                                      overflow: TextOverflow.ellipsis
                                   ),
                                 ),
                               ),
       
                               Image(image: AssetImage(history.state == 300 ? 'assets/images/icon_green_dot.png' : (history.state == -100 ? 'assets/images/icon_red_dot.png' : 'assets/images/icon_yellow_dot.png'))),
       
-                              SizedBox(
+                              const SizedBox(
                                 width: 10,
                               ),
       
@@ -164,29 +170,30 @@ class _HistoryScreenState extends State<HistoryScreen> {
                             ],
                           ),
       
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
       
                           Row(
                             children: [
-                              Image(
+                              const Image(
                                 image: AssetImage('assets/images/icon_vector.png'),
                                 height: 20,
                                 width: 20,
                               ),
       
-                              SizedBox(
+                              const SizedBox(
                                 width: 15,
                               ),
       
                               Flexible(
                                 child: Text(
                                   history.pickupAddress ?? '',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w700,
+                                  style: const TextStyle(
+                                      fontFamily: 'Roboto',
+                                      color: Color.fromRGBO(0, 0, 0, 0.52),
+                                      fontWeight: FontWeight.w500,
                                       fontSize: 16,
-                                      color: Colors.grey,
                                       overflow: TextOverflow.ellipsis
                                   ),
                                 ),
@@ -195,29 +202,30 @@ class _HistoryScreenState extends State<HistoryScreen> {
       
                           ),
       
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
       
                           Row(
                             children: [
-                              Image(
+                              const Image(
                                 image: AssetImage('assets/images/icon_destination.png'),
                                 height: 20,
                                 width: 20,
                               ),
       
-                              SizedBox(
+                              const SizedBox(
                                 width: 15,
                               ),
       
                               Flexible(
                                 child: Text(
                                   history.destinationAddress ?? '',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w700,
+                                  style: const TextStyle(
+                                      fontFamily: 'Roboto',
+                                      color: Color.fromRGBO(0, 0, 0, 0.52),
+                                      fontWeight: FontWeight.w500,
                                       fontSize: 16,
-                                      color: Colors.grey,
                                       overflow: TextOverflow.ellipsis
                                   ),
                                 ),
@@ -226,17 +234,19 @@ class _HistoryScreenState extends State<HistoryScreen> {
       
                           ),
       
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
       
                           Container(
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              'AllBike',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 16
+                              history.service!.name!,
+                              style: const TextStyle(
+                                  fontFamily: 'Roboto',
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 12,
+                                  overflow: TextOverflow.ellipsis
                               ),
                             ),
                           )
@@ -261,15 +271,15 @@ class _HistoryScreenState extends State<HistoryScreen> {
   }
 
   void loadMore(){
-    if(scrollController.position.pixels == scrollController.position.maxScrollExtent && viewModel.histories.length < viewModel.totalElements){
-      viewModel.getHistory();
+    if(scrollController.position.pixels == scrollController.position.maxScrollExtent && vm.histories.length < vm.totalElements){
+      vm.getHistory();
     }
   }
 
   Future<void> _refresh() async{
-    viewModel.setPage(0);
-    viewModel.refreshListHistory();
-    viewModel.getHistory();
+    vm.setPage(0);
+    vm.refreshListHistory();
+    vm.getHistory();
   }
 
 }

@@ -4,7 +4,10 @@ import 'package:mvvm_flutter_app/res/colors/app_color.dart';
 import 'package:mvvm_flutter_app/res/colors/app_colors.dart';
 import 'package:mvvm_flutter_app/ui/history/history_screen.dart';
 import 'package:mvvm_flutter_app/ui/login/login_screen.dart';
+import 'package:mvvm_flutter_app/ui/navpages/account_page_viewmodel.dart';
+import 'package:provider/provider.dart';
 
+import '../../constant/Constant.dart';
 import '../../data/local/prefs/PreferencesService.dart';
 
 class AccountPage extends StatefulWidget {
@@ -15,203 +18,238 @@ class AccountPage extends StatefulWidget {
 }
 
 class _AccountPageState extends State<AccountPage> {
+
+  late AccountPageViewModel vm;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    vm = Provider.of<AccountPageViewModel>(context, listen: false);
+    vm.getProfile(context);
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.only(top: 40, left: 16, right: 16),
-            child: Column(
-              children: [
-                const SizedBox(
-                  width: double.infinity,
-                  child: Text(
-                    'Cài đặt',
-                    style: TextStyle(
-                      fontFamily: 'Roboto',
-                      fontWeight: FontWeight.w700,
-                      color: Colors.black,
-                      fontSize: 36.0,
+      body:Consumer<AccountPageViewModel>(
+        builder: (context,value,_){
+          return SafeArea(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 40, left: 16, right: 16),
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      width: double.infinity,
+                      child: Text(
+                        'Cài đặt',
+                        style: TextStyle(
+                          fontFamily: 'Roboto',
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xFF424242),
+                          fontSize: 36.0,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                Card(
-                  surfaceTintColor: Colors.white,
-                  shadowColor: Colors.lightGreenAccent,
-                  elevation: 4.0,
-                  child: Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: Row(
-                      children: [
-                        Image(
-                          image: AssetImage('assets/images/user_avatar.png'),
-                          width: 50.0,
-                          height: 50.0,
-                        ),
-                        SizedBox(
-                          width: 30,
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Nguyen Van An',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 18.0),
+                    const SizedBox(
+                      height: 15.0,
+                    ),
+                    Card(
+                      surfaceTintColor: Colors.white,
+                      shadowColor: null,
+                      elevation: 4.0,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Row(
+                          children: [
+                            ClipOval(
+                              child: vm.profileRes?.data?.avatar != null
+                                  ? Image.network(Constant.MEDIA_URL+Constant.MEDIA_LOAD_URL+ vm.profileRes!.data!.avatar!
+                                ,width: 50.0,
+                                height: 50.0,
+                                fit: BoxFit.cover,
+                                errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
+                                  return const Icon(Icons.error, size: 50.0,); // Replace with your desired error widget
+                                },)
+                                  : const Image(
+                                image: AssetImage('assets/images/user_avatar.png'),
+                                width: 50.0,
+                                height: 50.0,
                               ),
-                              Row(
+                            ),
+                            const SizedBox(
+                              width: 30,
+                            ),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Image(
-                                    image: AssetImage(
-                                        'assets/images/icon_star.png'),
-                                    width: 15.0,
-                                    height: 15.0,
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
                                   Text(
-                                    '5.0',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.w400),
-                                  )
+                                    vm.profileRes?.data?.fullName ?? "username",
+                                    style: const TextStyle(
+                                        fontFamily: 'Roboto',
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 18.0),
+                                  ),
+                                  Row(
+                                    children: [
+                                      const Image(
+                                        image: AssetImage(
+                                            'assets/images/icon_star.png'),
+                                        width: 15.0,
+                                        height: 15.0,
+                                      ),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      Text(
+                                        vm.profileRes?.data?.averageRating != null ? vm.profileRes.data!.averageRating!.toStringAsFixed(1): "0.0",
+                                        style:
+                                        const TextStyle(fontWeight: FontWeight.w400,
+                                            fontFamily: 'Roboto'),
+                                      )
+                                    ],
+                                  ),
                                 ],
                               ),
-                            ],
-                          ),
-                        ),
-                        Image(
-                          image: AssetImage('assets/images/icon_arrow.png'),
-                          width: 50.0,
-                          height: 50.0,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 30,
-                ),
-                Card(
-                  surfaceTintColor: Colors.white,
-                  shadowColor: Colors.lightGreenAccent,
-                  elevation: 4.0,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            print('hello');
-                          },
-                          child: Row(
-                            children: [
-                              Image(
-                                image:
-                                    AssetImage('assets/images/icon_config.png'),
-                                width: 50.0,
-                                height: 50.0,
-                              ),
-                              Expanded(
-                                  child: Text(
-                                'Cấu hình dịch vụ',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 18.0),
-                              )),
-                              Image(
-                                image:
-                                    AssetImage('assets/images/icon_arrow.png'),
-                                width: 50.0,
-                                height: 50.0,
-                              ),
-                            ],
-                          ),
-                        ),
-                        Divider(
-                          color: Color(0xFFC0C0C0),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const HistoryScreen()));
-                          },
-                          child: Row(
-                            children: [
-                              Image(
-                                image:
-                                    AssetImage('assets/images/icon_config.png'),
-                                width: 50.0,
-                                height: 50.0,
-                              ),
-                              Expanded(
-                                  child: Text(
-                                'Lịch sử',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 18.0),
-                              )),
-                              Image(
-                                image:
-                                    AssetImage('assets/images/icon_arrow.png'),
-                                width: 50.0,
-                                height: 50.0,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-                SizedBox(
-                  height: 20,
-                ),
-
-                Card(
-                    surfaceTintColor: Colors.white,
-                    shadowColor: Colors.lightGreenAccent,
-                    elevation: 4.0,
-                    child: Padding(
-                        padding: EdgeInsets.all(16.0),
-                        child: Column(children: [
-                          InkWell(
-                            onTap: (){
-                              openAlert(context);
-                            },
-                            child: Row(
-                              children: [
-                                Image(
-                                  image: AssetImage('assets/images/icon_config.png'),
-                                  width: 50.0,
-                                  height: 50.0,
-                                ),
-
-
-                                Expanded(child: Text(
-                                  'Đăng xuất',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 18.0
-                                  ),
-                                )),
-
-                              ],
                             ),
-                          ),
+                            const Image(
+                              image: AssetImage('assets/images/icon_arrow.png'),
+                              width: 50.0,
+                              height: 50.0,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Card(
+                      surfaceTintColor: Colors.white,
+                      shadowColor: null,
+                      elevation: 4.0,
+                      child: Padding(
+                        padding: const EdgeInsets.all(0.0),
+                        child: Column(
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                print('hello');
+                              },
+                              child: const Row(
+                                children: [
+                                  Image(
+                                    image:
+                                    AssetImage('assets/images/icon_config.png'),
+                                    width: 50.0,
+                                    height: 50.0,
+                                  ),
+                                  Expanded(
+                                      child: Text(
+                                        'Cấu hình dịch vụ',
+                                        style: TextStyle(
+                                            fontFamily: 'Roboto',
+                                            color: Color(0xFF424242),
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 16.0),
+                                      )),
+                                  Image(
+                                    image:
+                                    AssetImage('assets/images/icon_arrow.png'),
+                                    width: 50.0,
+                                    height: 50.0,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const Divider(
+                              color: Color(0xFFC0C0C0),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                        const HistoryScreen()));
+                              },
+                              child: const Row(
+                                children: [
+                                  Image(
+                                    image:
+                                    AssetImage('assets/images/icon_config.png'),
+                                    width: 50.0,
+                                    height: 50.0,
+                                  ),
+                                  Expanded(
+                                      child: Text(
+                                        'Lịch sử',
+                                        style: TextStyle(
+                                            fontFamily: 'Roboto',
+                                            color: Color(0xFF424242),
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 16.0),
+                                      )),
+                                  Image(
+                                    image:
+                                    AssetImage('assets/images/icon_arrow.png'),
+                                    width: 50.0,
+                                    height: 50.0,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
 
-                        ])))
-              ],
+                    const SizedBox(
+                      height: 10,
+                    ),
+
+                    Card(
+                        surfaceTintColor: Colors.white,
+                        shadowColor: null,
+                        elevation: 4.0,
+                        child: Padding(
+                            padding: const EdgeInsets.all(0.0),
+                            child: Column(children: [
+                              InkWell(
+                                onTap: (){
+                                  openAlert(context);
+                                },
+                                child: const Row(
+                                  children: [
+                                    Image(
+                                      image: AssetImage('assets/images/icon_config.png'),
+                                      width: 50.0,
+                                      height: 50.0,
+                                    ),
+
+
+                                    Expanded(child: Text(
+                                      'Đăng xuất',
+                                      style: TextStyle(
+                                          fontFamily: 'Roboto',
+                                          color: Color(0xFF424242),
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 16.0
+                                      ),
+                                    )),
+
+                                  ],
+                                ),
+                              ),
+
+                            ])))
+                  ],
+                ),
+              ),
             ),
-          ),
-        ),
+          );
+        }
       ),
     );
   }
@@ -229,35 +267,35 @@ class _AccountPageState extends State<AccountPage> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text(
+              const Text(
                 'Bạn có muốn đăng xuất?',
                 style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20.0),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 16,
               ),
               Row(
                 children: [
                   Expanded(
                     child: Padding(
-                      padding: EdgeInsets.only(left: 12, right: 6),
+                      padding: const EdgeInsets.only(left: 12, right: 6),
                       child: OutlinedButton(
-                        child: Text(
-                        "Hủy",
-                        style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500),
-                      ),
                         style: OutlinedButton.styleFrom(
                           primary: Colors.green,
-                          side: BorderSide(color: Color(0xFF7EA567)),
+                          side: const BorderSide(color: Color(0xFF7EA567)),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(4)),
                         ),
                         onPressed: () {
                           Navigator.pop(context);
                         },
+                        child: const Text(
+                        "Hủy",
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w500),
+                      ),
 
 
                       ),
@@ -266,7 +304,7 @@ class _AccountPageState extends State<AccountPage> {
 
                   Expanded(
                     child: Padding(
-                      padding: EdgeInsets.only(left: 6, right: 12),
+                      padding: const EdgeInsets.only(left: 6, right: 12),
                       child: ElevatedButton(
                         onPressed: () {
                           AppPreferencesService()
@@ -281,7 +319,7 @@ class _AccountPageState extends State<AccountPage> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(4)),
                         ),
-                        child: Text(
+                        child: const Text(
                           "Đăng xuất",
                           style: TextStyle(
                               fontSize: 16,

@@ -5,7 +5,7 @@ import 'dart:developer';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
-import 'package:mvvm_flutter_app/data/model/api/ResponseWrapper.dart';
+import 'package:mvvm_flutter_app/data/model/api/response_wrapper.dart';
 import 'package:mvvm_flutter_app/data/model/api/request/cancel_booking_request.dart';
 import 'package:mvvm_flutter_app/data/model/api/request/event_booking_request.dart';
 import 'package:mvvm_flutter_app/data/model/api/request/state_request.dart';
@@ -13,12 +13,12 @@ import 'package:mvvm_flutter_app/data/model/api/request/update_booking_request.d
 import 'package:mvvm_flutter_app/data/model/api/response/current_booking.dart';
 import 'package:mvvm_flutter_app/data/model/api/response/profile_response.dart';
 import 'package:mvvm_flutter_app/data/model/api/response/service_online_response.dart';
-import 'package:mvvm_flutter_app/utils/Utils.dart';
+import 'package:mvvm_flutter_app/utils/utils.dart';
 
-import '../../constant/Constant.dart';
+import '../../constant/constant.dart';
 import '../../data/local/prefs/AppPreferecesService.dart';
 import '../../data/model/api/request/position_request.dart';
-import '../../repository/Repository.dart';
+import '../../repo/repository.dart';
 
 class HomePageViewModel extends ChangeNotifier{
   final _repo = Repository();
@@ -62,7 +62,7 @@ class HomePageViewModel extends ChangeNotifier{
 
   void setNullDestinationLocation(){
     _destinationLocation = null;
-    notifyListeners();
+    // notifyListeners();
   }
 
   void setDriverState(int value) {
@@ -238,7 +238,6 @@ class HomePageViewModel extends ChangeNotifier{
       }else if(state == Constant.BOOKING_STATE_DONE){
         bookingState = Constant.BOOKING_SUCCESS;
         _destinationLocation = null;
-        notifyListeners();
       }
       notifyListeners();
       Utils.toastSuccessMessage(value.message);

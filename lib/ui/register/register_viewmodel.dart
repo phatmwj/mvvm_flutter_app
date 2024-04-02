@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:mvvm_flutter_app/data/model/api/request/register_request.dart';
 import 'package:mvvm_flutter_app/data/model/api/response/register_response.dart';
-import 'package:mvvm_flutter_app/ui/login/LoginScreen.dart';
-import 'package:mvvm_flutter_app/utils/Utils.dart';
+import 'package:mvvm_flutter_app/ui/login/login_screen.dart';
+import 'package:mvvm_flutter_app/utils/utils.dart';
 import 'package:provider/provider.dart';
 
-import '../../data/model/api/ResponseWrapper.dart';
-import '../../repository/Repository.dart';
+import '../../data/model/api/response_wrapper.dart';
+import '../../repo/repository.dart';
 
 class RegisterViewModel extends ChangeNotifier{
   final _repo = Repository();

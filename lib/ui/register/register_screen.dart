@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mvvm_flutter_app/ui/register/register_view_model.dart';
+import 'package:mvvm_flutter_app/ui/register/register_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 class RegisterScreen extends StatefulWidget {

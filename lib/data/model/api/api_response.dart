@@ -1,4 +1,4 @@
-import 'ApiStatus.dart';
+import 'api_status.dart';
 
 class ApiResponse<T> {
   ApiStatus? status;

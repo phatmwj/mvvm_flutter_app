@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
-import 'BaseColors.dart';
+import 'base_colors.dart';
 
 class AppColors implements BaseColors {
   Map<int, Color> _primary = {

@@ -1,7 +1,7 @@
 
 
-import 'package:mvvm_flutter_app/data/local/database/DBProvider.dart';
-import 'package:mvvm_flutter_app/data/local/database/User.dart';
+import 'package:mvvm_flutter_app/data/local/database/db_provider.dart';
+import 'package:mvvm_flutter_app/data/local/database/user.dart';
 
 class UserDao{
 

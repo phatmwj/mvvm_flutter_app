@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mvvm_flutter_app/data/local/prefs/AppPreferecesService.dart';
-import 'package:mvvm_flutter_app/res/colors/AppColor.dart';
-import 'package:mvvm_flutter_app/res/colors/AppColors.dart';
+import 'package:mvvm_flutter_app/res/colors/app_color.dart';
+import 'package:mvvm_flutter_app/res/colors/app_colors.dart';
 import 'package:mvvm_flutter_app/ui/history/history_screen.dart';
-import 'package:mvvm_flutter_app/ui/login/LoginScreen.dart';
+import 'package:mvvm_flutter_app/ui/login/login_screen.dart';
 
 import '../../data/local/prefs/PreferencesService.dart';
 

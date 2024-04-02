@@ -2,13 +2,13 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import 'package:mvvm_flutter_app/data/model/api/request/LoginRequest.dart';
+import 'package:mvvm_flutter_app/data/model/api/request/login_request.dart';
 import 'package:mvvm_flutter_app/data/model/api/request/cancel_booking_request.dart';
 import 'package:mvvm_flutter_app/data/model/api/request/event_booking_request.dart';
 import 'package:mvvm_flutter_app/data/model/api/request/register_request.dart';
 import 'package:mvvm_flutter_app/data/model/api/request/state_request.dart';
 import 'package:mvvm_flutter_app/data/model/api/request/update_booking_request.dart';
-import 'package:mvvm_flutter_app/data/model/api/response/LoginResponse.dart';
+import 'package:mvvm_flutter_app/data/model/api/response/login_response.dart';
 import 'package:mvvm_flutter_app/data/model/api/response/current_booking.dart';
 import 'package:mvvm_flutter_app/data/model/api/response/history_response.dart';
 import 'package:mvvm_flutter_app/data/model/api/response/postion_response.dart';
@@ -16,12 +16,12 @@ import 'package:mvvm_flutter_app/data/model/api/response/profile_response.dart';
 import 'package:mvvm_flutter_app/data/model/api/response/register_response.dart';
 import 'package:mvvm_flutter_app/data/model/api/response/service_online_response.dart';
 import 'package:mvvm_flutter_app/data/model/api/response_list_wrapper.dart';
-import 'package:mvvm_flutter_app/data/remote/network/BaseApiService.dart';
-import 'package:mvvm_flutter_app/data/remote/network/NetworkApiService.dart';
+import 'package:mvvm_flutter_app/data/remote/network/base_api_service.dart';
+import 'package:mvvm_flutter_app/data/remote/network/network_api_service.dart';
 
-import '../data/model/api/ResponseWrapper.dart';
+import '../data/model/api/response_wrapper.dart';
 import '../data/model/api/request/position_request.dart';
-import '../data/remote/network/ApiEndPoints.dart';
+import '../data/remote/network/api_end_points.dart';
 
 class Repository{
 

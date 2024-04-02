@@ -1,7 +1,7 @@
 
-import 'package:mvvm_flutter_app/data/local/database/User.dart';
+import 'package:mvvm_flutter_app/data/local/database/user.dart';
 
-import 'ApiStatus.dart';
+import 'api_status.dart';
 
 class ResponseWrapper<T> {
     bool? result;

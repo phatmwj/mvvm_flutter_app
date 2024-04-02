@@ -1,13 +1,13 @@
 
 import 'package:flutter/widgets.dart';
 import 'package:location/location.dart';
-import 'package:mvvm_flutter_app/data/local/database/UserDao.dart';
-import 'package:mvvm_flutter_app/data/model/api/ResponseWrapper.dart';
+import 'package:mvvm_flutter_app/data/local/database/user_dao.dart';
+import 'package:mvvm_flutter_app/data/model/api/response_wrapper.dart';
 import 'package:mvvm_flutter_app/data/model/api/response/profile_response.dart';
-import 'package:mvvm_flutter_app/utils/Utils.dart';
+import 'package:mvvm_flutter_app/utils/utils.dart';
 
 import '../../data/local/prefs/AppPreferecesService.dart';
-import '../../repository/Repository.dart';
+import '../../repo/repository.dart';
 
 class HomeViewModel extends ChangeNotifier{
   final _repo = Repository();

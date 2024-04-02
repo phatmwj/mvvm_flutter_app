@@ -1,11 +1,11 @@
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
-import 'package:mvvm_flutter_app/data/model/api/ApiStatus.dart';
+import 'package:mvvm_flutter_app/data/model/api/api_status.dart';
 import 'package:mvvm_flutter_app/data/model/api/response/history_response.dart';
-import 'package:mvvm_flutter_app/ui/history/history_view_model.dart';
+import 'package:mvvm_flutter_app/ui/history/history_viewmodel.dart';
 import 'package:mvvm_flutter_app/ui/home/home_viewmodel.dart';
-import 'package:mvvm_flutter_app/utils/Utils.dart';
+import 'package:mvvm_flutter_app/utils/utils.dart';
 import 'package:mvvm_flutter_app/utils/number_utils.dart';
 import 'package:provider/provider.dart';
 class HistoryScreen extends StatefulWidget {

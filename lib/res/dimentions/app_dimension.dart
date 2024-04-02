@@ -1,6 +1,6 @@
 
 
-import 'Dimensions.dart';
+import 'dimensions.dart';
 
 class AppDimension extends Dimensions {
   @override

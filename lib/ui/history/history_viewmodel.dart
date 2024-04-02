@@ -5,9 +5,9 @@ import 'package:mvvm_flutter_app/data/model/api/response/history_response.dart';
 import 'package:mvvm_flutter_app/data/model/api/response_list_wrapper.dart';
 
 import '../../data/local/prefs/AppPreferecesService.dart';
-import '../../data/model/api/ResponseWrapper.dart';
-import '../../repository/Repository.dart';
-import '../../utils/Utils.dart';
+import '../../data/model/api/response_wrapper.dart';
+import '../../repo/repository.dart';
+import '../../utils/utils.dart';
 
 class HistoryViewModel extends ChangeNotifier{
   final _repo = Repository();

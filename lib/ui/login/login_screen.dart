@@ -3,12 +3,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:mvvm_flutter_app/data/model/api/ApiStatus.dart';
-import 'package:mvvm_flutter_app/res/colors/AppColors.dart';
-import 'package:mvvm_flutter_app/res/colors/BaseColors.dart';
-import 'package:mvvm_flutter_app/ui/login/LoginViewModel.dart';
+import 'package:mvvm_flutter_app/data/model/api/api_status.dart';
+import 'package:mvvm_flutter_app/res/colors/app_colors.dart';
+import 'package:mvvm_flutter_app/res/colors/base_colors.dart';
+import 'package:mvvm_flutter_app/ui/login/login_viewmodel.dart';
 import 'package:mvvm_flutter_app/ui/register/register_screen.dart';
-import 'package:mvvm_flutter_app/ui/widget/LoadingWidget.dart';
+import 'package:mvvm_flutter_app/ui/widget/loading_widget.dart';
 import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget{

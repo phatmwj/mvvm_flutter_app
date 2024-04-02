@@ -1,4 +1,4 @@
-import 'ApiStatus.dart';
+import 'api_status.dart';
 
 class ResponseListWrapper<T>{
   List<T>? content;

@@ -1,5 +1,5 @@
 
-import 'Strings.dart';
+import 'strings.dart';
 
 class BanglaStrings extends Strings {
   @override

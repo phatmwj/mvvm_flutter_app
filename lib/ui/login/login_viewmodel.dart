@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:mvvm_flutter_app/data/local/prefs/AppPreferecesService.dart';
-import 'package:mvvm_flutter_app/data/model/api/ApiResponse.dart';
-import 'package:mvvm_flutter_app/data/model/api/request/LoginRequest.dart';
-import 'package:mvvm_flutter_app/repository/Repository.dart';
+import 'package:mvvm_flutter_app/data/model/api/api_response.dart';
+import 'package:mvvm_flutter_app/data/model/api/request/login_request.dart';
 import 'package:mvvm_flutter_app/ui/home/home_screen.dart';
-import 'package:mvvm_flutter_app/ui/widget/LoadingWidget.dart';
-import 'package:mvvm_flutter_app/utils/Utils.dart';
+import 'package:mvvm_flutter_app/ui/widget/loading_widget.dart';
+import 'package:mvvm_flutter_app/utils/utils.dart';
 
-import '../../data/model/api/ResponseWrapper.dart';
-import '../../data/model/api/response/LoginResponse.dart';
+import '../../data/model/api/response_wrapper.dart';
+import '../../data/model/api/response/login_response.dart';
+import '../../repo/repository.dart';
 
 class LoginViewModel extends ChangeNotifier {
 

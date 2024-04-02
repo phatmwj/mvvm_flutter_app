@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
-import '../res/strings/BanglaStrings.dart';
-import '../res/strings/Strings.dart';
+import '../res/strings/bangla_strings.dart';
+import '../res/strings/strings.dart';
 
-import 'colors/AppColors.dart';
-import 'dimentions/AppDimension.dart';
-import 'strings/EnglishStrings.dart';
+import 'colors/app_colors.dart';
+import 'dimentions/app_dimension.dart';
+import 'strings/english_strings.dart';
 
 class Resources {
 

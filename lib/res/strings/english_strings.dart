@@ -1,6 +1,6 @@
 
 
-import 'Strings.dart';
+import 'strings.dart';
 
 class EnglishStrings extends Strings {
   @override

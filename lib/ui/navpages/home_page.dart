@@ -16,9 +16,9 @@ import 'package:mvvm_flutter_app/ui/navpages/home_page_viewmodel.dart';
 import 'package:mvvm_flutter_app/utils/number_utils.dart';
 import 'package:provider/provider.dart';
 
-import '../../constant/Constant.dart';
+import '../../constant/constant.dart';
 import '../../data/model/api/response/booking.dart';
-import '../../res/colors/AppColor.dart';
+import '../../res/colors/app_color.dart';
 
 class HomePage extends StatefulWidget{
   const HomePage({super.key});
@@ -47,7 +47,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
         .then((location){
       vm.setCurrentLocation(location);
       vm.updatePosition(context);
-      if(vm.destinationLocation != null){
+      if(vm.destinationLocation != null ){
         getPolylinePoints().then((value) =>{
           generatePolylineFromPoints(value)
         });
@@ -140,6 +140,13 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
 
         Consumer<HomePageViewModel>(
           builder: (context,value,_){
+            if(vm.destinationLocation != null && vm.currentLocation != null){
+              getPolylinePoints().then((value) =>{
+                generatePolylineFromPoints(value)
+              });
+            }else {
+              polylines.remove(PolylineId("poly"));
+            }
             return vm.currentLocation == null ?
             const Center(child: CircularProgressIndicator(
               color: Color(0xFF7EA567),
@@ -246,6 +253,8 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
                           case Command.CM_CUSTOMER_CANCEL_BOOKING:
                             vm.bookingState = Constant.BOOKING_CUSTOMER_CANCEL;
                             vm.setNullDestinationLocation();
+                            // vm.notifyListeners();
+                            wsvm.booking = BookingWS("0");
                             wsvm.messageRes = null;
                             break;
                           default:
@@ -269,7 +278,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const Text(
-                              "Chao Nguyen! Bạn có muốn chở tôi không?",
+                              "Xin chào! Bạn có muốn chở tôi không?",
                               style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 13,
@@ -459,10 +468,10 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
                               height: 10.0,
                             ),
 
-                            vm.bookingState != Constant.BOOKING_VISIBLE ? const Divider(
+                            vm.bookingState != Constant.BOOKING_VISIBLE  && vm.bookingState != Constant.BOOKING_CUSTOMER_CANCEL && vm.bookingState != Constant.BOOKING_CANCELED && vm.bookingState != Constant.BOOKING_SUCCESS ? const Divider(
                               color: Color(0xFFC0C0C0),
                             ): const SizedBox.shrink(),
-                            vm.bookingState != Constant.BOOKING_VISIBLE ? const Padding(
+                            vm.bookingState != Constant.BOOKING_VISIBLE  && vm.bookingState != Constant.BOOKING_CUSTOMER_CANCEL && vm.bookingState != Constant.BOOKING_CANCELED && vm.bookingState != Constant.BOOKING_SUCCESS ? const Padding(
                               padding: EdgeInsets.only(top: 5.0,bottom: 5.0,left: 10.0, right: 10.0),
                               child: Row(
                                   children: [
@@ -623,6 +632,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
                                         vm.updateStateBooking(context, Constant.BOOKING_STATE_PICKUP_SUCCESS);
                                       }else if(vm.bookingState == Constant.BOOKING_PICKUP){
                                         vm.updateStateBooking(context, Constant.BOOKING_STATE_DONE);
+                                        wsvm.booking = BookingWS("0");
                                       }
                                     },
                                     style: ElevatedButton.styleFrom(
@@ -746,6 +756,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
                           } else if(vm.bookingState == Constant.BOOKING_ACCEPTED) {
                             vm.cancelBooking(context);
                           }
+                          wsvm.booking = BookingWS("0");
                         },
                         style: ElevatedButton.styleFrom(
                           primary: AppColor.mainColor,

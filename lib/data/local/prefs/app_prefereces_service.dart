@@ -1,5 +1,5 @@
 
-import 'package:mvvm_flutter_app/data/local/prefs/PreferencesService.dart';
+import 'package:mvvm_flutter_app/data/local/prefs/preferences_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppPreferencesService extends PreferencesService{
@@ -39,6 +39,20 @@ class AppPreferencesService extends PreferencesService{
   Future<void> remove(String key) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.remove(key);
+  }
+
+  @override
+  Future<int?> getDriverId() async{
+    // TODO: implement getDriverId
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getInt(PreferencesService.KEY_DRIVER_ID);
+  }
+
+  @override
+  void setDriverId(int driverId) async {
+    // TODO: implement setDriverId
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setInt(PreferencesService.KEY_DRIVER_ID, driverId);
   }
   
 }

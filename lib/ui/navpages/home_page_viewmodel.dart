@@ -16,11 +16,12 @@ import 'package:mvvm_flutter_app/data/model/api/response/service_online_response
 import 'package:mvvm_flutter_app/utils/utils.dart';
 
 import '../../constant/constant.dart';
-import '../../data/local/prefs/AppPreferecesService.dart';
+import '../../data/local/prefs/app_prefereces_service.dart';
 import '../../data/model/api/request/position_request.dart';
 import '../../repo/repository.dart';
 
 class HomePageViewModel extends ChangeNotifier{
+
   final _repo = Repository();
 
   final _prefs = AppPreferencesService();
@@ -94,6 +95,7 @@ class HomePageViewModel extends ChangeNotifier{
         .then((value) {
       _setProfileRes(ResponseWrapper.completed(value));
       avatar = (profileRes.data != null ? profileRes.data?.avatar :'')!;
+      _prefs.setDriverId(profileRes.data!.id!);
       Utils.dismissLoading();
     })
         .onError((error, stackTrace) {

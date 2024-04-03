@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:mvvm_flutter_app/data/local/prefs/AppPreferecesService.dart';
+import 'package:mvvm_flutter_app/data/local/prefs/app_prefereces_service.dart';
 import 'package:mvvm_flutter_app/res/colors/app_color.dart';
-import 'package:mvvm_flutter_app/res/colors/app_colors.dart';
 import 'package:mvvm_flutter_app/ui/history/history_screen.dart';
 import 'package:mvvm_flutter_app/ui/login/login_screen.dart';
 import 'package:mvvm_flutter_app/ui/navpages/account_page_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 import '../../constant/Constant.dart';
-import '../../data/local/prefs/PreferencesService.dart';
+import '../../data/local/prefs/preferences_service.dart';
+import '../service/service_screen.dart';
 
 class AccountPage extends StatefulWidget {
   const AccountPage({super.key});
@@ -135,7 +135,11 @@ class _AccountPageState extends State<AccountPage> {
                           children: [
                             InkWell(
                               onTap: () {
-                                print('hello');
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                        const ServiceScreen()));
                               },
                               child: const Row(
                                 children: [

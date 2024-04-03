@@ -6,8 +6,8 @@ import 'package:flutter/foundation.dart';
 import 'package:mvvm_flutter_app/constant/constant.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
-import '../data/local/prefs/AppPreferecesService.dart';
-import '../data/local/prefs/PreferencesService.dart';
+import '../data/local/prefs/app_prefereces_service.dart';
+import '../data/local/prefs/preferences_service.dart';
 import 'booking.dart';
 import 'command.dart';
 import 'message.dart';

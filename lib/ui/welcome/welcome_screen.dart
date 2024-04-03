@@ -2,8 +2,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
-import 'package:mvvm_flutter_app/data/local/prefs/AppPreferecesService.dart';
-import 'package:mvvm_flutter_app/data/local/prefs/PreferencesService.dart';
+import 'package:mvvm_flutter_app/data/local/prefs/app_prefereces_service.dart';
+import 'package:mvvm_flutter_app/data/local/prefs/preferences_service.dart';
 import 'package:mvvm_flutter_app/ui/login/login_screen.dart';
 import 'package:mvvm_flutter_app/ui/welcome/welcome_viewmodel.dart';
 import 'package:provider/provider.dart';

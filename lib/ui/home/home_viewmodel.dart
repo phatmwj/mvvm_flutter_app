@@ -6,7 +6,7 @@ import 'package:mvvm_flutter_app/data/model/api/response_wrapper.dart';
 import 'package:mvvm_flutter_app/data/model/api/response/profile_response.dart';
 import 'package:mvvm_flutter_app/utils/utils.dart';
 
-import '../../data/local/prefs/AppPreferecesService.dart';
+import '../../data/local/prefs/app_prefereces_service.dart';
 import '../../repo/repository.dart';
 
 class HomeViewModel extends ChangeNotifier{

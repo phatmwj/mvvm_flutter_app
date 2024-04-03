@@ -2,12 +2,14 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
+import 'package:mvvm_flutter_app/data/model/api/request/change_service_state_request.dart';
 import 'package:mvvm_flutter_app/data/model/api/request/login_request.dart';
 import 'package:mvvm_flutter_app/data/model/api/request/cancel_booking_request.dart';
 import 'package:mvvm_flutter_app/data/model/api/request/event_booking_request.dart';
 import 'package:mvvm_flutter_app/data/model/api/request/register_request.dart';
 import 'package:mvvm_flutter_app/data/model/api/request/state_request.dart';
 import 'package:mvvm_flutter_app/data/model/api/request/update_booking_request.dart';
+import 'package:mvvm_flutter_app/data/model/api/response/driver_service_response.dart';
 import 'package:mvvm_flutter_app/data/model/api/response/login_response.dart';
 import 'package:mvvm_flutter_app/data/model/api/response/current_booking.dart';
 import 'package:mvvm_flutter_app/data/model/api/response/history_response.dart';
@@ -218,6 +220,39 @@ class Repository{
       return jsonData;
     }catch(e){
       log("cancelBooking Error: $e");
+      rethrow;
+    }
+  }
+
+  Future<ResponseWrapper<ResponseListWrapper<DriverServiceResponse>>> getDriverService(int? driverId) async{
+    Options options = Options(
+        headers: {
+
+        }
+    );
+
+    try{
+      dynamic res = await _apiService.get('${ApiEndPoints.DRIVER_SERVICE}?driverId=$driverId', options);
+      final jsonData = ResponseWrapper<ResponseListWrapper<DriverServiceResponse>>.fromJson(res,(p0) => ResponseListWrapper.fromJson(res['data'], (p1) => DriverServiceResponse.fromJson(p1)));
+      // log("data login ${jsonData.data?.content}");
+      return jsonData;
+    }catch(e){
+      log("getDriverService: $e");
+      rethrow;
+    }
+  }
+
+  Future<ResponseGeneric> changeServiceState(ChangeServiceStateRequest request) async {
+    Options options = Options(
+        headers: {
+        }
+    );
+    try{
+      dynamic res = await _apiService.put(ApiEndPoints.CHANGE_SERVICE_STATE, request.toJson(), options);
+      final jsonData = ResponseGeneric.fromJson(res);
+      return jsonData;
+    }catch(e){
+      log("changeServiceState Error: $e");
       rethrow;
     }
   }

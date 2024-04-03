@@ -8,6 +8,7 @@ import 'package:mvvm_flutter_app/ui/login/login_viewmodel.dart';
 import 'package:mvvm_flutter_app/ui/navpages/account_page_viewmodel.dart';
 import 'package:mvvm_flutter_app/ui/navpages/home_page_viewmodel.dart';
 import 'package:mvvm_flutter_app/ui/register/register_viewmodel.dart';
+import 'package:mvvm_flutter_app/ui/service/service_viewmodel.dart';
 import 'package:mvvm_flutter_app/ui/splash/splash_screen.dart';
 import 'package:mvvm_flutter_app/ui/welcome/welcome_viewmodel.dart';
 import 'package:provider/provider.dart';
@@ -32,6 +33,7 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(create: (_) => WebSocketViewModel()),
           ChangeNotifierProvider(create: (_) => HomePageViewModel()),
           ChangeNotifierProvider(create: (_) => AccountPageViewModel()),
+          ChangeNotifierProvider(create: (_) => ServiceViewModel()),
         ],
         child: MaterialApp(
           theme: ThemeData(

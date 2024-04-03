@@ -23,5 +23,9 @@ class ApiEndPoints {
   static const String ACCEPT_BOOKING = "v1/booking/accept";
 
   static const String CANCEL_BOOKING = "v1/booking/cancel";
+
+  static const String DRIVER_SERVICE = "v1/driver-service/auto-complete";
+
+  static const String CHANGE_SERVICE_STATE = "v1/driver-service/change-state";
 }
 

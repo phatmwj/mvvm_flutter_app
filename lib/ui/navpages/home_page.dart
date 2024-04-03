@@ -65,10 +65,10 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
       vm.setCurrentLocation(newLoc);
       // vm.updatePosition(context);
       log("Latitude: ${newLoc.latitude}, Longitude: ${newLoc.longitude}");
-      controller.animateCamera(CameraUpdate.newCameraPosition(
-        CameraPosition(target: LatLng(newLoc.latitude!,newLoc.longitude!),
-            zoom: 16),
-      ));
+      // controller.animateCamera(CameraUpdate.newCameraPosition(
+      //   CameraPosition(target: LatLng(newLoc.latitude!,newLoc.longitude!),
+      //       zoom: 16),
+      // ));
       if(vm.destinationLocation != null){
         getPolylinePoints().then((value) =>{
           generatePolylineFromPoints(value)

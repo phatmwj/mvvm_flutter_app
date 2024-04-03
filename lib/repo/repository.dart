@@ -21,6 +21,8 @@ import 'package:mvvm_flutter_app/data/model/api/response_list_wrapper.dart';
 import 'package:mvvm_flutter_app/data/remote/network/base_api_service.dart';
 import 'package:mvvm_flutter_app/data/remote/network/network_api_service.dart';
 
+import '../data/model/api/request/income_request.dart';
+import '../data/model/api/response/income_response.dart';
 import '../data/model/api/response_wrapper.dart';
 import '../data/model/api/request/position_request.dart';
 import '../data/remote/network/api_end_points.dart';
@@ -66,7 +68,6 @@ class Repository{
 
         }
     );
-
 
       dynamic res = await _apiService.get('v1/booking/my-booking?endDate=${endDate ?? ''}&startDate=${startDate ?? ''}&page=$page&size=$size&state=${state ?? ''}', options);
       final jsonData = ResponseWrapper<ResponseListWrapper<HistoryResponse>>.fromJson(res,(p0) => ResponseListWrapper.fromJson(res['data'], (p1) => HistoryResponse.fromJson(p1)));
@@ -253,6 +254,21 @@ class Repository{
       return jsonData;
     }catch(e){
       log("changeServiceState Error: $e");
+      rethrow;
+    }
+  }
+
+  Future<ResponseWrapper<IncomeResponse>> statisticIncome(IncomeRequest request) async{
+    Options options = Options(
+        headers: {
+        }
+    );
+    try{
+      dynamic res = await _apiService.post(ApiEndPoints.STATISTIC_INCOME, request.toJson(), options);
+      final jsonData = ResponseWrapper<IncomeResponse>.fromJson(res,(p0) => IncomeResponse.fromJson(res['data']));
+      return jsonData;
+    }catch(e){
+      log("statisticIncome Error: $e");
       rethrow;
     }
   }

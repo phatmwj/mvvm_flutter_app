@@ -61,12 +61,12 @@ class HistoryViewModel extends ChangeNotifier{
 
   void _showLoading(bool loading){
     isLoading = loading;
-    notifyListeners();
+    // notifyListeners();
   }
 
   void _setLoginRes(ResponseWrapper<ResponseListWrapper<HistoryResponse>> res){
     this.res = res;
-    notifyListeners();
+    // notifyListeners();
   }
 
   Future<void> getHistory() async{
@@ -76,6 +76,7 @@ class HistoryViewModel extends ChangeNotifier{
 
 
     _showLoading(true);
+    notifyListeners();
 
     _setLoginRes(ResponseWrapper.loading());
     _repo
@@ -97,6 +98,7 @@ class HistoryViewModel extends ChangeNotifier{
         _setLoginRes(ResponseWrapper.completed(value));
 
       }
+      notifyListeners();
     })
         .onError((error, stackTrace) {
       Utils.dismissLoading();
@@ -106,6 +108,7 @@ class HistoryViewModel extends ChangeNotifier{
         .whenComplete((){
       Utils.dismissLoading();
       _showLoading(false);
+      notifyListeners();
     });
   }
 

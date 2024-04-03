@@ -68,6 +68,16 @@ dependencies:
 
   circular_countdown_timer: any
 
+  flutter_spinkit: ^5.1.0
+
+  flutter_rating_bar: ^4.0.1
+
+  image_cropper: ^3.0.1
+
+  image_picker: ^0.8.5+3
+
+  permission_handler: ^10.2.0
+
 #  build_runner: ^2.1.5
 #  json_serializable: ^6.0.3
 

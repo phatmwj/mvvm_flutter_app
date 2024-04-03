@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 
 import '../../constant/Constant.dart';
 import '../../data/local/prefs/preferences_service.dart';
+import '../account/account_screen.dart';
 import '../service/service_screen.dart';
 
 class AccountPage extends StatefulWidget {
@@ -58,67 +59,76 @@ class _AccountPageState extends State<AccountPage> {
                       surfaceTintColor: Colors.white,
                       shadowColor: null,
                       elevation: 4.0,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Row(
-                          children: [
-                            ClipOval(
-                              child: vm.profileRes?.data?.avatar != null
-                                  ? Image.network(Constant.MEDIA_URL+Constant.MEDIA_LOAD_URL+ vm.profileRes!.data!.avatar!
-                                ,width: 50.0,
-                                height: 50.0,
-                                fit: BoxFit.cover,
-                                errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
-                                  return const Icon(Icons.error, size: 50.0,); // Replace with your desired error widget
-                                },)
-                                  : const Image(
-                                image: AssetImage('assets/images/user_avatar.png'),
+                      child: InkWell(
+                        onTap: (){
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                  const AccountScreen()));
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Row(
+                            children: [
+                              ClipOval(
+                                child: vm.profileRes?.data?.avatar != null
+                                    ? Image.network(Constant.MEDIA_URL+Constant.MEDIA_LOAD_URL+ vm.profileRes!.data!.avatar!
+                                  ,width: 50.0,
+                                  height: 50.0,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
+                                    return const Icon(Icons.error, size: 50.0,); // Replace with your desired error widget
+                                  },)
+                                    : const Image(
+                                  image: AssetImage('assets/images/user_avatar.png'),
+                                  width: 50.0,
+                                  height: 50.0,
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 30,
+                              ),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      vm.profileRes?.data?.fullName ?? "username",
+                                      style: const TextStyle(
+                                          fontFamily: 'Roboto',
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 18.0),
+                                    ),
+                                    Row(
+                                      children: [
+                                        const Image(
+                                          image: AssetImage(
+                                              'assets/images/icon_star.png'),
+                                          width: 15.0,
+                                          height: 15.0,
+                                        ),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        Text(
+                                          vm.profileRes?.data?.averageRating != null ? vm.profileRes.data!.averageRating!.toStringAsFixed(1): "0.0",
+                                          style:
+                                          const TextStyle(fontWeight: FontWeight.w400,
+                                              fontFamily: 'Roboto'),
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const Image(
+                                image: AssetImage('assets/images/icon_arrow.png'),
                                 width: 50.0,
                                 height: 50.0,
                               ),
-                            ),
-                            const SizedBox(
-                              width: 30,
-                            ),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    vm.profileRes?.data?.fullName ?? "username",
-                                    style: const TextStyle(
-                                        fontFamily: 'Roboto',
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 18.0),
-                                  ),
-                                  Row(
-                                    children: [
-                                      const Image(
-                                        image: AssetImage(
-                                            'assets/images/icon_star.png'),
-                                        width: 15.0,
-                                        height: 15.0,
-                                      ),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                      Text(
-                                        vm.profileRes?.data?.averageRating != null ? vm.profileRes.data!.averageRating!.toStringAsFixed(1): "0.0",
-                                        style:
-                                        const TextStyle(fontWeight: FontWeight.w400,
-                                            fontFamily: 'Roboto'),
-                                      )
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const Image(
-                              image: AssetImage('assets/images/icon_arrow.png'),
-                              width: 50.0,
-                              height: 50.0,
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -143,12 +153,9 @@ class _AccountPageState extends State<AccountPage> {
                               },
                               child: const Row(
                                 children: [
-                                  Image(
-                                    image:
-                                    AssetImage('assets/images/icon_config.png'),
-                                    width: 50.0,
+                                  SizedBox(width: 50.0,
                                     height: 50.0,
-                                  ),
+                                    child: Icon(Icons.miscellaneous_services,color: Color(0xFF424242),),),
                                   Expanded(
                                       child: Text(
                                         'Cấu hình dịch vụ',
@@ -180,12 +187,9 @@ class _AccountPageState extends State<AccountPage> {
                               },
                               child: const Row(
                                 children: [
-                                  Image(
-                                    image:
-                                    AssetImage('assets/images/icon_config.png'),
-                                    width: 50.0,
+                                  SizedBox(width: 50.0,
                                     height: 50.0,
-                                  ),
+                                    child: Icon(Icons.history,color: Color(0xFF424242),),),
                                   Expanded(
                                       child: Text(
                                         'Lịch sử',
@@ -226,11 +230,14 @@ class _AccountPageState extends State<AccountPage> {
                                 },
                                 child: const Row(
                                   children: [
-                                    Image(
-                                      image: AssetImage('assets/images/icon_config.png'),
-                                      width: 50.0,
+                                    SizedBox(width: 50.0,
                                       height: 50.0,
-                                    ),
+                                    child: Icon(Icons.logout,color: Colors.red,),),
+                                    // Image(
+                                    //   image: AssetImage('assets/images/icon_config.png'),
+                                    //   width: 50.0,
+                                    //   height: 50.0,
+                                    // ),
 
 
                                     Expanded(child: Text(

@@ -82,14 +82,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 ),
                 const SizedBox(height: 15),
 
-                ChangeNotifierProvider<HistoryViewModel>(
-                  create: (BuildContext context) => vm,
-                  child: Consumer<HistoryViewModel>(
+                Consumer<HistoryViewModel>(
                     builder: (context, value, _){
                       return _ui(vm);
                     },
-                  )
-                ),
+                  ),
 
                // _ui(historyViewModel),
 

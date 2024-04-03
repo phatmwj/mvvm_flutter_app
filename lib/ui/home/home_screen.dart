@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:mvvm_flutter_app/socket/web_socket_viewmodel.dart';
 import 'package:mvvm_flutter_app/ui/navpages/home_page.dart';
 import 'package:mvvm_flutter_app/ui/navpages/account_page.dart';
+import 'package:mvvm_flutter_app/ui/navpages/income_page.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget{
@@ -62,7 +63,7 @@ class _HomeScreenState extends State<HomeScreen>{
               children:[
                 // Your first page widget
                 HomePage(),
-                Text('Thu nhập'),
+                IncomePage(),
                 AccountPage(),
               ],
             ),
@@ -75,7 +76,7 @@ class _HomeScreenState extends State<HomeScreen>{
                 label: 'Trang chủ',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.search),
+                icon: Icon(Icons.bar_chart),
                 label: 'Thu nhập',
               ),
               BottomNavigationBarItem(

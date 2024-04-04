@@ -17,14 +17,16 @@ import 'package:mvvm_flutter_app/utils/utils.dart';
 
 import '../../constant/constant.dart';
 import '../../data/local/prefs/prefereces_service_impl.dart';
+import '../../data/local/prefs/preferences_service.dart';
 import '../../data/model/api/request/position_request.dart';
+import '../../di/locator.dart';
 import '../../repo/repository.dart';
 
 class HomePageViewModel extends ChangeNotifier{
 
-  final _repo = Repository();
+  final _repo = locator<Repository>();
 
-  final _prefs = PreferencesServiceImpl();
+  final _prefs = locator<PreferencesService>();
 
   String avatar = '';
 

@@ -15,7 +15,7 @@ class NetworkApiService extends BaseApiService {
   }
 
   @override
-  Future get(String url, Options options) async {
+  Future get(String url, Options? options) async {
     dynamic responseJson;
     final dio = createDio();
     try {
@@ -28,7 +28,7 @@ class NetworkApiService extends BaseApiService {
   }
 
   @override
-  Future post(String url, Map<String, dynamic> data, Options options) async {
+  Future post(String url, Map<String, dynamic> data, Options? options) async {
     dynamic responseJson;
     final dio = createDio();
     try {
@@ -59,7 +59,7 @@ class NetworkApiService extends BaseApiService {
   }
 
   @override
-  Future put(String url, Map<String, dynamic> data, Options options) async {
+  Future put(String url, Map<String, dynamic> data, Options? options) async {
     // TODO: implement put
     dynamic responseJson;
     final dio = createDio();

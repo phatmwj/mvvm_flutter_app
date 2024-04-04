@@ -20,6 +20,7 @@ import 'package:mvvm_flutter_app/data/model/api/response/service_online_response
 import 'package:mvvm_flutter_app/data/model/api/response_list_wrapper.dart';
 import 'package:mvvm_flutter_app/data/remote/network/base_api_service.dart';
 import 'package:mvvm_flutter_app/data/remote/network/network_api_service.dart';
+import 'package:mvvm_flutter_app/di/locator.dart';
 
 import '../data/model/api/request/income_request.dart';
 import '../data/model/api/response/income_response.dart';
@@ -27,266 +28,41 @@ import '../data/model/api/response_wrapper.dart';
 import '../data/model/api/request/position_request.dart';
 import '../data/remote/network/api_end_points.dart';
 
-class Repository{
+abstract class Repository{
 
-  final BaseApiService _apiService = NetworkApiService();
+  final BaseApiService _apiService = locator<BaseApiService>();
 
-  Future<ResponseWrapper<LoginResponse>> login(LoginRequest loginRequest) async{
-     Options options = Options(
-      headers: {
-        'IgnoreAuth': '1',
-      }
-    );
-    try{
-      dynamic res = await _apiService.post(ApiEndPoints.USER_LOGIN, loginRequest.toMap(), options);
-      final jsonData = ResponseWrapper<LoginResponse>.fromJson(res,(p0) => LoginResponse.fromJson(res['data']));
-      return jsonData;
-    }catch(e){
-      throw e;
-    }
-  }
+  Future<ResponseWrapper<LoginResponse>> login(LoginRequest loginRequest);
 
-  Future<ResponseWrapper<RegisterResponse>> register(RegisterRequest registerRequest) async{
-    Options options = Options(
-        headers: {
-          'IgnoreAuth': '1',
-        }
-    );
-    try{
-      dynamic res = await _apiService.post(ApiEndPoints.USER_REGISTER, registerRequest.toJson(), options);
-      final jsonData = ResponseWrapper<RegisterResponse>.fromJson(res,(p0) => RegisterResponse.fromJson(res['data']));
-      log("data login ${jsonData.toMap()}");
-      return jsonData;
-    }catch(e){
-      throw e;
-    }
-  }
+  Future<ResponseWrapper<RegisterResponse>> register(RegisterRequest registerRequest);
 
-  Future<ResponseWrapper<ResponseListWrapper<HistoryResponse>>> getHistory(String? endDate, String? startDate, int? page, int? size, int? state) async{
-    Options options = Options(
-        headers: {
+  Future<ResponseWrapper<ResponseListWrapper<HistoryResponse>>> getHistory(String? endDate, String? startDate, int? page, int? size, int? state);
 
-        }
-    );
+  Future<ResponseWrapper<ProfileResponse>> getProfile() ;
 
-      dynamic res = await _apiService.get('v1/booking/my-booking?endDate=${endDate ?? ''}&startDate=${startDate ?? ''}&page=$page&size=$size&state=${state ?? ''}', options);
-      final jsonData = ResponseWrapper<ResponseListWrapper<HistoryResponse>>.fromJson(res,(p0) => ResponseListWrapper.fromJson(res['data'], (p1) => HistoryResponse.fromJson(p1)));
-      log("data login ${jsonData.data?.content}");
-      return jsonData;
+  Future<ResponseWrapper<ServiceOnlineResponse>> getDriverState();
 
-  }
+  Future<ResponseGeneric> updatePosition(PositionRequest request);
 
-  Future<ResponseWrapper<ProfileResponse>> getProfile() async {
-    Options options = Options(
-        headers: {
-        }
-    );
-    try{
-      dynamic res = await _apiService.get(ApiEndPoints.PROFILE, options);
-      final jsonData = ResponseWrapper<ProfileResponse>.fromJson(res,(p0) => ProfileResponse.fromJson(res['data']));
-      return jsonData;
-    }catch(e){
-      throw e;
-    }
-  }
+  Future<ResponseGeneric> changeDriverState(DriverStateRequest request);
 
-  Future<ResponseWrapper<ServiceOnlineResponse>> getDriverState() async {
-    Options options = Options(
-        headers: {
-        }
-    );
-    try{
-      dynamic res = await _apiService.get(ApiEndPoints.DRIVER_STATE, options);
-      final jsonData = ResponseWrapper<ServiceOnlineResponse>.fromJson(res,(p0) => ServiceOnlineResponse.fromJson(res['data']));
-      return jsonData;
-    }catch(e){
-      log("Error $e");
-      throw e;
-    }
-  }
+  Future<ResponseWrapper<CurrentBooking>> getCurrentBooking();
 
-  Future<ResponseGeneric> updatePosition(PositionRequest request) async {
-    Options options = Options(
-        headers: {
-        }
-    );
-    try{
-      dynamic res = await _apiService.put(ApiEndPoints.UPDATE_POSITION, request.toJson(), options);
-      final jsonData = ResponseGeneric.fromJson(res);
-      return jsonData;
-    }catch(e){
-      log("UpdatePosition Error: $e");
-      rethrow;
-    }
-  }
+  Future<ResponseWrapper<CurrentBooking>> loadBookingById(String bookingId);
 
-  Future<ResponseGeneric> changeDriverState(DriverStateRequest request) async {
-    Options options = Options(
-        headers: {
-        }
-    );
-    try{
-      dynamic res = await _apiService.put(ApiEndPoints.CHANGE_STATE, request.toJson(), options);
-      final jsonData = ResponseGeneric.fromJson(res);
-      return jsonData;
-    }catch(e){
-      log("changeDriverState Error: $e");
-      rethrow;
-    }
-  }
+  Future<ResponseGeneric> rejectBooking(CancelBookingRequest request);
 
-  Future<ResponseWrapper<CurrentBooking>> getCurrentBooking() async {
-    Options options = Options(
-        headers: {
-        }
-    );
-    try{
-      dynamic res = await _apiService.get(ApiEndPoints.CURRENT_BOOKING, options);
-      final jsonData = ResponseWrapper<CurrentBooking>.fromJson(res,(p0) => CurrentBooking.fromJson(res['data']));
-      return jsonData;
-    }catch(e){
-      log("getCurrentBooking Error: $e");
-      rethrow;
-    }
-  }
+  Future<ResponseGeneric> updateStateBooking(UpdateBookingRequest request);
 
-  Future<ResponseWrapper<CurrentBooking>> loadBookingById(String bookingId) async {
-    Options options = Options(
-        headers: {
-        }
-    );
-    try{
-      dynamic res = await _apiService.get("${ApiEndPoints.LOAD_BOOKING_BY_ID}/$bookingId" , options);
-      final jsonData = ResponseWrapper<CurrentBooking>.fromJson(res,(p0) => CurrentBooking.fromJson(res['data']));
-      return jsonData;
-    }catch(e){
-      log("LoadBooking Error: $e");
-      rethrow;
-    }
-  }
+  Future<ResponseGeneric> acceptBooking(EventBookingRequest request);
 
-  Future<ResponseGeneric> rejectBooking(CancelBookingRequest request) async {
-    Options options = Options(
-        headers: {
-        }
-    );
-    try{
-      dynamic res = await _apiService.put(ApiEndPoints.REJECT_BOOKING, request.toJson(), options);
-      final jsonData = ResponseGeneric.fromJson(res);
-      return jsonData;
-    }catch(e){
-      log("RejectBooking Error: $e");
-      rethrow;
-    }
-  }
+  Future<ResponseGeneric> cancelBooking(CancelBookingRequest request);
 
-  Future<ResponseGeneric> updateStateBooking(UpdateBookingRequest request) async {
-    Options options = Options(
-        headers: {
-        }
-    );
-    try{
-      dynamic res = await _apiService.put(ApiEndPoints.UPDATE_STATE_BOOKING, request.toJson(), options);
-      final jsonData = ResponseGeneric.fromJson(res);
-      return jsonData;
-    }catch(e){
-      log("updateStateBooking: $e");
-      rethrow;
-    }
-  }
+  Future<ResponseWrapper<ResponseListWrapper<DriverServiceResponse>>> getDriverService(int? driverId);
 
-  Future<ResponseGeneric> acceptBooking(EventBookingRequest request) async {
-    Options options = Options(
-        headers: {
-        }
-    );
-    try{
-      dynamic res = await _apiService.put(ApiEndPoints.ACCEPT_BOOKING, request.toJson(), options);
-      final jsonData = ResponseGeneric.fromJson(res);
-      return jsonData;
-    }catch(e){
-      log("acceptBooking: $e");
-      rethrow;
-    }
-  }
+  Future<ResponseGeneric> changeServiceState(ChangeServiceStateRequest request);
 
-  Future<ResponseGeneric> cancelBooking(CancelBookingRequest request) async {
-    Options options = Options(
-        headers: {
-        }
-    );
-    try{
-      dynamic res = await _apiService.put(ApiEndPoints.CANCEL_BOOKING, request.toJson(), options);
-      final jsonData = ResponseGeneric.fromJson(res);
-      return jsonData;
-    }catch(e){
-      log("cancelBooking Error: $e");
-      rethrow;
-    }
-  }
+  Future<ResponseWrapper<IncomeResponse>> statisticIncome(IncomeRequest request);
 
-  Future<ResponseWrapper<ResponseListWrapper<DriverServiceResponse>>> getDriverService(int? driverId) async{
-    Options options = Options(
-        headers: {
-
-        }
-    );
-
-    try{
-      dynamic res = await _apiService.get('${ApiEndPoints.DRIVER_SERVICE}?driverId=$driverId', options);
-      final jsonData = ResponseWrapper<ResponseListWrapper<DriverServiceResponse>>.fromJson(res,(p0) => ResponseListWrapper.fromJson(res['data'], (p1) => DriverServiceResponse.fromJson(p1)));
-      // log("data login ${jsonData.data?.content}");
-      return jsonData;
-    }catch(e){
-      log("getDriverService: $e");
-      rethrow;
-    }
-  }
-
-  Future<ResponseGeneric> changeServiceState(ChangeServiceStateRequest request) async {
-    Options options = Options(
-        headers: {
-        }
-    );
-    try{
-      dynamic res = await _apiService.put(ApiEndPoints.CHANGE_SERVICE_STATE, request.toJson(), options);
-      final jsonData = ResponseGeneric.fromJson(res);
-      return jsonData;
-    }catch(e){
-      log("changeServiceState Error: $e");
-      rethrow;
-    }
-  }
-
-  Future<ResponseWrapper<IncomeResponse>> statisticIncome(IncomeRequest request) async{
-    Options options = Options(
-        headers: {
-        }
-    );
-    try{
-      dynamic res = await _apiService.post(ApiEndPoints.STATISTIC_INCOME, request.toJson(), options);
-      final jsonData = ResponseWrapper<IncomeResponse>.fromJson(res,(p0) => IncomeResponse.fromJson(res['data']));
-      return jsonData;
-    }catch(e){
-      log("statisticIncome Error: $e");
-      rethrow;
-    }
-  }
-
-  Future<ResponseWrapper<CurrentBooking>> getBooking(int? id) async {
-    Options options = Options(
-        headers: {
-
-        }
-    );
-
-    try{
-      dynamic res = await _apiService.get('${ApiEndPoints.BOOKING_DETAIL}/$id', options);
-      final jsonData = ResponseWrapper<CurrentBooking>.fromJson(res, (p0) => CurrentBooking.fromJson(res['data']));
-      return jsonData;
-    }catch(e){
-      log("getBooking Error: $e");
-      rethrow;
-    }
-  }
+  Future<ResponseWrapper<CurrentBooking>> getBooking(int? id);
 }

@@ -5,15 +5,17 @@ import 'package:mvvm_flutter_app/data/model/api/response/driver_service_response
 import 'package:mvvm_flutter_app/data/model/api/response_list_wrapper.dart';
 
 import '../../data/local/prefs/prefereces_service_impl.dart';
+import '../../data/local/prefs/preferences_service.dart';
 import '../../data/model/api/response_wrapper.dart';
+import '../../di/locator.dart';
 import '../../repo/repository.dart';
 import '../../utils/Utils.dart';
 
 class ServiceViewModel extends ChangeNotifier{
 
-  final _prefs = PreferencesServiceImpl();
+  final _repo = locator<Repository>();
 
-  final _repo = Repository();
+  final _prefs = locator<PreferencesService>();
   
   ResponseWrapper<ResponseListWrapper<DriverServiceResponse>> service = ResponseWrapper.loading();
   

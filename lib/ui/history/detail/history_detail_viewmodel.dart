@@ -2,11 +2,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:mvvm_flutter_app/data/model/api/response/current_booking.dart';
 
+import '../../../data/local/prefs/preferences_service.dart';
 import '../../../data/model/api/response_wrapper.dart';
+import '../../../di/locator.dart';
 import '../../../repo/repository.dart';
 
 class HistoryDetailViewModel extends ChangeNotifier {
-  final _repo = Repository();
+
+  final _repo = locator<Repository>();
+
+  final _prefs = locator<PreferencesService>();
 
   ResponseWrapper<CurrentBooking> res = ResponseWrapper.loading();
 

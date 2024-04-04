@@ -1,16 +1,19 @@
 
 import 'package:flutter/cupertino.dart';
+import 'package:mvvm_flutter_app/data/local/prefs/preferences_service.dart';
 
 import '../../data/local/prefs/prefereces_service_impl.dart';
 import '../../data/model/api/response/profile_response.dart';
 import '../../data/model/api/response_wrapper.dart';
+import '../../di/locator.dart';
 import '../../repo/repository.dart';
 
 
 class AccountViewModel extends ChangeNotifier{
-  final _repo = Repository();
 
-  final _prefs = PreferencesServiceImpl();
+  final _repo = locator<Repository>();
+
+  final _prefs = locator<PreferencesService>();
 
   ResponseWrapper<ProfileResponse> res = ResponseWrapper.loading();
 

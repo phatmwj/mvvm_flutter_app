@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:mvvm_flutter_app/di/locator.dart';
 import 'package:mvvm_flutter_app/socket/web_socket_viewmodel.dart';
 import 'package:mvvm_flutter_app/ui/account/account_viewmodel.dart';
 import 'package:mvvm_flutter_app/ui/history/detail/history_detail_viewmodel.dart';
@@ -17,6 +18,7 @@ import 'package:mvvm_flutter_app/ui/welcome/welcome_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 void main() {
+  setupLocator();
   runApp(const MyApp());
   configLoading();
 }

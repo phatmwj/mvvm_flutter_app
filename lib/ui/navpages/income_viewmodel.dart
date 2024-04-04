@@ -6,12 +6,16 @@ import 'package:mvvm_flutter_app/data/model/api/response/income_response.dart';
 import 'package:mvvm_flutter_app/repo/repository.dart';
 import 'package:mvvm_flutter_app/utils/datetime_utils.dart';
 
+import '../../data/local/prefs/preferences_service.dart';
 import '../../data/model/api/response_wrapper.dart';
+import '../../di/locator.dart';
 import '../../utils/Utils.dart';
 
 class IncomeViewModel extends ChangeNotifier{
 
-  final _repo = Repository();
+  final _repo = locator<Repository>();
+
+  final _prefs = locator<PreferencesService>();
 
   int incomeTime = 0;
 

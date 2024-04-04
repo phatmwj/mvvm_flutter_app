@@ -8,11 +8,16 @@ import 'package:mvvm_flutter_app/ui/login/login_screen.dart';
 import 'package:mvvm_flutter_app/utils/utils.dart';
 import 'package:provider/provider.dart';
 
+import '../../data/local/prefs/preferences_service.dart';
 import '../../data/model/api/response_wrapper.dart';
+import '../../di/locator.dart';
 import '../../repo/repository.dart';
 
 class RegisterViewModel extends ChangeNotifier{
-  final _repo = Repository();
+
+  final _repo = locator<Repository>();
+
+  final _prefs = locator<PreferencesService>();
 
   late String _fullName;
   late String _phoneNumber;

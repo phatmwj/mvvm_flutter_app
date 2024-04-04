@@ -7,14 +7,18 @@ import 'package:mvvm_flutter_app/ui/home/home_screen.dart';
 import 'package:mvvm_flutter_app/ui/widget/loading_widget.dart';
 import 'package:mvvm_flutter_app/utils/utils.dart';
 
+import '../../data/local/prefs/preferences_service.dart';
 import '../../data/model/api/response_wrapper.dart';
 import '../../data/model/api/response/login_response.dart';
+import '../../di/locator.dart';
 import '../../repo/repository.dart';
 
 class LoginViewModel extends ChangeNotifier {
 
-  final _repo = Repository();
-  final _prefs = PreferencesServiceImpl();
+  final _repo = locator<Repository>();
+
+  final _prefs = locator<PreferencesService>();
+
   late String _phoneNumber;
   late String _password;
 

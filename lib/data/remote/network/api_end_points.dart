@@ -29,5 +29,8 @@ class ApiEndPoints {
   static const String CHANGE_SERVICE_STATE = "v1/driver-service/change-state";
 
   static const String STATISTIC_INCOME = "v1/driver/sum-income";
+
+  static const String BOOKING_DETAIL = "v1/booking/detail-booking";
+
 }
 

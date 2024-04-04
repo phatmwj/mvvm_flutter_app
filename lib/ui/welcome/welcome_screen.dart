@@ -2,7 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
-import 'package:mvvm_flutter_app/data/local/prefs/app_prefereces_service.dart';
+import 'package:mvvm_flutter_app/data/local/prefs/prefereces_service_impl.dart';
 import 'package:mvvm_flutter_app/data/local/prefs/preferences_service.dart';
 import 'package:mvvm_flutter_app/ui/login/login_screen.dart';
 import 'package:mvvm_flutter_app/ui/welcome/welcome_viewmodel.dart';
@@ -27,7 +27,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>{
   late bool _serviceEnabled;
   late PermissionStatus _permissionGranted;
   late LocationData _locationData;
-  final PreferencesService _pref = AppPreferencesService();
+  final PreferencesService _pref = PreferencesServiceImpl();
 
   @override
   void initState() {

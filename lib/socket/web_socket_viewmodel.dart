@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:mvvm_flutter_app/constant/constant.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
-import '../data/local/prefs/app_prefereces_service.dart';
+import '../data/local/prefs/prefereces_service_impl.dart';
 import '../data/local/prefs/preferences_service.dart';
 import 'booking.dart';
 import 'command.dart';
@@ -51,7 +51,7 @@ class WebSocketViewModel extends ChangeNotifier {
   }
 
   Future<void> sendClientInfo() async {
-    PreferencesService _pref = AppPreferencesService();
+    PreferencesService _pref = PreferencesServiceImpl();
     String? token = await _pref.getToken();
     Message message = Message(Constant.APP_NAME, "1.0", Command.COMMAND_CLIENT_INFO,booking.toJson().toString() ,"vi", 0, 35000, token);
     _channel.sink.add(message.toJson().toString());
@@ -59,7 +59,7 @@ class WebSocketViewModel extends ChangeNotifier {
   }
 
   Future<void> sendPing() async {
-    PreferencesService _pref = AppPreferencesService();
+    PreferencesService _pref = PreferencesServiceImpl();
     String? token = await _pref.getToken();
     Message message = Message(Constant.APP_NAME, "1.0", Command.COMMAND_PING,booking.toJson().toString() ,"vi", 0, 35000, token);
     _channel.sink.add(message.toJson().toString());

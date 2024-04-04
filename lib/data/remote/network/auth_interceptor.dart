@@ -3,13 +3,13 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import 'package:mvvm_flutter_app/data/local/prefs/app_prefereces_service.dart';
+import 'package:mvvm_flutter_app/data/local/prefs/prefereces_service_impl.dart';
 import 'package:mvvm_flutter_app/data/local/prefs/preferences_service.dart';
 import 'package:mvvm_flutter_app/data/remote/network/base_api_service.dart';
 
 class AuthInterceptor extends Interceptor{
 
-  PreferencesService preferencesService = AppPreferencesService();
+  PreferencesService preferencesService = PreferencesServiceImpl();
 
   @override
   Future<void> onRequest(RequestOptions options, RequestInterceptorHandler handler) async {

@@ -1,7 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
 
-import '../../data/local/prefs/app_prefereces_service.dart';
+import '../../data/local/prefs/prefereces_service_impl.dart';
 import '../../data/model/api/response/profile_response.dart';
 import '../../data/model/api/response_wrapper.dart';
 import '../../repo/repository.dart';
@@ -10,7 +10,7 @@ import '../../repo/repository.dart';
 class AccountViewModel extends ChangeNotifier{
   final _repo = Repository();
 
-  final _prefs = AppPreferencesService();
+  final _prefs = PreferencesServiceImpl();
 
   ResponseWrapper<ProfileResponse> res = ResponseWrapper.loading();
 

@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mvvm_flutter_app/ui/home/home_screen.dart';
 import 'package:location/location.dart';
-import 'package:mvvm_flutter_app/data/local/prefs/app_prefereces_service.dart';
+import 'package:mvvm_flutter_app/data/local/prefs/prefereces_service_impl.dart';
 import 'package:mvvm_flutter_app/data/local/prefs/preferences_service.dart';
 import 'package:mvvm_flutter_app/ui/login/login_screen.dart';
 import 'package:mvvm_flutter_app/ui/register/register_screen.dart';
@@ -23,7 +23,7 @@ class SplashScreen extends StatefulWidget{
 
 class _SplashScreenState extends State<SplashScreen>{
 
-  PreferencesService _pref = AppPreferencesService();
+  PreferencesService _pref = PreferencesServiceImpl();
   Location location = Location();
   late PermissionStatus _permission;
 

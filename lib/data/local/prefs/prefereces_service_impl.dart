@@ -2,7 +2,7 @@
 import 'package:mvvm_flutter_app/data/local/prefs/preferences_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AppPreferencesService extends PreferencesService{
+class PreferencesServiceImpl extends PreferencesService{
   @override
   Future<String?> getToken() async {
     // TODO: implement getToken

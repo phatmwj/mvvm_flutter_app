@@ -4,14 +4,14 @@ import 'package:mvvm_flutter_app/data/model/api/request/change_service_state_req
 import 'package:mvvm_flutter_app/data/model/api/response/driver_service_response.dart';
 import 'package:mvvm_flutter_app/data/model/api/response_list_wrapper.dart';
 
-import '../../data/local/prefs/app_prefereces_service.dart';
+import '../../data/local/prefs/prefereces_service_impl.dart';
 import '../../data/model/api/response_wrapper.dart';
 import '../../repo/repository.dart';
 import '../../utils/Utils.dart';
 
 class ServiceViewModel extends ChangeNotifier{
 
-  final _prefs = AppPreferencesService();
+  final _prefs = PreferencesServiceImpl();
 
   final _repo = Repository();
   

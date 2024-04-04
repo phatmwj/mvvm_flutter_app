@@ -4,14 +4,14 @@ import 'package:flutter/foundation.dart';
 import 'package:mvvm_flutter_app/data/model/api/response/history_response.dart';
 import 'package:mvvm_flutter_app/data/model/api/response_list_wrapper.dart';
 
-import '../../data/local/prefs/app_prefereces_service.dart';
+import '../../data/local/prefs/prefereces_service_impl.dart';
 import '../../data/model/api/response_wrapper.dart';
 import '../../repo/repository.dart';
 import '../../utils/utils.dart';
 
 class HistoryViewModel extends ChangeNotifier{
   final _repo = Repository();
-  final _prefs = AppPreferencesService();
+  final _prefs = PreferencesServiceImpl();
 
   List<HistoryResponse> _histories = [];
 

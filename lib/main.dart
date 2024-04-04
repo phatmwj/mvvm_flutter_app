@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:mvvm_flutter_app/socket/web_socket_viewmodel.dart';
 import 'package:mvvm_flutter_app/ui/account/account_viewmodel.dart';
+import 'package:mvvm_flutter_app/ui/history/detail/history_detail_viewmodel.dart';
 import 'package:mvvm_flutter_app/ui/history/history_viewmodel.dart';
 import 'package:mvvm_flutter_app/ui/home/home_viewmodel.dart';
 import 'package:mvvm_flutter_app/ui/login/login_viewmodel.dart';
@@ -38,6 +39,7 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(create: (_) => ServiceViewModel()),
           ChangeNotifierProvider(create: (_) => AccountViewModel()),
           ChangeNotifierProvider(create: (_) => IncomeViewModel()),
+          ChangeNotifierProvider(create: (_) => HistoryDetailViewModel()),
         ],
         child: MaterialApp(
           theme: ThemeData(

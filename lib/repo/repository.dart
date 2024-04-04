@@ -272,4 +272,21 @@ class Repository{
       rethrow;
     }
   }
+
+  Future<ResponseWrapper<CurrentBooking>> getBooking(int? id) async {
+    Options options = Options(
+        headers: {
+
+        }
+    );
+
+    try{
+      dynamic res = await _apiService.get('${ApiEndPoints.BOOKING_DETAIL}/$id', options);
+      final jsonData = ResponseWrapper<CurrentBooking>.fromJson(res, (p0) => CurrentBooking.fromJson(res['data']));
+      return jsonData;
+    }catch(e){
+      log("getBooking Error: $e");
+      rethrow;
+    }
+  }
 }

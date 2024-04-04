@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mvvm_flutter_app/data/local/prefs/app_prefereces_service.dart';
+import 'package:mvvm_flutter_app/data/local/prefs/prefereces_service_impl.dart';
 import 'package:mvvm_flutter_app/res/colors/app_color.dart';
 import 'package:mvvm_flutter_app/ui/history/history_screen.dart';
 import 'package:mvvm_flutter_app/ui/login/login_screen.dart';
@@ -318,7 +318,7 @@ class _AccountPageState extends State<AccountPage> {
                       padding: const EdgeInsets.only(left: 6, right: 12),
                       child: ElevatedButton(
                         onPressed: () {
-                          AppPreferencesService()
+                          PreferencesServiceImpl()
                               .remove(PreferencesService.KEY_BEARER_TOKEN);
                           Navigator.pushReplacement(
                               context,

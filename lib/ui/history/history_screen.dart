@@ -8,6 +8,8 @@ import 'package:mvvm_flutter_app/ui/home/home_viewmodel.dart';
 import 'package:mvvm_flutter_app/utils/utils.dart';
 import 'package:mvvm_flutter_app/utils/number_utils.dart';
 import 'package:provider/provider.dart';
+
+import 'detail/history_detail_screen.dart';
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
 
@@ -116,141 +118,146 @@ class _HistoryScreenState extends State<HistoryScreen> {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(top: 10, bottom: 0.0, left: 16, right: 16),
-                  child: Card(
-                    surfaceTintColor: Colors.white,
-                    shadowColor: null,
-                    elevation: 4.0,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                NumberUtils.formatDate(history.createdDate!),
+                  child: InkWell(
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => HistoryDetailScreen(history.id)));
+                    },
+                    child: Card(
+                      surfaceTintColor: Colors.white,
+                      shadowColor: null,
+                      elevation: 4.0,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  NumberUtils.formatDate(history.createdDate!),
+                                  style: const TextStyle(
+                                      fontFamily: 'Roboto',
+                                      color: Color.fromRGBO(0, 0, 0, 0.66),
+                                      fontWeight: FontWeight.w500
+                                  ),
+                                ),
+
+                                const SizedBox(
+                                  width: 15,
+                                ),
+
+                                Expanded(
+                                  child: Text(
+                                    "${NumberUtils.formatMoneyToString(history.money!)} đ",
+                                    style: const TextStyle(
+                                        fontFamily: 'Roboto',
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 14,
+                                        overflow: TextOverflow.ellipsis
+                                    ),
+                                  ),
+                                ),
+
+                                Image(image: AssetImage(history.state == 300 ? 'assets/images/icon_green_dot.png' : (history.state == -100 ? 'assets/images/icon_red_dot.png' : 'assets/images/icon_yellow_dot.png'))),
+
+                                const SizedBox(
+                                  width: 10,
+                                ),
+
+                                Text(
+                                  history.state == 300 ? 'Hoàn thành' : (history.state == -100 ? 'Đã hủy' : 'Đang thực hiện'),
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    color: history.state == 300 ? Colors.green : (history.state == -100 ? Colors.red : Colors.yellow),
+                                  ),
+                                )
+                              ],
+                            ),
+
+                            const SizedBox(
+                              height: 10,
+                            ),
+
+                            Row(
+                              children: [
+                                const Image(
+                                  image: AssetImage('assets/images/icon_vector.png'),
+                                  height: 20,
+                                  width: 20,
+                                ),
+
+                                const SizedBox(
+                                  width: 15,
+                                ),
+
+                                Flexible(
+                                  child: Text(
+                                    history.pickupAddress ?? '',
+                                    style: const TextStyle(
+                                        fontFamily: 'Roboto',
+                                        color: Color.fromRGBO(0, 0, 0, 0.52),
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 16,
+                                        overflow: TextOverflow.ellipsis
+                                    ),
+                                  ),
+                                ),
+                              ],
+
+                            ),
+
+                            const SizedBox(
+                              height: 10,
+                            ),
+
+                            Row(
+                              children: [
+                                const Image(
+                                  image: AssetImage('assets/images/icon_destination.png'),
+                                  height: 20,
+                                  width: 20,
+                                ),
+
+                                const SizedBox(
+                                  width: 15,
+                                ),
+
+                                Flexible(
+                                  child: Text(
+                                    history.destinationAddress ?? '',
+                                    style: const TextStyle(
+                                        fontFamily: 'Roboto',
+                                        color: Color.fromRGBO(0, 0, 0, 0.52),
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 16,
+                                        overflow: TextOverflow.ellipsis
+                                    ),
+                                  ),
+                                ),
+                              ],
+
+                            ),
+
+                            const SizedBox(
+                              height: 10,
+                            ),
+
+                            Container(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                history.service!.name!,
                                 style: const TextStyle(
                                     fontFamily: 'Roboto',
-                                    color: Color.fromRGBO(0, 0, 0, 0.66),
-                                    fontWeight: FontWeight.w500
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 12,
+                                    overflow: TextOverflow.ellipsis
                                 ),
                               ),
-      
-                              const SizedBox(
-                                width: 15,
-                              ),
-      
-                              Expanded(
-                                child: Text(
-                                  "${NumberUtils.formatMoneyToString(history.money!)} đ",
-                                  style: const TextStyle(
-                                      fontFamily: 'Roboto',
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 14,
-                                      overflow: TextOverflow.ellipsis
-                                  ),
-                                ),
-                              ),
-      
-                              Image(image: AssetImage(history.state == 300 ? 'assets/images/icon_green_dot.png' : (history.state == -100 ? 'assets/images/icon_red_dot.png' : 'assets/images/icon_yellow_dot.png'))),
-      
-                              const SizedBox(
-                                width: 10,
-                              ),
-      
-                              Text(
-                                history.state == 300 ? 'Hoàn thành' : (history.state == -100 ? 'Đã hủy' : 'Đang thực hiện'),
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w700,
-                                  color: history.state == 300 ? Colors.green : (history.state == -100 ? Colors.red : Colors.yellow),
-                                ),
-                              )
-                            ],
-                          ),
-      
-                          const SizedBox(
-                            height: 10,
-                          ),
-      
-                          Row(
-                            children: [
-                              const Image(
-                                image: AssetImage('assets/images/icon_vector.png'),
-                                height: 20,
-                                width: 20,
-                              ),
-      
-                              const SizedBox(
-                                width: 15,
-                              ),
-      
-                              Flexible(
-                                child: Text(
-                                  history.pickupAddress ?? '',
-                                  style: const TextStyle(
-                                      fontFamily: 'Roboto',
-                                      color: Color.fromRGBO(0, 0, 0, 0.52),
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 16,
-                                      overflow: TextOverflow.ellipsis
-                                  ),
-                                ),
-                              ),
-                            ],
-      
-                          ),
-      
-                          const SizedBox(
-                            height: 10,
-                          ),
-      
-                          Row(
-                            children: [
-                              const Image(
-                                image: AssetImage('assets/images/icon_destination.png'),
-                                height: 20,
-                                width: 20,
-                              ),
-      
-                              const SizedBox(
-                                width: 15,
-                              ),
-      
-                              Flexible(
-                                child: Text(
-                                  history.destinationAddress ?? '',
-                                  style: const TextStyle(
-                                      fontFamily: 'Roboto',
-                                      color: Color.fromRGBO(0, 0, 0, 0.52),
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 16,
-                                      overflow: TextOverflow.ellipsis
-                                  ),
-                                ),
-                              ),
-                            ],
-      
-                          ),
-      
-                          const SizedBox(
-                            height: 10,
-                          ),
-      
-                          Container(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              history.service!.name!,
-                              style: const TextStyle(
-                                  fontFamily: 'Roboto',
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 12,
-                                  overflow: TextOverflow.ellipsis
-                              ),
-                            ),
-                          )
-                        ],
+                            )
+                          ],
+                        ),
                       ),
                     ),
-                  ),
+                  )
                 ),
       
                 if(index == historyViewModel.histories.length - 1 && historyViewModel.isLoading)

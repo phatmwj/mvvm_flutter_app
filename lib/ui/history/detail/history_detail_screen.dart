@@ -3,6 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:mvvm_flutter_app/constant/Constant.dart';
+import 'package:mvvm_flutter_app/res/app_context_extension.dart';
+import 'package:mvvm_flutter_app/ui/widget/app_header.dart';
+import 'package:mvvm_flutter_app/ui/widget/my_oval_avartar.dart';
+import 'package:mvvm_flutter_app/ui/widget/my_textview.dart';
+import 'package:mvvm_flutter_app/ui/widget/network_error.dart';
 import 'package:provider/provider.dart';
 
 import '../../../data/model/api/api_status.dart';
@@ -34,193 +39,116 @@ class _HistoryDetailScreenState extends State<HistoryDetailScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-          child: Column(
-            children: [
-              Container(
-                alignment: Alignment.center,
-                padding: const EdgeInsets.only(top: 10.0),
-                child: Stack(
-                  alignment: Alignment.centerLeft,
-                  children: [
-                    IconButton(
-                        onPressed: (){
-                          Navigator.pop(context, true);},
-                        icon: const Icon(
-                            Icons.arrow_back,
-                          size: 25.0,
-                        )),
-
-                    const SizedBox(width: 10),
-
-                    Container(
-                      alignment: Alignment.center,
-                      child: const Text(
-                        'Chi tiết chuyến đi',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20.0
-                        ),
-                      ),
-                    ),
-                  ],
+        child: Column(
+          children: [
+            AppHeader(title: "Chi tiết chuyến đi",),
+            Expanded(
+              child: RefreshIndicator(
+                onRefresh: _refresh,
+                child: Consumer<HistoryDetailViewModel>(
+                  builder: (context, value, _) {
+                    switch (value.res.status) {
+                      case ApiStatus.LOADING:
+                        return Center(
+                          child: SpinKitThreeBounce(
+                            color: context.resources.color.appColorMain,
+                            size: 30.0,
+                          ),
+                        );
+                      case ApiStatus.ERROR:
+                        return RefreshIndicator(
+                          onRefresh: _refresh,
+                          child: SingleChildScrollView(
+                            physics: AlwaysScrollableScrollPhysics(),
+                            child: SizedBox(
+                              height: MediaQuery.of(context).size.height,
+                              child: NetworkError(),
+                            ),
+                          ),
+                        );
+                      case ApiStatus.COMPLETED:
+                        return _ui1(value);
+                      default:
+                        return Container();
+                    }
+                  },
                 ),
               ),
-
-
-              Expanded(
-                child: RefreshIndicator(
-                    onRefresh: _refresh,
-                    child: SingleChildScrollView(
-                      physics: AlwaysScrollableScrollPhysics(),
-                      child: Container(
-                        height: MediaQuery.of(context).size.height * 0.9,
-                        child: Consumer<HistoryDetailViewModel>(
-                            builder: (context, value, _){
-                              switch(value.res.status){
-                                case ApiStatus.LOADING:
-                                  return const Center(
-                                    child: SpinKitThreeBounce(
-                                      color: AppColor.mainColor,
-                                      size: 30.0,
-                                    ),
-                                  );
-                                case ApiStatus.ERROR:
-                                  return RefreshIndicator(
-                                    onRefresh: _refresh,
-                                    child: SingleChildScrollView(
-                                      physics: const AlwaysScrollableScrollPhysics(),
-                                      child: SizedBox(
-                                        height: MediaQuery.of(context).size.height,
-                                        child: const Center(
-                                          child: Text('Lỗi kết nối, vui lòng thử lại!'),
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                case ApiStatus.COMPLETED:
-                                  return _ui(vm);
-                                default:
-                                  return Container();
-                              }
-                            },
-                          ),
-                      ),
-                    )),
-              )
-
-            ],
-          )
-      ));
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Future<void> _refresh() async{
+    vm.isRefresh = true;
     vm.getBooking(widget.historyId);
   }
 
-  _ui(HistoryDetailViewModel vm){
+  _ui1(HistoryDetailViewModel vm){
     return Column(
       children: [
-        Expanded(
+        Expanded(child: SingleChildScrollView(
           child: Column(
             children: [
               if(vm.res.data?.state == 300)
                 Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Container(
-                        padding: EdgeInsets.all(10.0),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10.0),
-                          boxShadow:[
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.3),
-                              spreadRadius: 3,
-                              blurRadius: 5,
-                              offset: Offset(0, 3), // changes position of shadow
-                            ),
-                          ],
-                        ),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: ClipOval(
-                                  child:  vm.res.data?.customer?.avatar != null ?
-                                  Image.network(
-                                      '${Constant.MEDIA_URL}/v1/file/download${vm.res.data?.customer!.avatar!}',
-                                      height:60.0,
-                                      width: 60.0,
-                                      fit: BoxFit.cover
-                                  )
-                                      :
-                                  const Image(
-                                      image: AssetImage('assets/images/user_avatar.png'),
-                                      width: 60.0,
-                                      height: 60.0),
+                      padding: const EdgeInsets.only(left: 16,right: 16,bottom: 16,top: 5),
+                      child: Card(
+                          surfaceTintColor: Colors.white,
+                          shadowColor: null,
+                          elevation: 4.0,
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: MyOvalAvatar(
+                                    avatar: vm.res?.data?.customer?.avatar ?? '',
+                                  ),
                                 ),
                               ),
-                            ),
 
-                            Expanded(
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      vm.res.data?.customer?.name ?? '',
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 16,
-                                          color: Color(0xFF424242)
-                                      ),),
-
-                                    // Text(
-                                    //   vm.res.data?.customer?.address ?? '',
-                                    //   style: TextStyle(
-                                    //       fontWeight: FontWeight.w500,
-                                    //       fontSize: 16
-                                    //   ),),
-
-                                    Container(
-                                      padding: const EdgeInsets.only(top: 5, bottom: 5, left: 10,right: 10),
-                                      decoration: BoxDecoration(
-                                          color: AppColor.backgroundColor,
-                                          borderRadius: BorderRadius.circular(10)
+                              Expanded(
+                                  child: Column(
+                                    children: [
+                                      MyTextView(
+                                        label: vm.res.data?.customer?.name ?? '',
                                       ),
-                                      child: Text(
-                                        vm.res.data?.customer?.phone ?? '',
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 16,
-                                            color: Color(0xFF424242)
-                                        ),),
-                                    )
-                                  ],
-                                )
-                            ),
 
-                          ],
+                                      Container(
+                                        padding: const EdgeInsets.only(top: 5, bottom: 5, left: 10,right: 10),
+                                        decoration: BoxDecoration(
+                                            color: AppColor.backgroundColor,
+                                            borderRadius: BorderRadius.circular(10)
+                                        ),
+                                        child: MyTextView(label: vm.res.data?.customer?.phone ?? '',),
+                                      )
+                                    ],
+                                  )
+                              ),
+
+                            ],
+                          ),
                         ),
                       ),
                     ),
                     const SizedBox(
-                      height: 20,
+                      height: 10,
                     ),
                   ],
                 ),
-
-
               if(vm.res.data?.rating != null)
                 Column(
                   children: [
-                    const Text(
-                      'Đánh giá từ khách hàng',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 16,
-                          color: Color(0xFF424242)
-                      ),),
+                    MyTextView(
+                      label: 'Đánh giá từ khách hàng',
+                    ),
 
                     RatingBar(
                         initialRating: vm.res.data?.rating?.star?.toDouble() ?? 0,
@@ -250,16 +178,7 @@ class _HistoryDetailScreenState extends State<HistoryDetailScreen> {
                       width: double.infinity,
                       alignment: Alignment.center,
                       margin: const EdgeInsets.symmetric(horizontal: 50.0),
-                      child: Text(
-                        vm.res.data?.rating?.message ?? '',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 14,
-                          color: Color(0xFF424242),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        maxLines: 1,
-                      ),
+                      child: MyTextView(label: vm.res.data?.rating?.message ?? '',),
                     ),
 
                     const SizedBox(
@@ -267,7 +186,7 @@ class _HistoryDetailScreenState extends State<HistoryDetailScreen> {
                     ),
 
                     const Divider(
-                      thickness: 10.0,
+                      thickness: 5.0,
                       color: AppColor.backgroundColor,
                     ),
                   ],
@@ -277,24 +196,12 @@ class _HistoryDetailScreenState extends State<HistoryDetailScreen> {
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: [
-
-                    const SizedBox(
-                      height: 16,
-                    ),
-
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            'Thanh toán',
-                            textAlign: TextAlign.start,
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 16,
-                                color: Color(0xFF424242)
-                            ),),
+                          MyTextView(label: "Thanh toán",),
 
                           const SizedBox(
                             height: 5,
@@ -302,28 +209,24 @@ class _HistoryDetailScreenState extends State<HistoryDetailScreen> {
 
                           Row(
                             children: [
-                              const Text(
-                                'Cước phí',
-                                textAlign: TextAlign.start,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 14
-                                ),),
+                              MyTextView(
+                                label: "Cước phí",
+                                fontSize: 14,
+                              ),
 
                               Expanded(
-                                child: Text(
-                                  '${NumberUtils.formatMoneyToString(vm.res.data!.money!)} đ',
+                                child: MyTextView(
+                                  label: '${NumberUtils.formatMoneyToString(vm.res.data!.money!)} đ',
+                                  fontSize: 14,
                                   textAlign: TextAlign.end,
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 14
-                                  ),),
+                                ),
+
                               )
                             ],
                           ),
 
                           const SizedBox(
-                            height: 5,
+                            height: 3,
                           ),
 
                           const Divider(
@@ -332,24 +235,17 @@ class _HistoryDetailScreenState extends State<HistoryDetailScreen> {
 
                           Row(
                             children: [
-                              const Text(
-                                'Thành tiền',
-                                textAlign: TextAlign.start,
-                                style: TextStyle(
+                              MyTextView(
+                                label: "Thành tiền",
                                     fontWeight: FontWeight.w600,
-                                    fontSize: 16,
-                                    color: Color(0xFF424242)
-                                ),),
+                                ),
 
                               Expanded(
-                                child: Text(
-                                  '${NumberUtils.formatMoneyToString(vm.res.data!.money!)} đ',
+                                child: MyTextView(
+                                  label: '${NumberUtils.formatMoneyToString(vm.res.data!.money!)} đ',
                                   textAlign: TextAlign.end,
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 16,
-                                      color: Color(0xFF424242)
-                                  ),),
+                                  fontWeight: FontWeight.w600,
+                                ),
                               )
                             ],
                           ),
@@ -363,7 +259,7 @@ class _HistoryDetailScreenState extends State<HistoryDetailScreen> {
               ),
 
               const Divider(
-                thickness: 8.0,
+                thickness: 5.0,
                 color: Color(0xffEEF2F5),
               ),
 
@@ -526,14 +422,14 @@ class _HistoryDetailScreenState extends State<HistoryDetailScreen> {
               ),
             ],
           ),
-        ),
+        ),),
 
         Align(
           alignment: Alignment.bottomCenter,
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(10.0),
             child: Container(
-              padding: EdgeInsets.all(16),
+              padding: EdgeInsets.all(10),
               width: double.infinity,
               decoration: BoxDecoration(
                   shape: BoxShape.rectangle,
@@ -554,4 +450,5 @@ class _HistoryDetailScreenState extends State<HistoryDetailScreen> {
       ],
     );
   }
+
 }

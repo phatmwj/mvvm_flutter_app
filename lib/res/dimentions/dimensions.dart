@@ -1,4 +1,8 @@
+import 'package:flutter/cupertino.dart';
+
 abstract class Dimensions {
+
+  double get statusBarHeight;
   //define your text sizes
   double get verySmallText;
 

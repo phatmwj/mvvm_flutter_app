@@ -16,7 +16,6 @@ import 'package:mvvm_flutter_app/data/model/api/response/service_online_response
 import 'package:mvvm_flutter_app/utils/utils.dart';
 
 import '../../constant/constant.dart';
-import '../../data/local/prefs/prefereces_service_impl.dart';
 import '../../data/local/prefs/preferences_service.dart';
 import '../../data/model/api/request/position_request.dart';
 import '../../di/locator.dart';
@@ -27,8 +26,6 @@ class HomePageViewModel extends ChangeNotifier{
   final _repo = locator<Repository>();
 
   final _prefs = locator<PreferencesService>();
-
-  String avatar = '';
 
   int bookingState = Constant.BOOKING_NONE;
 
@@ -65,67 +62,61 @@ class HomePageViewModel extends ChangeNotifier{
 
   void setNullDestinationLocation(){
     _destinationLocation = null;
-    // notifyListeners();
   }
 
   void setDriverState(int value) {
     _driverState = value;
-    // notifyListeners();
   }
 
   void _setProfileRes(ResponseWrapper<ProfileResponse> res){
     profileRes = res;
-    // notifyListeners();
   }
 
   void _setServiceOnline(ResponseWrapper<ServiceOnlineResponse> serviceOnline){
     this.serviceOnline = serviceOnline;
-    // notifyListeners();
   }
 
   void _setBooking(ResponseWrapper<CurrentBooking> booking){
     bookingRes = booking;
-    // notifyListeners();
   }
 
 
-  void getProfile(BuildContext context){
+  Future<void> getProfile(BuildContext context)async {
     _setProfileRes(ResponseWrapper.loading());
-    Utils.showLoading();
+    // Utils.showLoading();
     _repo
         .getProfile()
         .then((value) {
       _setProfileRes(ResponseWrapper.completed(value));
-      avatar = (profileRes.data != null ? profileRes.data?.avatar :'')!;
       _prefs.setDriverId(profileRes.data!.id!);
-      Utils.dismissLoading();
+      // Utils.dismissLoading();
     })
         .onError((error, stackTrace) {
       _setProfileRes(ResponseWrapper.error(profileRes.message));
-      Utils.dismissLoading();
+      // Utils.dismissLoading();
     })
         .whenComplete((){
-      Utils.dismissLoading();
+      // Utils.dismissLoading();
     });
   }
 
-  void getServiceOnline(BuildContext context){
+  Future<void> getServiceOnline(BuildContext context)async {
     _setServiceOnline(ResponseWrapper.loading());
-    Utils.showLoading();
+    // Utils.showLoading();
     _repo
         .getDriverState()
         .then((value) {
       _setServiceOnline(ResponseWrapper.completed(value));
       setDriverState(serviceOnline.data!.driverState);
       log(" driver state $_driverState");
-      Utils.dismissLoading();
+      // Utils.dismissLoading();
     })
         .onError((error, stackTrace) {
       _setProfileRes(ResponseWrapper.error(serviceOnline.message));
-      Utils.dismissLoading();
+      // Utils.dismissLoading();
     })
         .whenComplete((){
-      Utils.dismissLoading();
+      // Utils.dismissLoading();
     });
   }
 
@@ -136,7 +127,7 @@ class HomePageViewModel extends ChangeNotifier{
     _repo
         .updatePosition(request)
         .then((value) {
-          Utils.toastSuccessMessage(value.message);
+          // Utils.toastSuccessMessage(value.message);
     })
         .onError((error, stackTrace) {
     })
@@ -144,7 +135,7 @@ class HomePageViewModel extends ChangeNotifier{
     });
   }
 
-  void changeDriverState(BuildContext context){
+  Future<void> changeDriverState(BuildContext context)async {
     DriverStateRequest request = DriverStateRequest(newState: _driverState);
     _repo
         .changeDriverState(request)
@@ -157,14 +148,14 @@ class HomePageViewModel extends ChangeNotifier{
     });
   }
 
-  void getCurrentBooking(BuildContext context){
+  Future<void> getCurrentBooking(BuildContext context)async {
     _setBooking(ResponseWrapper.loading());
-    Utils.showLoading();
+    // Utils.showLoading();
     _repo
         .getCurrentBooking()
         .then((value) {
       _setBooking(ResponseWrapper.completed(value));
-      Utils.dismissLoading();
+      // Utils.dismissLoading();
       if(bookingRes.data?.state == Constant.BOOKING_STATE_DRIVER_ACCEPT){
         bookingState = Constant.BOOKING_ACCEPTED;
         setDestinationLocation(LocationData.fromMap({
@@ -181,14 +172,14 @@ class HomePageViewModel extends ChangeNotifier{
     })
         .onError((error, stackTrace) {
       _setProfileRes(ResponseWrapper.error(bookingRes.message));
-      Utils.dismissLoading();
+      // Utils.dismissLoading();
     })
         .whenComplete((){
-      Utils.dismissLoading();
+      // Utils.dismissLoading();
     });
   }
 
-  void loadBooking(BuildContext context, String bookingId){
+  Future<void> loadBooking(BuildContext context, String bookingId)async {
     _setBooking(ResponseWrapper.loading());
     Utils.showLoading();
     _repo
@@ -212,7 +203,7 @@ class HomePageViewModel extends ChangeNotifier{
     });
   }
 
-  void rejectBooking(BuildContext context){
+  Future<void> rejectBooking(BuildContext context)async {
     CancelBookingRequest request = CancelBookingRequest(null, bookingRes.data!.id);
     _repo
         .rejectBooking(request)
@@ -228,7 +219,7 @@ class HomePageViewModel extends ChangeNotifier{
     });
   }
 
-  void updateStateBooking(BuildContext context, int state){
+  Future<void> updateStateBooking(BuildContext context, int state)async {
     UpdateBookingRequest request = UpdateBookingRequest(bookingRes.data?.id, null, state);
     _repo
         .updateStateBooking(request)
@@ -252,7 +243,7 @@ class HomePageViewModel extends ChangeNotifier{
     });
   }
 
-  void acceptBooking(BuildContext context){
+  Future<void> acceptBooking(BuildContext context)async {
     EventBookingRequest request = EventBookingRequest(bookingRes.data?.id, null);
     _repo
         .acceptBooking(request)
@@ -268,7 +259,7 @@ class HomePageViewModel extends ChangeNotifier{
     });
   }
 
-  void cancelBooking(BuildContext context){
+  Future<void> cancelBooking(BuildContext context)async {
     CancelBookingRequest request = CancelBookingRequest(null, bookingRes.data!.id);
     _repo
         .cancelBooking(request)

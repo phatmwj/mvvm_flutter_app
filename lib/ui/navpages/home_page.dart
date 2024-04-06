@@ -7,18 +7,24 @@ import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:mvvm_flutter_app/res/app_context_extension.dart';
 import 'package:mvvm_flutter_app/socket/booking.dart';
 import 'package:mvvm_flutter_app/socket/command.dart';
 import 'package:mvvm_flutter_app/socket/web_socket_viewmodel.dart';
 import 'package:mvvm_flutter_app/ui/navpages/home_page_viewmodel.dart';
+import 'package:mvvm_flutter_app/ui/widget/my_oval_avartar.dart';
+import 'package:mvvm_flutter_app/ui/widget/my_textview.dart';
 import 'package:mvvm_flutter_app/utils/number_utils.dart';
 import 'package:provider/provider.dart';
 
 import '../../constant/constant.dart';
 import '../../data/model/api/response/booking.dart';
 import '../../res/colors/app_color.dart';
+import '../widget/my_elevated_button.dart';
+import '../widget/my_outlined_button.dart';
 
 class HomePage extends StatefulWidget{
   const HomePage({super.key});
@@ -36,6 +42,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
   late HomePageViewModel vm;
   late WebSocketViewModel wsvm;
   late Future<void> initData;
+  bool dataLoaded = false;
 
   final Completer<GoogleMapController> _controller = Completer<GoogleMapController>();
 
@@ -46,9 +53,10 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
     location.getLocation()
         .then((location){
       vm.setCurrentLocation(location);
+      log("CurrentLocation( Latitude: ${location.latitude}, Longitude: ${location.longitude})");
       vm.updatePosition(context);
       if(vm.destinationLocation != null ){
-        getPolylinePoints().then((value) =>{
+        getPolylinePoints(vm.currentLocation!, vm.destinationLocation!).then((value) =>{
           generatePolylineFromPoints(value)
         });
       }else {
@@ -70,7 +78,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
       //       zoom: 16),
       // ));
       if(vm.destinationLocation != null){
-        getPolylinePoints().then((value) =>{
+        getPolylinePoints(vm.currentLocation!, vm.destinationLocation!).then((value) =>{
           generatePolylineFromPoints(value)
         });
       }else {
@@ -80,11 +88,12 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
     });
   }
 
-  Future<List<LatLng>> getPolylinePoints() async {
+  Future<List<LatLng>> getPolylinePoints(LocationData current, LocationData location) async {
     List<LatLng> polylineCoordinates = [];
     PolylinePoints polylinePoints =  PolylinePoints();
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(Constant.GG_API_KEY,
-        PointLatLng(vm.currentLocation!.latitude!, vm.currentLocation!.longitude!), PointLatLng(vm.destinationLocation!.latitude!, vm.destinationLocation!.longitude!),travelMode: TravelMode.driving);
+        PointLatLng(current!.latitude!, current!.longitude!), PointLatLng(location!.latitude!, location!.longitude!),travelMode: TravelMode.driving);
+        // PointLatLng(vm.currentLocation!.latitude!, vm.currentLocation!.longitude!), PointLatLng(vm.destinationLocation!.latitude!, vm.destinationLocation!.longitude!),travelMode: TravelMode.driving);
     if(result.points.isNotEmpty){
       result.points.forEach((PointLatLng point) { 
         polylineCoordinates.add(LatLng(point.latitude, point.longitude));
@@ -116,11 +125,13 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
   void initState(){
     vm = Provider.of<HomePageViewModel>(context, listen: false);
     wsvm = Provider.of<WebSocketViewModel>(context, listen: false);
-    vm.getCurrentBooking(context);
-    vm.getProfile(context);
-    vm.getServiceOnline(context);
-    getCurrentLocation();
-
+    // vm.getCurrentBooking(context);
+    // vm.getProfile(context);
+    // vm.getServiceOnline(context);
+    // getCurrentLocation();
+    //
+    // fetchInitialData().whenComplete(() => getCurrentLocation());
+    initData = fetchInitialData();
     super.initState();
   }
 
@@ -130,6 +141,16 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
   //   // TODO: implement didChangeDependencies
   //   super.didChangeDependencies();
   // }
+  
+  void loadPolyline(LocationData location){
+    if(vm.destinationLocation != null && vm.currentLocation != null){
+      getPolylinePoints(vm.currentLocation!, location).then((value) =>{
+        generatePolylineFromPoints(value)
+      });
+    }else {
+      polylines.remove(PolylineId("poly"));
+    }
+  }
 
 
   @override
@@ -140,18 +161,21 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
 
         Consumer<HomePageViewModel>(
           builder: (context,value,_){
+            initData.whenComplete(() => dataLoaded = true);
             if(vm.destinationLocation != null && vm.currentLocation != null){
-              getPolylinePoints().then((value) =>{
+              getPolylinePoints(vm.currentLocation!,vm.destinationLocation!).then((value) =>{
                 generatePolylineFromPoints(value)
               });
             }else {
               polylines.remove(PolylineId("poly"));
             }
-            return vm.currentLocation == null ?
-            const Center(child: CircularProgressIndicator(
-              color: Color(0xFF7EA567),
-              strokeWidth: 6.0,
-            ))
+            return vm.currentLocation == null || !dataLoaded ?
+            Center(child:
+              SpinKitThreeBounce(
+                color: context.resources.color.appColorMain,
+                size: 30.0,
+              ),
+            )
                 :Stack(
               children:[
                 GoogleMap(
@@ -178,7 +202,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
                   polylines: Set<Polyline>.of(polylines.values),
                 ),
                 Positioned(
-                  top: 40.0,
+                  top: context.resources.dimension.statusBarHeight,
                   left: 16.0,
                   right: 16.0,
                   child: Card(
@@ -190,35 +214,16 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          ClipOval(
-                            child: vm.avatar!= null && vm.avatar!=''
-                            ? Image.network(Constant.MEDIA_URL+Constant.MEDIA_LOAD_URL+vm.avatar
-                              ,width: 50.0,
-                              height: 50.0,
-                              fit: BoxFit.cover,
-                              errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
-                                return const Icon(Icons.error, size: 50.0,); // Replace with your desired error widget
-                              },)
-                            : const Image(
-                              image: AssetImage('assets/images/user_avatar.png'),
-                              width: 50.0,
-                              height: 50.0,
-                             ),
-                          ),
+                          MyOvalAvatar(avatar: vm.profileRes?.data?.avatar??'',),
 
-                          // const SizedBox(width: 80),
                           Expanded(child: Center(
-                            child: Text(
-                              vm.driverState != 1? "Offline" : "Online",
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontFamily: 'Roboto',
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
+                            child: MyTextView(
+                              label: vm.driverState !=1? "Offline": "Online",
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                              color: context.resources.color.textColorMain,),
                             ),
                           ),
-                          // const SizedBox(width: 80),
 
                           SizedBox(
                             height: 35.0,
@@ -248,6 +253,10 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
                           case Command.CM_CONTACT_DRIVER:
                             Booking booking = Booking.fromJson(wsvm.messageRes?.data);
                             vm.loadBooking(context, booking.bookingId!);
+                            loadPolyline(LocationData.fromMap({
+                              "latitude": vm.bookingRes?.data?.pickupLat,
+                              "longitude": vm.bookingRes?.data?.pickupLong,
+                            }));
                             wsvm.messageRes = null;
                             break;
                           case Command.CM_CUSTOMER_CANCEL_BOOKING:
@@ -277,15 +286,10 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              "Xin chào! Bạn có muốn chở tôi không?",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 13,
-                                  color: Color(0xFF7EA567),
-                                  overflow: TextOverflow.ellipsis
-                              ),
-                            ),
+                            MyTextView(
+                              label: "Xin chào! Bạn có muốn chở tôi không?",
+                              fontSize: 14,
+                              color: context.resources.color.appColorMain,),
                             const SizedBox(
                               height: 5.0,
                             ),
@@ -315,25 +319,16 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children:[
-                                      Text(
-                                        vm.bookingRes.data?.customer?.name ?? "Tên khách hàng"
-                                        ,
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 16,
-                                            color: Color(0xFF424242),
-                                            overflow: TextOverflow.ellipsis
-                                        ),
-                                      ),
-                                      const Text(
-                                        "Tiền mặt",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 13,
-                                            color: Color(0xFF7EA567),
-                                            overflow: TextOverflow.ellipsis
-                                        ),
-                                      ),
+                                      MyTextView(
+                                        label: vm.bookingRes.data?.customer?.name ?? "Tên khách hàng",
+                                        fontSize: 16,
+                                        color: context.resources.color.textColorMain,),
+
+                                      MyTextView(
+                                        label: "Tiền mặt",
+                                        fontSize: 14,
+                                        color: context.resources.color.appColorMain,),
+
                                     ]
                                 ),
                                 const SizedBox(
@@ -344,28 +339,21 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       crossAxisAlignment: CrossAxisAlignment.end,
                                       children:[
-                                        Text(
-                                          vm.bookingRes.data?.money != null
+
+                                        MyTextView(
+                                          label: vm.bookingRes.data?.money != null
                                               ? "${NumberUtils.formatMoneyToString(vm.bookingRes.data!.money!)} đ"
                                               : 'N/A',
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: 16,
-                                              color: Color(0xFF424242),
-                                              overflow: TextOverflow.ellipsis
-                                          ),
-                                        ),
-                                        Text(
-                                          vm.bookingRes.data?.distance != null
+                                          fontSize: 16,
+                                          color: context.resources.color.textColorMain,),
+
+                                        MyTextView(
+                                          label: vm.bookingRes.data?.distance != null
                                               ? "${(vm.bookingRes.data!.distance!/1000).toStringAsFixed(1)} Km"
                                               : 'N/A',
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: 13,
-                                              color: Color(0xFF575757),
-                                              overflow: TextOverflow.ellipsis
-                                          ),
-                                        ),
+                                          fontSize: 14,
+                                          color: context.resources.color.greyColor,),
+
                                       ]
 
                                   ),
@@ -392,24 +380,14 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children:[
-                                        const Text(
-                                          "Điểm đón",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: 10,
-                                              color: Color(0xBF424242),
-                                              overflow: TextOverflow.ellipsis
-                                          ),
-                                        ),
-                                        Text(
-                                          vm.bookingRes?.data?.pickupAddress ?? "Địa chỉ đón khách",
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: 14,
-                                              color: Color(0xFF424242),
-                                              overflow: TextOverflow.ellipsis
-                                          ),
-                                        ),
+                                        MyTextView(
+                                          label: "Điểm đón",
+                                          fontSize: 10,
+                                          color: context.resources.color.greyColor,),
+                                        MyTextView(
+                                          label: vm.bookingRes?.data?.pickupAddress ?? "Địa chỉ đón khách",
+                                          fontSize: 14,
+                                          color: context.resources.color.textColorMain,),
                                       ]
 
                                   ),
@@ -439,24 +417,14 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children:[
-                                        const Text(
-                                          "Điểm đến",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: 10,
-                                              color: Color(0xBF424242),
-                                              overflow: TextOverflow.ellipsis
-                                          ),
-                                        ),
-                                        Text(
-                                          vm.bookingRes?.data?.destinationAddress ?? "Điểm đến",
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: 14,
-                                              color: Color(0xFF424242),
-                                              overflow: TextOverflow.ellipsis
-                                          ),
-                                        ),
+                                        MyTextView(
+                                          label: "Điểm đến",
+                                          fontSize: 10,
+                                          color: context.resources.color.greyColor,),
+                                        MyTextView(
+                                          label: vm.bookingRes?.data?.destinationAddress ?? "Điểm đến",
+                                          fontSize: 14,
+                                          color: context.resources.color.textColorMain,),
                                       ]
 
                                   ),
@@ -471,47 +439,41 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
                             vm.bookingState != Constant.BOOKING_VISIBLE  && vm.bookingState != Constant.BOOKING_CUSTOMER_CANCEL && vm.bookingState != Constant.BOOKING_CANCELED && vm.bookingState != Constant.BOOKING_SUCCESS ? const Divider(
                               color: Color(0xFFC0C0C0),
                             ): const SizedBox.shrink(),
-                            vm.bookingState != Constant.BOOKING_VISIBLE  && vm.bookingState != Constant.BOOKING_CUSTOMER_CANCEL && vm.bookingState != Constant.BOOKING_CANCELED && vm.bookingState != Constant.BOOKING_SUCCESS ? const Padding(
-                              padding: EdgeInsets.only(top: 5.0,bottom: 5.0,left: 10.0, right: 10.0),
+                            vm.bookingState != Constant.BOOKING_VISIBLE  && vm.bookingState != Constant.BOOKING_CUSTOMER_CANCEL && vm.bookingState != Constant.BOOKING_CANCELED && vm.bookingState != Constant.BOOKING_SUCCESS ? Padding(
+                              padding: const EdgeInsets.only(top: 5.0,bottom: 5.0,left: 10.0, right: 10.0),
                               child: Row(
                                   children: [
                                     InkWell(
                                       child: Row(
                                         children: [
-                                          Icon(Icons.message_rounded, color: Color(0xFF7EA567),),
-                                          SizedBox(
+                                          Icon(Icons.message_rounded,
+                                            color: context.resources.color.appColorMain,),
+                                          const SizedBox(
                                             width: 10.0,
                                           ),
-                                          Text(
-                                            'Nhắn tin',
-                                            style: TextStyle(
-                                                fontFamily: 'Roboto',
-                                                fontWeight: FontWeight.w500,
-                                                color: Color(0xBF424242),
-                                                fontSize: 14.0),
-                                          ),
+                                          MyTextView(
+                                            label:  'Nhắn tin',
+                                            fontSize: 14,
+                                            color: context.resources.color.textColorMain,),
+
                                         ],
                                       ),
                                     ),
-                                    Expanded(
+                                    const Expanded(
                                         child: SizedBox()
                                     ),
 
                                     InkWell(
                                       child: Row(
                                         children: [
-                                          Icon(Icons.phone, color: Color(0xFF7EA567),),
-                                          SizedBox(
+                                          Icon(Icons.phone, color: context.resources.color.appColorMain,),
+                                          const SizedBox(
                                             width: 10.0,
                                           ),
-                                          Text(
-                                            'Gọi khách hàng',
-                                            style: TextStyle(
-                                                fontFamily: 'Roboto',
-                                                color: Color(0xBF424242),
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 14.0),
-                                          ),
+                                          MyTextView(
+                                            label:  'Gọi khách hàng',
+                                            fontSize: 14,
+                                            color: context.resources.color.textColorMain,),
                                         ],
                                       ),
                                     ),
@@ -531,15 +493,10 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
                                   width: 15,
                                 ),
 
-                                Text(
-                                  vm.bookingRes.data?.customerNote ?? "Không có ghi chú",
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 13,
-                                      color: Color(0xFF575757),
-                                      overflow: TextOverflow.ellipsis
-                                  ),
-                                ),
+                                MyTextView(
+                                  label:  vm.bookingRes.data?.customerNote ?? "Không có ghi chú",
+                                  fontSize: 14,
+                                  color: context.resources.color.textColorMain,),
                               ],
 
                             ),
@@ -597,24 +554,12 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
                             vm.bookingState != Constant.BOOKING_CUSTOMER_CANCEL && vm.bookingState != Constant.BOOKING_CANCELED && vm.bookingState != Constant.BOOKING_SUCCESS ? Row(
                               children: [
                                 vm.bookingState != Constant.BOOKING_PICKUP ? Expanded(
-                                  child: OutlinedButton(
-                                    style: OutlinedButton.styleFrom(
-                                      primary: Colors.green,
-                                      side: const BorderSide(color: Color(0xFF7EA567)),
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(6.0)),
-                                    ),
-                                    onPressed: () {
+                                  child: MyOutlinedButton(
+                                    label: "Hủy cuốc",
+                                    onPressed: (){
                                       openAlert(context);
                                     },
-                                    child: const Text(
-                                      "Hủy cuốc",
-                                      style: TextStyle(
-                                          fontFamily: 'Roboto',
-                                          fontSize: 14,
-                                          color: Color(0xFF7EA567),
-                                          fontWeight: FontWeight.w500),
-                                    ),
+                                    fontSize: 14,
                                   ),
                                 ): const SizedBox.shrink(),
 
@@ -623,32 +568,24 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
                                 ): const SizedBox.shrink(),
 
                                 Expanded(
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      if(vm.bookingState == Constant.BOOKING_VISIBLE){
-                                        vm.acceptBooking(context);
-                                        wsvm.booking = BookingWS(vm.bookingRes!.data!.code!);
-                                      }else if(vm.bookingState == Constant.BOOKING_ACCEPTED){
-                                        vm.updateStateBooking(context, Constant.BOOKING_STATE_PICKUP_SUCCESS);
-                                      }else if(vm.bookingState == Constant.BOOKING_PICKUP){
-                                        vm.updateStateBooking(context, Constant.BOOKING_STATE_DONE);
-                                        wsvm.booking = BookingWS("0");
-                                      }
+                                  child: MyElevatedButton(
+                                    label: vm.bookingState == Constant.BOOKING_VISIBLE ?"Nhận cuốc": vm.bookingState == Constant.BOOKING_ACCEPTED ? "Đã đón khách":vm.bookingState == Constant.BOOKING_PICKUP ?"Đã đưa khách đến nơi": "",
+                                    onPressed: (){
+                                          if(vm.bookingState == Constant.BOOKING_VISIBLE){
+                                            vm.acceptBooking(context);
+                                            wsvm.booking = BookingWS(vm.bookingRes!.data!.code!);
+                                          }else if(vm.bookingState == Constant.BOOKING_ACCEPTED){
+                                            vm.updateStateBooking(context, Constant.BOOKING_STATE_PICKUP_SUCCESS);
+                                            loadPolyline(LocationData.fromMap({
+                                              "latitude": vm.bookingRes.data!.destinationLat,
+                                              "longitude": vm.bookingRes.data!.destinationLong,
+                                            }));
+                                          }else if(vm.bookingState == Constant.BOOKING_PICKUP){
+                                            vm.updateStateBooking(context, Constant.BOOKING_STATE_DONE);
+                                            wsvm.booking = BookingWS("0");
+                                          }
                                     },
-                                    style: ElevatedButton.styleFrom(
-                                      primary: AppColor.mainColor,
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(6.0)),
-                                    ),
-                                    child: Text(
-                                      vm.bookingState == Constant.BOOKING_VISIBLE ?"Nhận cuốc": vm.bookingState == Constant.BOOKING_ACCEPTED ? "Đã đón khách":vm.bookingState == Constant.BOOKING_PICKUP ?"Đã đưa khách đến nơi": "",
-                                      style: const TextStyle(
-                                          fontFamily: 'Roboto',
-                                          fontSize: 14,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-
+                                    fontSize: 14,
                                   ),
                                 ),
 
@@ -656,28 +593,19 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
                             ) : const SizedBox.shrink(),
 
                             vm.bookingState == Constant.BOOKING_CUSTOMER_CANCEL || vm.bookingState == Constant.BOOKING_CANCELED || vm.bookingState == Constant.BOOKING_SUCCESS ?
-                            Center(
-                              child: ElevatedButton(
-                              onPressed: () {
-                                vm.bookingState = Constant.BOOKING_NONE;
-                                vm.setNullDestinationLocation();
-                                vm.notifyListeners();
-                              },
-                              style: ElevatedButton.styleFrom(
-                                primary: AppColor.mainColor,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(6.0)),
+                            Container(
+                              width: MediaQuery.of(context).size.width,
+                              child:
+                              MyElevatedButton(
+                                label: vm.bookingState == Constant.BOOKING_CUSTOMER_CANCEL ?"Khách hàng đã hủy chuyến!": vm.bookingState == Constant.BOOKING_CANCELED ?"Hủy chuyến thành công":"Đã hoàn thành chuyến đi",
+                                onPressed: (){
+                                  vm.bookingState = Constant.BOOKING_NONE;
+                                  vm.setNullDestinationLocation();
+                                  vm.notifyListeners();
+                                },
+                                fontSize: 14,
                               ),
-                              child: Text(
-                                vm.bookingState == Constant.BOOKING_CUSTOMER_CANCEL ?"Khách hàng đã hủy chuyến!": vm.bookingState == Constant.BOOKING_CANCELED ?"Hủy chuyến thành công":"Đã hoàn thành chuyến đi",
-                                    style: const TextStyle(
-                                    fontFamily: 'Roboto',
-                                    fontSize: 14,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w500),
-                              ),
-
-                            ),): const SizedBox.shrink(),
+                              ): const SizedBox.shrink(),
                           ],
                         ),
                       ),
@@ -710,10 +638,11 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              const Text(
-                'Bạn muốn hủy chuyến?',
-                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20.0),
+              MyTextView(
+                label: 'Bạn muốn hủy chuyến?',
+                fontSize: 18.0,
               ),
+
               const SizedBox(
                 height: 16,
               ),
@@ -722,56 +651,31 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
                   Expanded(
                       child: Padding(
                         padding: const EdgeInsets.only(left: 12, right: 6),
-                        child: OutlinedButton(
-                          style: OutlinedButton.styleFrom(
-                            primary: Colors.green,
-                            side: const BorderSide(color: Color(0xFF7EA567)),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(4)),
-                          ),
-                          onPressed: () {
+                        child: MyOutlinedButton(
+                          onPressed: (){
                             Navigator.pop(context);
                           },
-                          child: const Text(
-                            "Quay lại",
-                            style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w500),
-                          ),
-
-
-                        ),
+                          label: "Quay lại",
+                        )
                       )
                   ),
 
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.only(left: 6, right: 12),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                          if(vm.bookingState == Constant.BOOKING_VISIBLE){
-                            vm.rejectBooking(context);
-                          } else if(vm.bookingState == Constant.BOOKING_ACCEPTED) {
-                            vm.cancelBooking(context);
-                          }
-                          wsvm.booking = BookingWS("0");
-                        },
-                        style: ElevatedButton.styleFrom(
-                          primary: AppColor.mainColor,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4)),
-                        ),
-                        child: const Text(
-                          "Xác nhận",
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500),
-                        ),
-
-                      ),
+                      child:
+                          MyElevatedButton(
+                            label: "Xác nhận",
+                            onPressed: (){
+                              Navigator.pop(context);
+                              if(vm.bookingState == Constant.BOOKING_VISIBLE){
+                                vm.rejectBooking(context);
+                              } else if(vm.bookingState == Constant.BOOKING_ACCEPTED) {
+                                vm.cancelBooking(context);
+                              }
+                              wsvm.booking = BookingWS("0");
+                            },
+                          ),
                     ),
                   )
                 ],

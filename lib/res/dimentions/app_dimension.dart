@@ -1,8 +1,22 @@
 
 
+import 'package:flutter/cupertino.dart';
+
 import 'dimensions.dart';
 
 class AppDimension extends Dimensions {
+
+  final BuildContext context;
+
+  static AppDimension? _instance;
+
+  AppDimension(this.context);
+
+  static AppDimension of(BuildContext context){
+    _instance ??= AppDimension(context);
+    return _instance!;
+  }
+
   @override
   double get bigMargin => 20;
 
@@ -50,4 +64,9 @@ class AppDimension extends Dimensions {
 
   @override
   double get imageHeight => 450;
+
+  @override
+  // TODO: implement statusBarHeight
+  double get statusBarHeight => MediaQuery.of(context).padding.top;
+
 }

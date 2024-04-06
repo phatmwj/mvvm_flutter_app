@@ -1,6 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mvvm_flutter_app/res/app_context_extension.dart';
 import 'package:mvvm_flutter_app/socket/web_socket_viewmodel.dart';
 import 'package:mvvm_flutter_app/ui/navpages/home_page.dart';
 import 'package:mvvm_flutter_app/ui/navpages/account_page.dart';
@@ -85,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen>{
               ),
             ],
             currentIndex: _selectedIndex,
-            selectedItemColor: const Color(0xFF7EA567),
+            selectedItemColor: context.resources.color.appColorMain,
             onTap: _onItemTapped,
             selectedLabelStyle: const TextStyle(
               fontFamily: 'Roboto',

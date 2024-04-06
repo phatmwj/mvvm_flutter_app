@@ -13,23 +13,30 @@ class HistoryDetailViewModel extends ChangeNotifier {
 
   final _prefs = locator<PreferencesService>();
 
+  bool isRefresh = false;
+
   ResponseWrapper<CurrentBooking> res = ResponseWrapper.loading();
 
   _setRes(ResponseWrapper<CurrentBooking> res) {
     this.res = res;
+    if(isRefresh){
+      notifyListeners();
+    }
   }
 
-  void getBooking(int? id) {
+  Future<void> getBooking(int? id) async {
     _setRes(ResponseWrapper.loading());
-
     _repo
         .getBooking(id)
         .then((value) => {
                 _setRes(ResponseWrapper.completed(value)),
-                notifyListeners(),
             })
         .onError((error, stackTrace) =>
-            {_setRes(ResponseWrapper.error(error.toString()))})
-        .whenComplete(() => {});
+            {_setRes(ResponseWrapper.error(error.toString())),
+    })
+        .whenComplete(() => {
+        notifyListeners(),
+        isRefresh = false,
+    });
   }
 }

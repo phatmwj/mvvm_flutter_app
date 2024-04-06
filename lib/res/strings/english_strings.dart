@@ -1,8 +1,22 @@
 
 
+import 'package:flutter/cupertino.dart';
+
 import 'strings.dart';
 
 class EnglishStrings extends Strings {
+
+  final BuildContext context;
+
+  static EnglishStrings? _instance;
+
+  EnglishStrings(this.context);
+
+  static EnglishStrings of(BuildContext context){
+    _instance ??= EnglishStrings(context);
+    return _instance!;
+  }
+
   @override
   String get homeScreenTitle => "User List";
 

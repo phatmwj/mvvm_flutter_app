@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:mvvm_flutter_app/constant/constant.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
@@ -22,7 +23,17 @@ class WebSocketViewModel extends ChangeNotifier {
 
   BookingWS booking = BookingWS("0");
 
-  WebSocketViewModel() {
+  late StreamSubscription<ConnectivityResult> _connectivitySubscription;
+
+  bool isConnected = false;
+
+  WebSocketViewModel(){
+    _init();
+    // _initConnectivity();
+  }
+
+
+  void _init(){
     _channel = WebSocketChannel.connect(
       Uri.parse(Constant.WSS_URL),
     );
@@ -37,16 +48,55 @@ class WebSocketViewModel extends ChangeNotifier {
       },
       onDone: () {
         log('WebSocket closed');
+        isConnected = false;
+        _pingTimer.cancel();
+        if (!isConnected) {
+          Future.delayed(Duration(seconds: 1), () {
+            log('WebSocket reconnect');
+            _init();// Trigger StreamBuilder rebuild
+          });
+        }
       },
       onError: (error) {
         log('WebSocket error: $error');
+        _pingTimer.cancel();
+        isConnected = false;
+        if (!isConnected) {
+          Future.delayed(Duration(seconds: 1), () {
+            log('WebSocket reconnect');
+            _init();// Trigger StreamBuilder rebuild
+          });
+        }
       },
+      cancelOnError: true,
     );
 
+    isConnected = true;
     sendClientInfo();
 
     _pingTimer = Timer.periodic(const Duration(seconds: 20), (timer) {
       sendPing();
+    });
+  }
+
+  void _initConnectivity() {
+    // Lắng nghe sự kiện thay đổi trạng thái kết nối mạng
+    _connectivitySubscription = Connectivity().onConnectivityChanged.listen((event) {
+      if (event != ConnectivityResult.none) {
+        if(_channel != null || _channel.closeCode == null){
+          closeWebSocket();
+        }
+        // closeWebSocket();
+        log("network_connect");
+        // Có kết nối mạng, kiểm tra và kết nối lại WebSocket
+        if (_channel == null || _channel.closeCode != null) {
+          _init();
+        }
+        // _init();
+      }else{
+        log("network_error");
+        closeWebSocket();
+      }
     });
   }
 
@@ -72,6 +122,7 @@ class WebSocketViewModel extends ChangeNotifier {
 
   // Đóng kết nối WebSocket khi không cần thiết
   void closeWebSocket() {
+    _pingTimer.cancel();
     _channel.sink.close();
   }
 

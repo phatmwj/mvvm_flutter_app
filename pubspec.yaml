@@ -78,6 +78,10 @@ dependencies:
 
   permission_handler: ^10.2.0
 
+  cached_network_image: ^3.1.0
+
+  connectivity_plus: ^2.3.5
+
 #  build_runner: ^2.1.5
 #  json_serializable: ^6.0.3
 

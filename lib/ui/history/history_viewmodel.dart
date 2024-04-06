@@ -19,7 +19,9 @@ class HistoryViewModel extends ChangeNotifier{
 
   List<HistoryResponse> _histories = [];
 
-  bool isLoading = false;
+  bool isRefresh = false;
+
+  bool isLazyLoad = false;
 
   int _totalElements = 0;
 
@@ -63,32 +65,18 @@ class HistoryViewModel extends ChangeNotifier{
     _histories.clear();
   }
 
-  void _showLoading(bool loading){
-    isLoading = loading;
-    // notifyListeners();
-  }
-
-  void _setLoginRes(ResponseWrapper<ResponseListWrapper<HistoryResponse>> res){
+  void _setRes(ResponseWrapper<ResponseListWrapper<HistoryResponse>> res){
     this.res = res;
-    // notifyListeners();
   }
 
   Future<void> getHistory() async{
-    if(_totalElements == 0){
-      Utils.showLoading();
+
+    if(!isLazyLoad){
+      _setRes(ResponseWrapper.loading());
     }
-
-
-    _showLoading(true);
-    notifyListeners();
-
-    _setLoginRes(ResponseWrapper.loading());
     _repo
         .getHistory(null, null, page, size, null)
         .then((value) {
-      _showLoading(false);
-      Utils.dismissLoading();
-
       if(value.result!){
         final List<HistoryResponse>? data = value.data?.content?.map((e) => e).toList();
 
@@ -99,20 +87,20 @@ class HistoryViewModel extends ChangeNotifier{
 
         setListHistory(data as List<HistoryResponse>);
 
-        _setLoginRes(ResponseWrapper.completed(value));
+        _setRes(ResponseWrapper.completed(value));
 
       }
       notifyListeners();
     })
         .onError((error, stackTrace) {
-      Utils.dismissLoading();
       log(error.toString());
-      _showLoading(false);
-      _setLoginRes(ResponseWrapper.error(error.toString()));})
+      if(!isLazyLoad){
+        _setRes(ResponseWrapper.error(error.toString()));
+      }
+      })
         .whenComplete((){
-      Utils.dismissLoading();
-      _showLoading(false);
       notifyListeners();
+      isLazyLoad = false;
     });
   }
 

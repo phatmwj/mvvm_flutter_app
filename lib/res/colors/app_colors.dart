@@ -5,41 +5,38 @@ import 'package:flutter/material.dart';
 import 'base_colors.dart';
 
 class AppColors implements BaseColors {
-  Map<int, Color> _primary = {
-    50: Color.fromRGBO(22, 134, 206, 0.1),
-    100: Color.fromRGBO(22, 134, 206, 0.2),
-    200: Color.fromRGBO(22, 134, 206, 0.3),
-    300: Color.fromRGBO(22, 134, 206, 0.4),
-    400: Color.fromRGBO(22, 134, 206, 0.5),
-    500: Color.fromRGBO(22, 134, 206, 0.6),
-    600: Color.fromRGBO(22, 134, 206, 0.7),
-    700: Color.fromRGBO(22, 134, 206, 0.8),
-    800: Color.fromRGBO(22, 134, 206, 0.9),
-    900: Color.fromRGBO(22, 134, 206, 1.0),
-  };
+
+  final BuildContext context;
+
+  static AppColors? _instance;
+
+  AppColors(this.context);
+
+  static AppColors of(BuildContext context){
+    _instance ??= AppColors(context);
+    return _instance!;
+  }
 
   @override
-  MaterialColor get colorAccent => Colors.amber;
+  // TODO: implement appColor
+  Color get appColorMain => const Color.fromRGBO(126, 165, 103, 1.0);
 
   @override
-  MaterialColor get colorPrimary => MaterialColor(0xff1686ce, _primary);
+  // TODO: implement textColor
+  Color get textColorMain => const Color.fromRGBO(66, 66, 66, 1);
 
   @override
-  Color get colorPrimaryText => Color(0xff49ABFF);
+  // TODO: implement greyColor
+  Color get greyColor => const Color.fromRGBO(87, 87, 87, 0.77);
 
   @override
-  Color get colorSecondaryText => Color(0xff3593FF);
+  // TODO: implement dividerColor
+  Color get dividerColor => const Color.fromRGBO(66, 66, 66, 0.2);
 
   @override
-  Color get colorWhite => Color(0xffffffff);
+  // TODO: implement cancelColor
+  Color get cancelColor => Colors.red;
 
-  @override
-  Color get colorBlack => Color(0xff000000);
 
-  @override
-  Color get castChipColor => Colors.deepOrangeAccent;
-
-  @override
-  Color get catChipColor => Colors.indigoAccent;
 
 }

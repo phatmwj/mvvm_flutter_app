@@ -83,7 +83,7 @@ class IncomeViewModel extends ChangeNotifier{
       endD = DatetimeUtils.endMonthFormat(currentTime);
       timeString = "Từ ${DateFormat("dd/MM/yyyy").format(DateFormat("dd/MM/yyyy HH:mm:ss").parse(startD))} đến ${DateFormat("dd/MM/yyyy").format(DateFormat("dd/MM/yyyy HH:mm:ss").parse(endD))}";
     }
-    Utils.showLoading();
+    // Utils.showLoading();
     // _setIncome(ResponseWrapper.loading());
     IncomeRequest request = IncomeRequest(bookingState: 300, startDate: DatetimeUtils.convertToUTC(startD), endDate: DatetimeUtils.convertToUTC(endD));
     _repo
@@ -91,14 +91,14 @@ class IncomeViewModel extends ChangeNotifier{
         .then((value) {
           _setIncome(ResponseWrapper.completed(value));
           notifyListeners();
-          Utils.dismissLoading();
+          // Utils.dismissLoading();
         })
         .onError((error, stackTrace) {
-          Utils.dismissLoading();
+          // Utils.dismissLoading();
           _setIncome(ResponseWrapper.error(error.toString()));
         })
         .whenComplete((){
-          Utils.dismissLoading();
+          // Utils.dismissLoading();
         });
   }
 }

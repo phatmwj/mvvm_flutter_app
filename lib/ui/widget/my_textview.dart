@@ -3,17 +3,23 @@ import 'package:mvvm_flutter_app/res/app_context_extension.dart';
 
 class MyTextView extends StatelessWidget {
   final String label;
-  final Color color;
+  final Color? color;
   final double fontSize;
+  final FontWeight fontWeight;
+  final TextAlign? textAlign;
 
-  MyTextView({this.label = "", this.color = Colors.black54, this.fontSize = 0});
+  MyTextView({this.label = "", this.color, this.fontSize = 16, this.fontWeight = FontWeight.w500, this.textAlign});
 
   @override
   Widget build(BuildContext context) {
-    double fSize = fontSize;
-    if (fSize == 0) {
-      fSize = context.resources.dimension.bigText;
-    }
-    return Text(label, style: TextStyle(color: color, fontSize: fSize),);
+    return Text(label,
+      textAlign: textAlign?? TextAlign.start,
+      style: TextStyle(
+        color: color ?? context.resources.color.textColorMain,
+        fontSize: fontSize,
+        fontFamily: 'Roboto',
+        fontWeight: fontWeight,
+          overflow: TextOverflow.ellipsis,
+    ),);
   }
 }

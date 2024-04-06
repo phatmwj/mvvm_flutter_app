@@ -22,20 +22,20 @@ class AccountPageViewModel extends ChangeNotifier {
 
   void getProfile(BuildContext context){
     _setProfileRes(ResponseWrapper.loading());
-    Utils.showLoading();
+    // Utils.showLoading();
     _repo
         .getProfile()
         .then((value) {
       _setProfileRes(ResponseWrapper.completed(value));
       notifyListeners();
-      Utils.dismissLoading();
+      // Utils.dismissLoading();
     })
         .onError((error, stackTrace) {
       _setProfileRes(ResponseWrapper.error(profileRes.message));
-      Utils.dismissLoading();
+      // Utils.dismissLoading();
     })
         .whenComplete((){
-      Utils.dismissLoading();
+      // Utils.dismissLoading();
     });
   }
 }

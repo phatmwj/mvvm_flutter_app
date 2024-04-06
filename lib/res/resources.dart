@@ -1,4 +1,6 @@
 import 'package:flutter/cupertino.dart';
+import 'package:mvvm_flutter_app/res/colors/base_colors.dart';
+import 'package:mvvm_flutter_app/res/dimentions/dimensions.dart';
 import '../res/strings/bangla_strings.dart';
 import '../res/strings/strings.dart';
 
@@ -10,6 +12,8 @@ class Resources {
 
   final BuildContext _context;
 
+  static Resources? _instance;
+
   Resources(this._context);
 
   Strings get strings {
@@ -17,22 +21,23 @@ class Resources {
     Locale locale = Localizations.localeOf(_context);
     switch (locale.languageCode) {
       case 'bn':
-        return BanglaStrings();
+        return BanglaStrings.of(_context);
       default:
-        return EnglishStrings();
+        return EnglishStrings.of(_context);
     }
   }
 
-  AppColors get color {
-    return AppColors();
+  BaseColors get color {
+    return AppColors.of(_context);
   }
 
-  AppDimension get dimension {
-    return AppDimension();
+  Dimensions get dimension {
+    return AppDimension.of(_context);
   }
 
   static Resources of(BuildContext context){
-    return Resources(context);
+    _instance ??= Resources(context);
+    return _instance!;
   }
 
 }

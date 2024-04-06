@@ -28,10 +28,18 @@ class MyOvalAvatar extends StatelessWidget {
           ),
           child:
           ClipOval(
-            child: CachedNetworkImage(
+            child: avatar == null || avatar == '' ?
+            Image(
+              image: const AssetImage('assets/images/user_avatar.png'),
+              width: size,
+              height: size,
+            )
+            :CachedNetworkImage(
+              // width: size,
+              // height: size,
               imageUrl: Constant.MEDIA_URL+Constant.MEDIA_LOAD_URL+avatar,
               placeholder: (context, url) => CircularProgressIndicator(),
-              errorWidget: (context, url, error) => Icon(Icons.error),
+              errorWidget: (context, url, error) => Icon(Icons.error, size: size,),
             ),
 
           //   avatar!= null && avatar!=''

@@ -4,6 +4,7 @@ import 'package:mvvm_flutter_app/res/colors/app_color.dart';
 import 'package:mvvm_flutter_app/ui/history/history_screen.dart';
 import 'package:mvvm_flutter_app/ui/login/login_screen.dart';
 import 'package:mvvm_flutter_app/ui/navpages/account_page_viewmodel.dart';
+import 'package:mvvm_flutter_app/ui/widget/my_oval_avartar.dart';
 import 'package:provider/provider.dart';
 
 import '../../constant/Constant.dart';
@@ -18,7 +19,7 @@ class AccountPage extends StatefulWidget {
   State<AccountPage> createState() => _AccountPageState();
 }
 
-class _AccountPageState extends State<AccountPage> {
+class _AccountPageState extends State<AccountPage> with AutomaticKeepAliveClientMixin{
 
   late AccountPageViewModel vm;
 
@@ -31,6 +32,7 @@ class _AccountPageState extends State<AccountPage> {
   }
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       body:Consumer<AccountPageViewModel>(
         builder: (context,value,_){
@@ -71,21 +73,7 @@ class _AccountPageState extends State<AccountPage> {
                           padding: const EdgeInsets.all(16.0),
                           child: Row(
                             children: [
-                              ClipOval(
-                                child: vm.profileRes?.data?.avatar != null
-                                    ? Image.network(Constant.MEDIA_URL+Constant.MEDIA_LOAD_URL+ vm.profileRes!.data!.avatar!
-                                  ,width: 50.0,
-                                  height: 50.0,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
-                                    return const Icon(Icons.error, size: 50.0,); // Replace with your desired error widget
-                                  },)
-                                    : const Image(
-                                  image: AssetImage('assets/images/user_avatar.png'),
-                                  width: 50.0,
-                                  height: 50.0,
-                                ),
-                              ),
+                              MyOvalAvatar(avatar: vm.profileRes?.data?.avatar??'',),
                               const SizedBox(
                                 width: 30,
                               ),
@@ -350,4 +338,8 @@ class _AccountPageState extends State<AccountPage> {
     );
     showDialog(context: context, builder: (BuildContext context) => dialog);
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

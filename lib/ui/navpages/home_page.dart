@@ -155,6 +155,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     // TODO: implement build
     return Scaffold(
       body:

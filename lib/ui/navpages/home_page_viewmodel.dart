@@ -205,6 +205,7 @@ class HomePageViewModel extends ChangeNotifier{
 
   Future<void> rejectBooking(BuildContext context)async {
     CancelBookingRequest request = CancelBookingRequest(null, bookingRes.data!.id);
+    Utils.showLoading();
     _repo
         .rejectBooking(request)
         .then((value) {
@@ -216,11 +217,13 @@ class HomePageViewModel extends ChangeNotifier{
         .onError((error, stackTrace) {
     })
         .whenComplete((){
+          Utils.dismissLoading();
     });
   }
 
   Future<void> updateStateBooking(BuildContext context, int state)async {
     UpdateBookingRequest request = UpdateBookingRequest(bookingRes.data?.id, null, state);
+    Utils.showLoading();
     _repo
         .updateStateBooking(request)
         .then((value) {
@@ -240,11 +243,13 @@ class HomePageViewModel extends ChangeNotifier{
         .onError((error, stackTrace) {
     })
         .whenComplete((){
+      Utils.dismissLoading();
     });
   }
 
   Future<void> acceptBooking(BuildContext context)async {
     EventBookingRequest request = EventBookingRequest(bookingRes.data?.id, null);
+    Utils.showLoading();
     _repo
         .acceptBooking(request)
         .then((value) {
@@ -256,11 +261,13 @@ class HomePageViewModel extends ChangeNotifier{
         .onError((error, stackTrace) {
     })
         .whenComplete((){
+      Utils.dismissLoading();
     });
   }
 
   Future<void> cancelBooking(BuildContext context)async {
     CancelBookingRequest request = CancelBookingRequest(null, bookingRes.data!.id);
+    Utils.showLoading();
     _repo
         .cancelBooking(request)
         .then((value) {
@@ -272,6 +279,7 @@ class HomePageViewModel extends ChangeNotifier{
         .onError((error, stackTrace) {
     })
         .whenComplete((){
+      Utils.dismissLoading();
     });
   }
 }

@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget{
   static const String id = "home_screen";
-  
+
   const HomeScreen({super.key});
 
   @override
@@ -28,6 +28,7 @@ class _HomeScreenState extends State<HomeScreen>{
   @override
   void initState() {
     // TODO: implement initState
+    // _pageController.jumpToPage(_selectedIndex);
     super.initState();
   }
   void _onItemTapped(int index) {
@@ -53,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen>{
         Scaffold(
           body: Center(
             child: PageView(
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               controller: _pageController,
               allowImplicitScrolling: true,
               onPageChanged: (int index) {
@@ -61,8 +62,7 @@ class _HomeScreenState extends State<HomeScreen>{
                   _selectedIndex = index;
                 });
               },
-              children:[
-                // Your first page widget
+              children:const [
                 HomePage(),
                 IncomePage(),
                 AccountPage(),
@@ -101,5 +101,5 @@ class _HomeScreenState extends State<HomeScreen>{
           ),
         );
   }
-  
+
 }

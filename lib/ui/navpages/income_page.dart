@@ -18,7 +18,7 @@ class IncomePage extends StatefulWidget {
   State<IncomePage> createState() => _IncomePageState();
 }
 
-class _IncomePageState extends State<IncomePage> {
+class _IncomePageState extends State<IncomePage> with AutomaticKeepAliveClientMixin{
 
   late IncomeViewModel vm;
 
@@ -32,6 +32,7 @@ class _IncomePageState extends State<IncomePage> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
 
     return Scaffold(
       body: SafeArea(
@@ -251,6 +252,10 @@ class _IncomePageState extends State<IncomePage> {
     ));
 
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 
 }
 

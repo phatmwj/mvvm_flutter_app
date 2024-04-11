@@ -24,6 +24,8 @@ import 'package:mvvm_flutter_app/ui/splash/splash_screen.dart';
 import 'package:mvvm_flutter_app/ui/welcome/welcome_viewmodel.dart';
 import 'package:provider/provider.dart';
 
+import 'app_route/app_route.dart';
+
 void main() {
   setupLocator();
   runApp(const MyApp());
@@ -61,17 +63,7 @@ class MyApp extends StatelessWidget {
           ),
           debugShowCheckedModeBanner: false,
           initialRoute: SplashScreen.id,
-          routes: {
-            SplashScreen.id:(context) => const SplashScreen(),
-            LoginScreen.id:(context)=> const LoginScreen(),
-            RegisterScreen.id: (context) => const RegisterScreen(),
-            HomeScreen.id: (context)=> const HomeScreen(),
-            AccountScreen.id: (context) => const AccountScreen(),
-            HistoryScreen.id:(context) => const HistoryScreen(),
-            // HistoryDetailScreen.id:(context) =>  HistoryDetailScreen(),
-            ServiceScreen.id : (context) => const ServiceScreen()
-
-          },
+          onGenerateRoute: onGenerateRoute,
           builder: EasyLoading.init(),
        ));
   }

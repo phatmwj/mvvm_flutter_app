@@ -309,15 +309,7 @@ class _AccountPageState extends State<AccountPage> with AutomaticKeepAliveClient
                         onPressed: () {
                           PreferencesServiceImpl()
                               .remove(PreferencesService.KEY_BEARER_TOKEN);
-                          // Navigator.pushAndRemoveUntil(
-                          //     super.context,
-                          //     MaterialPageRoute(
-                          //         builder: (context) => const LoginScreen()),(route)=>false);
-                          // Navigator.popUntil(context, ModalRoute.withName("LoginScreen"));
-                          // Navigator.pop(super.context);
-                          // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>LoginScreen()));
                           Navigator.pushNamedAndRemoveUntil(context, LoginScreen.id, (route) => false);
-
                         },
                         style: ElevatedButton.styleFrom(
                           primary: AppColor.mainColor,

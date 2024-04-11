@@ -141,6 +141,13 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
   //   // TODO: implement didChangeDependencies
   //   super.didChangeDependencies();
   // }
+  @override
+  void dispose() {
+    // vm.dispose();
+    // wsvm.dispose();
+    // TODO: implement dispose
+    super.dispose();
+  }
   
   void loadPolyline(LocationData location){
     if(vm.destinationLocation != null && vm.currentLocation != null){
@@ -155,6 +162,11 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
 
   @override
   Widget build(BuildContext context) {
+    if(vm == null){
+      log("NULL");
+    }else{
+      log("NOTNULL");
+    }
     super.build(context);
     // TODO: implement build
     return Scaffold(
@@ -163,7 +175,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
         Consumer<HomePageViewModel>(
           builder: (context,value,_){
             initData.whenComplete(() => dataLoaded = true);
-            if(vm.destinationLocation != null && vm.currentLocation != null){
+            if(vm != null && vm.destinationLocation != null && vm.currentLocation != null){
               getPolylinePoints(vm.currentLocation!,vm.destinationLocation!).then((value) =>{
                 generatePolylineFromPoints(value)
               });

@@ -16,6 +16,7 @@ import '../../../utils/number_utils.dart';
 import 'history_detail_viewmodel.dart';
 
 class HistoryDetailScreen extends StatefulWidget {
+  static const String id = 'history_detail_screen';
   int? historyId;
 
   HistoryDetailScreen(this.historyId, {super.key});

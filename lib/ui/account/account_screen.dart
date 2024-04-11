@@ -11,6 +11,7 @@ import '../../res/colors/app_color.dart';
 import 'account_viewmodel.dart';
 
 class AccountScreen extends StatefulWidget {
+  static const String id = 'account_screen';
   const AccountScreen({super.key});
 
   @override

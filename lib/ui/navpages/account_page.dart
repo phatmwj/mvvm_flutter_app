@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mvvm_flutter_app/data/local/prefs/prefereces_service_impl.dart';
 import 'package:mvvm_flutter_app/res/colors/app_color.dart';
 import 'package:mvvm_flutter_app/ui/history/history_screen.dart';
+import 'package:mvvm_flutter_app/ui/home/home_screen.dart';
 import 'package:mvvm_flutter_app/ui/login/login_screen.dart';
 import 'package:mvvm_flutter_app/ui/navpages/account_page_viewmodel.dart';
 import 'package:mvvm_flutter_app/ui/widget/my_oval_avartar.dart';
@@ -308,10 +309,15 @@ class _AccountPageState extends State<AccountPage> with AutomaticKeepAliveClient
                         onPressed: () {
                           PreferencesServiceImpl()
                               .remove(PreferencesService.KEY_BEARER_TOKEN);
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const LoginScreen()));
+                          // Navigator.pushAndRemoveUntil(
+                          //     super.context,
+                          //     MaterialPageRoute(
+                          //         builder: (context) => const LoginScreen()),(route)=>false);
+                          // Navigator.popUntil(context, ModalRoute.withName("LoginScreen"));
+                          // Navigator.pop(super.context);
+                          // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>LoginScreen()));
+                          Navigator.pushNamedAndRemoveUntil(context, LoginScreen.id, (route) => false);
+
                         },
                         style: ElevatedButton.styleFrom(
                           primary: AppColor.mainColor,

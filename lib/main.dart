@@ -3,15 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:mvvm_flutter_app/di/locator.dart';
 import 'package:mvvm_flutter_app/socket/web_socket_viewmodel.dart';
+import 'package:mvvm_flutter_app/ui/account/account_screen.dart';
 import 'package:mvvm_flutter_app/ui/account/account_viewmodel.dart';
+import 'package:mvvm_flutter_app/ui/history/detail/history_detail_screen.dart';
 import 'package:mvvm_flutter_app/ui/history/detail/history_detail_viewmodel.dart';
+import 'package:mvvm_flutter_app/ui/history/history_screen.dart';
 import 'package:mvvm_flutter_app/ui/history/history_viewmodel.dart';
+import 'package:mvvm_flutter_app/ui/home/home_screen.dart';
 import 'package:mvvm_flutter_app/ui/home/home_viewmodel.dart';
+import 'package:mvvm_flutter_app/ui/login/login_screen.dart';
 import 'package:mvvm_flutter_app/ui/login/login_viewmodel.dart';
 import 'package:mvvm_flutter_app/ui/navpages/account_page_viewmodel.dart';
 import 'package:mvvm_flutter_app/ui/navpages/home_page_viewmodel.dart';
 import 'package:mvvm_flutter_app/ui/navpages/income_viewmodel.dart';
+import 'package:mvvm_flutter_app/ui/register/register_screen.dart';
 import 'package:mvvm_flutter_app/ui/register/register_viewmodel.dart';
+import 'package:mvvm_flutter_app/ui/service/service_screen.dart';
 import 'package:mvvm_flutter_app/ui/service/service_viewmodel.dart';
 import 'package:mvvm_flutter_app/ui/splash/splash_screen.dart';
 import 'package:mvvm_flutter_app/ui/welcome/welcome_viewmodel.dart';
@@ -47,15 +54,23 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             fontFamily: 'Roboto',
             useMaterial3: true,
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
             cardTheme: const CardTheme(
               color: Colors.white,
             ),
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.white).copyWith(background: Colors.white),
           ),
           debugShowCheckedModeBanner: false,
           initialRoute: SplashScreen.id,
           routes: {
-            SplashScreen.id:(context) => const SplashScreen()
+            SplashScreen.id:(context) => const SplashScreen(),
+            LoginScreen.id:(context)=> const LoginScreen(),
+            RegisterScreen.id: (context) => const RegisterScreen(),
+            HomeScreen.id: (context)=> const HomeScreen(),
+            AccountScreen.id: (context) => const AccountScreen(),
+            HistoryScreen.id:(context) => const HistoryScreen(),
+            // HistoryDetailScreen.id:(context) =>  HistoryDetailScreen(),
+            ServiceScreen.id : (context) => const ServiceScreen()
+
           },
           builder: EasyLoading.init(),
        ));

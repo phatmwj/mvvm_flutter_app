@@ -36,12 +36,15 @@ class _SplashScreenState extends State<SplashScreen>{
       String? token = await _pref.getToken();
       if(_permission != PermissionStatus.denied){
         if(token != null){
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+          Navigator.pushReplacementNamed(context, HomeScreen.id);
+          // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
         }else{
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const LoginScreen()));
+          Navigator.pushReplacementNamed(context, LoginScreen.id);
+          // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const LoginScreen()));
         }
       }else{
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const WelcomeScreen()));
+        Navigator.pushReplacementNamed(context, WelcomeScreen.id);
+        // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const WelcomeScreen()));
       }
     });
   }

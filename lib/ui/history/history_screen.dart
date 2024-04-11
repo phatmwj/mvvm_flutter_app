@@ -15,6 +15,7 @@ import 'package:provider/provider.dart';
 
 import 'detail/history_detail_screen.dart';
 class HistoryScreen extends StatefulWidget {
+  static const String id = 'history_screen';
   const HistoryScreen({super.key});
 
   @override

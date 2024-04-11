@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mvvm_flutter_app/res/app_context_extension.dart';
 import 'package:mvvm_flutter_app/socket/web_socket_viewmodel.dart';
+import 'package:mvvm_flutter_app/ui/login/login_screen.dart';
 import 'package:mvvm_flutter_app/ui/navpages/home_page.dart';
 import 'package:mvvm_flutter_app/ui/navpages/account_page.dart';
 import 'package:mvvm_flutter_app/ui/navpages/income_page.dart';
@@ -101,5 +102,10 @@ class _HomeScreenState extends State<HomeScreen>{
           ),
         );
   }
+  
+  void navigateToLogin(){
+    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>LoginScreen()), (route) => false);
+  }
+  
 
 }

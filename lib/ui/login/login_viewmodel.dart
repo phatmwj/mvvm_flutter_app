@@ -22,16 +22,10 @@ class LoginViewModel extends ChangeNotifier {
   late String _phoneNumber;
   late String _password;
 
-  bool isLoading = false;
   String get phoneNumber => _phoneNumber;
   String get password => _password;
 
   ResponseWrapper<LoginResponse> res = ResponseWrapper.loading();
-
-  void _showLoading(bool loading){
-    isLoading = loading;
-    notifyListeners();
-  }
 
   void setPhoneNumber(String value) {
     _phoneNumber = value;
@@ -50,7 +44,6 @@ class LoginViewModel extends ChangeNotifier {
 
 // Thêm các phương thức xử lý đăng nhập, kiểm tra hợp lệ, v.v.
   Future<void> loginUser(BuildContext context) async {
-    _showLoading(true);
     Utils.showLoading();
     LoginRequest loginRequest = LoginRequest(phone: _phoneNumber, password: _password);
     dynamic j = loginRequest.toMap();
@@ -60,26 +53,25 @@ class LoginViewModel extends ChangeNotifier {
     _repo
         .login(loginRequest)
         .then((value) {
-          _showLoading(false);
-          Utils.dismissLoading();
+          // Utils.dismissLoading();
          if(value.result!){
            Utils.toastSuccessMessage("Đăng nhập thành công");
            _setLoginRes(ResponseWrapper.completed(value));
            String? token = value.data?.access_token;
            _prefs.setToken(token!);
            print("token nef $token");
-           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+           // Utils.dismissLoading();
+           Navigator.pushReplacementNamed(context, HomeScreen.id);
+
          }else{
            Utils.toastErrorMessage("Tên đăng nhập hoặc mật khẩu không đúng");
          }
         })
         .onError((error, stackTrace) {
-      Utils.dismissLoading();
-          _showLoading(false);
+      // Utils.dismissLoading();
           _setLoginRes(ResponseWrapper.error(error.toString()));})
         .whenComplete((){
       Utils.dismissLoading();
-          _showLoading(false);
     });
   }
 }

@@ -32,5 +32,7 @@ class ApiEndPoints {
 
   static const String BOOKING_DETAIL = "v1/booking/detail-booking";
 
+  static const String GET_ROOM_CHAT = "v1/room/get";
+
 }
 

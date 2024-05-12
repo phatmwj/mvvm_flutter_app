@@ -1,11 +1,12 @@
 class BookingWS{
-  String? codeBooking;
+  List<String>? codeBooking;
 
   BookingWS(this.codeBooking);
 
   factory BookingWS.fromJson(Map<String, dynamic> json) {
+    // Chú ý kiểm tra null trước khi truy cập thuộc tính trong json
     return BookingWS(
-      json['codeBooking'] as String?,
+      json['codeBooking'] != null ? List<String>.from(json['codeBooking']) : null,
     );
   }
 

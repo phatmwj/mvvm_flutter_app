@@ -10,6 +10,7 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 import '../data/local/prefs/prefereces_service_impl.dart';
 import '../data/local/prefs/preferences_service.dart';
 import 'booking.dart';
+import 'booking_msg.dart';
 import 'command.dart';
 import 'message.dart';
 import 'message_res.dart';
@@ -21,7 +22,9 @@ class WebSocketViewModel extends ChangeNotifier {
   late Timer _pingTimer;
   MessageRes? messageRes;
 
-  BookingWS booking = BookingWS("0");
+  BookingWS booking = BookingWS(["9xsjej","exampleCode1","exampleCode2"]);
+
+  BookingMsg bookingMsg = BookingMsg("9xsjej");
 
   late StreamSubscription<ConnectivityResult> _connectivitySubscription;
 

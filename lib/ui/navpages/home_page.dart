@@ -12,6 +12,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:mvvm_flutter_app/res/app_context_extension.dart';
 import 'package:mvvm_flutter_app/socket/booking.dart';
+import 'package:mvvm_flutter_app/socket/booking_msg.dart';
 import 'package:mvvm_flutter_app/socket/command.dart';
 import 'package:mvvm_flutter_app/socket/web_socket_viewmodel.dart';
 import 'package:mvvm_flutter_app/ui/navpages/home_page_viewmodel.dart';
@@ -23,6 +24,7 @@ import 'package:provider/provider.dart';
 import '../../constant/constant.dart';
 import '../../data/model/api/response/booking.dart';
 import '../../res/colors/app_color.dart';
+import '../chat/chat_screen.dart';
 import '../widget/my_elevated_button.dart';
 import '../widget/my_outlined_button.dart';
 
@@ -276,7 +278,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
                             vm.bookingState = Constant.BOOKING_CUSTOMER_CANCEL;
                             vm.setNullDestinationLocation();
                             // vm.notifyListeners();
-                            wsvm.booking = BookingWS("0");
+                            wsvm.booking = BookingWS(["9xsjej","exampleCode1","exampleCode2"]);
                             wsvm.messageRes = null;
                             break;
                           default:
@@ -457,6 +459,9 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
                               child: Row(
                                   children: [
                                     InkWell(
+                                      onTap: (){
+                                        Navigator.push(context, MaterialPageRoute(builder: (context)=> ChatScreen(vm.bookingRes?.data?.room?.id?? 0)));
+                                      },
                                       child: Row(
                                         children: [
                                           Icon(Icons.message_rounded,
@@ -586,7 +591,9 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
                                     onPressed: (){
                                           if(vm.bookingState == Constant.BOOKING_VISIBLE){
                                             vm.acceptBooking(context);
-                                            wsvm.booking = BookingWS(vm.bookingRes!.data!.code!);
+                                            // vm.getCurrentBooking(context);
+                                            wsvm.booking = BookingWS([vm.bookingRes!.data!.code!]);
+                                            wsvm.bookingMsg = BookingMsg(vm.bookingRes!.data!.code!);
                                           }else if(vm.bookingState == Constant.BOOKING_ACCEPTED){
                                             vm.updateStateBooking(context, Constant.BOOKING_STATE_PICKUP_SUCCESS);
                                             loadPolyline(LocationData.fromMap({
@@ -595,7 +602,8 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
                                             }));
                                           }else if(vm.bookingState == Constant.BOOKING_PICKUP){
                                             vm.updateStateBooking(context, Constant.BOOKING_STATE_DONE);
-                                            wsvm.booking = BookingWS("0");
+                                            wsvm.booking = BookingWS(["9xsjej","exampleCode1","exampleCode2"]);
+                                            wsvm.bookingMsg = BookingMsg("9xsjej");
                                           }
                                     },
                                     fontSize: 14,
@@ -686,7 +694,8 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
                               } else if(vm.bookingState == Constant.BOOKING_ACCEPTED) {
                                 vm.cancelBooking(context);
                               }
-                              wsvm.booking = BookingWS("0");
+                              wsvm.booking = BookingWS(["9xsjej","exampleCode1","exampleCode2"]);
+                              wsvm.bookingMsg = BookingMsg("9xsjej");
                             },
                           ),
                     ),

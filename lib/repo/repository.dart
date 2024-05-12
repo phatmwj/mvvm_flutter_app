@@ -24,6 +24,7 @@ import 'package:mvvm_flutter_app/di/locator.dart';
 
 import '../data/model/api/request/income_request.dart';
 import '../data/model/api/response/income_response.dart';
+import '../data/model/api/response/room_response.dart';
 import '../data/model/api/response_wrapper.dart';
 import '../data/model/api/request/position_request.dart';
 import '../data/remote/network/api_end_points.dart';
@@ -54,7 +55,7 @@ abstract class Repository{
 
   Future<ResponseGeneric> updateStateBooking(UpdateBookingRequest request);
 
-  Future<ResponseGeneric> acceptBooking(EventBookingRequest request);
+  Future<ResponseWrapper<CurrentBooking>> acceptBooking(EventBookingRequest request);
 
   Future<ResponseGeneric> cancelBooking(CancelBookingRequest request);
 
@@ -65,4 +66,6 @@ abstract class Repository{
   Future<ResponseWrapper<IncomeResponse>> statisticIncome(IncomeRequest request);
 
   Future<ResponseWrapper<CurrentBooking>> getBooking(int? id);
+
+  Future<ResponseWrapper<RoomResponse>> getChatRoom(String? roomId) ;
 }

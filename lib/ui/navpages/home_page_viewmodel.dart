@@ -254,9 +254,10 @@ class HomePageViewModel extends ChangeNotifier{
         .acceptBooking(request)
         .then((value) {
         bookingState = Constant.BOOKING_ACCEPTED;
+        _setBooking(ResponseWrapper.completed(value));
         notifyListeners();
 
-      Utils.toastSuccessMessage(value.message);
+      Utils.toastSuccessMessage(value.message!);
     })
         .onError((error, stackTrace) {
     })

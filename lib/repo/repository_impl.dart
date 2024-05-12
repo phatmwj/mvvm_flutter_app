@@ -16,6 +16,7 @@ import 'package:mvvm_flutter_app/data/model/api/response/history_response.dart';
 import 'package:mvvm_flutter_app/data/model/api/response/postion_response.dart';
 import 'package:mvvm_flutter_app/data/model/api/response/profile_response.dart';
 import 'package:mvvm_flutter_app/data/model/api/response/register_response.dart';
+import 'package:mvvm_flutter_app/data/model/api/response/room_response.dart';
 import 'package:mvvm_flutter_app/data/model/api/response/service_online_response.dart';
 import 'package:mvvm_flutter_app/data/model/api/response_list_wrapper.dart';
 import 'package:mvvm_flutter_app/data/remote/network/base_api_service.dart';
@@ -172,10 +173,10 @@ class RepositoryImpl extends Repository{
   }
 
   @override
-  Future<ResponseGeneric> acceptBooking(EventBookingRequest request) async {
+  Future<ResponseWrapper<CurrentBooking>> acceptBooking(EventBookingRequest request) async {
     try{
       dynamic res = await _apiService.put(ApiEndPoints.ACCEPT_BOOKING, request.toJson(), null);
-      final jsonData = ResponseGeneric.fromJson(res);
+      final jsonData = ResponseWrapper<CurrentBooking>.fromJson(res,(p0) => CurrentBooking.fromJson(res['data']));
       return jsonData;
     }catch(e){
       log("acceptBooking: $e");
@@ -241,6 +242,22 @@ class RepositoryImpl extends Repository{
     }catch(e){
       log("getBooking Error: $e");
       rethrow;
+    }
+  }
+
+  @override
+  Future<ResponseWrapper<RoomResponse>> getChatRoom(String? roomId) async {
+    Options options = Options(
+        headers: {
+        }
+    );
+    try{
+      dynamic res = await _apiService.get('${ApiEndPoints.GET_ROOM_CHAT}/${roomId!}', options);
+      final jsonData = ResponseWrapper<RoomResponse>.fromJson(res,(p0) => RoomResponse.fromJson(res['data']));
+      return jsonData;
+    }catch(e){
+      log("getChatRoom $e");
+      throw e;
     }
   }
 }

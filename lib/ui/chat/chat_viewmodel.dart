@@ -37,6 +37,10 @@ class ChatViewModel extends ChangeNotifier{
     return message.toJson().toString();
   }
 
+  void setMsg(String? msgs){
+    msg = msgs;
+  }
+
   ResponseWrapper<RoomResponse> res = ResponseWrapper.loading();
   //
   // List<ChatResponse> get histories => _histories;

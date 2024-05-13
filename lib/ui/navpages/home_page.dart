@@ -134,6 +134,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
     //
     // fetchInitialData().whenComplete(() => getCurrentLocation());
     initData = fetchInitialData();
+    wsvm.context = context;
     super.initState();
   }
 
@@ -590,7 +591,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
                                     label: vm.bookingState == Constant.BOOKING_VISIBLE ?"Nhận cuốc": vm.bookingState == Constant.BOOKING_ACCEPTED ? "Đã đón khách":vm.bookingState == Constant.BOOKING_PICKUP ?"Đã đưa khách đến nơi": "",
                                     onPressed: (){
                                           if(vm.bookingState == Constant.BOOKING_VISIBLE){
-                                            vm.acceptBooking(context);
+                                            vm.acceptBooking(context,wsvm);
                                             // vm.getCurrentBooking(context);
                                             wsvm.booking = BookingWS([vm.bookingRes!.code!]);
                                             wsvm.bookingMsg = BookingMsg(vm.bookingRes!.code!);

@@ -250,7 +250,7 @@ class HomePageViewModel extends ChangeNotifier{
     });
   }
 
-  Future<void> acceptBooking(BuildContext context)async {
+  Future<void> acceptBooking(BuildContext context, WebSocketViewModel wsvm)async {
     EventBookingRequest request = EventBookingRequest(bookingRes.id, null);
     Utils.showLoading();
     _repo
@@ -258,6 +258,7 @@ class HomePageViewModel extends ChangeNotifier{
         .then((value) {
         bookingState = Constant.BOOKING_ACCEPTED;
         _setBooking(value.data!);
+        wsvm.roomId = bookingRes.room!.id!;
         notifyListeners();
 
       Utils.toastSuccessMessage(value.message!);

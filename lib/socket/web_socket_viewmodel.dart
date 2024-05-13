@@ -3,12 +3,15 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:mvvm_flutter_app/constant/constant.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../data/local/prefs/prefereces_service_impl.dart';
 import '../data/local/prefs/preferences_service.dart';
+import '../ui/chat/chat_screen.dart';
 import 'booking.dart';
 import 'booking_msg.dart';
 import 'command.dart';
@@ -30,6 +33,10 @@ class WebSocketViewModel extends ChangeNotifier {
 
   bool isConnected = false;
 
+  int? roomId = 0;
+
+  BuildContext? context;
+
   WebSocketViewModel(){
     _init();
     // _initConnectivity();
@@ -47,6 +54,9 @@ class WebSocketViewModel extends ChangeNotifier {
             Map<String, dynamic> jsonDataMap = jsonDecode(data);
             messageRes= MessageRes.fromJson(jsonDataMap);
             log('CMD SOCKET: ${messageRes?.cmd}');
+            // if(messageRes!.cmd == Command.CM_SEND_MESSAGE){
+            //   Navigator.push(context!, MaterialPageRoute(builder: (context) { return ChatScreen(roomId); }));
+            // }
         notifyListeners();
       },
       onDone: () {

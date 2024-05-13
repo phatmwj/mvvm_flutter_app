@@ -13,6 +13,7 @@ import 'package:mvvm_flutter_app/data/model/api/request/update_booking_request.d
 import 'package:mvvm_flutter_app/data/model/api/response/current_booking.dart';
 import 'package:mvvm_flutter_app/data/model/api/response/profile_response.dart';
 import 'package:mvvm_flutter_app/data/model/api/response/service_online_response.dart';
+import 'package:mvvm_flutter_app/socket/web_socket_viewmodel.dart';
 import 'package:mvvm_flutter_app/utils/utils.dart';
 
 import '../../constant/constant.dart';
@@ -20,6 +21,8 @@ import '../../data/local/prefs/preferences_service.dart';
 import '../../data/model/api/request/position_request.dart';
 import '../../di/locator.dart';
 import '../../repo/repository.dart';
+import '../../socket/booking.dart';
+import '../../socket/booking_msg.dart';
 
 class HomePageViewModel extends ChangeNotifier{
 
@@ -33,7 +36,7 @@ class HomePageViewModel extends ChangeNotifier{
 
   ResponseWrapper<ServiceOnlineResponse> serviceOnline = ResponseWrapper.loading();
 
-  ResponseWrapper<CurrentBooking> bookingRes = ResponseWrapper.loading();
+  late CurrentBooking bookingRes;
 
   LocationData? _currentLocation;
 
@@ -76,7 +79,7 @@ class HomePageViewModel extends ChangeNotifier{
     this.serviceOnline = serviceOnline;
   }
 
-  void _setBooking(ResponseWrapper<CurrentBooking> booking){
+  void _setBooking(CurrentBooking booking){
     bookingRes = booking;
   }
 
@@ -148,30 +151,31 @@ class HomePageViewModel extends ChangeNotifier{
     });
   }
 
-  Future<void> getCurrentBooking(BuildContext context)async {
-    _setBooking(ResponseWrapper.loading());
+  Future<void> getCurrentBooking(BuildContext context, WebSocketViewModel wsvm)async {
+    // _setBooking(ResponseWrapper.loading());
     // Utils.showLoading();
     _repo
         .getCurrentBooking()
         .then((value) {
-      _setBooking(ResponseWrapper.completed(value));
+      _setBooking(value.data!.content!.first!);
+      wsvm.booking = BookingWS([bookingRes!.code!]);
+      wsvm.bookingMsg = BookingMsg(bookingRes!.code!);
       // Utils.dismissLoading();
-      if(bookingRes.data?.state == Constant.BOOKING_STATE_DRIVER_ACCEPT){
+      if(bookingRes.state == Constant.BOOKING_STATE_DRIVER_ACCEPT){
         bookingState = Constant.BOOKING_ACCEPTED;
         setDestinationLocation(LocationData.fromMap({
-          "latitude": bookingRes.data!.pickupLat,
-          "longitude": bookingRes.data!.pickupLong,
+          "latitude": bookingRes.pickupLat,
+          "longitude": bookingRes.pickupLong,
         }));
-      } else if(bookingRes.data?.state == Constant.BOOKING_STATE_PICKUP_SUCCESS) {
+      } else if(bookingRes.state == Constant.BOOKING_STATE_PICKUP_SUCCESS) {
         bookingState = Constant.BOOKING_PICKUP;
         setDestinationLocation(LocationData.fromMap({
-          "latitude": bookingRes.data!.destinationLat,
-          "longitude": bookingRes.data!.destinationLong,
+          "latitude": bookingRes.destinationLat,
+          "longitude": bookingRes.destinationLong,
         }));
       }
     })
         .onError((error, stackTrace) {
-      _setProfileRes(ResponseWrapper.error(bookingRes.message));
       // Utils.dismissLoading();
     })
         .whenComplete((){
@@ -180,22 +184,21 @@ class HomePageViewModel extends ChangeNotifier{
   }
 
   Future<void> loadBooking(BuildContext context, String bookingId)async {
-    _setBooking(ResponseWrapper.loading());
     Utils.showLoading();
     _repo
         .loadBookingById(bookingId)
         .then((value) {
-      _setBooking(ResponseWrapper.completed(value));
+      _setBooking(value.data!);
       setDestinationLocation(LocationData.fromMap({
-        "latitude": bookingRes.data!.pickupLat,
-        "longitude": bookingRes.data!.pickupLong,
+        "latitude": bookingRes.pickupLat,
+        "longitude": bookingRes.pickupLong,
       }));
       bookingState = Constant.BOOKING_VISIBLE;
       notifyListeners();
       Utils.dismissLoading();
     })
         .onError((error, stackTrace) {
-      _setProfileRes(ResponseWrapper.error(bookingRes.message));
+      // _setProfileRes(ResponseWrapper.error(bookingRes.message));
       Utils.dismissLoading();
     })
         .whenComplete((){
@@ -204,7 +207,7 @@ class HomePageViewModel extends ChangeNotifier{
   }
 
   Future<void> rejectBooking(BuildContext context)async {
-    CancelBookingRequest request = CancelBookingRequest(null, bookingRes.data!.id);
+    CancelBookingRequest request = CancelBookingRequest(null, bookingRes.id);
     Utils.showLoading();
     _repo
         .rejectBooking(request)
@@ -222,7 +225,7 @@ class HomePageViewModel extends ChangeNotifier{
   }
 
   Future<void> updateStateBooking(BuildContext context, int state)async {
-    UpdateBookingRequest request = UpdateBookingRequest(bookingRes.data?.id, null, state);
+    UpdateBookingRequest request = UpdateBookingRequest(bookingRes.id, null, state);
     Utils.showLoading();
     _repo
         .updateStateBooking(request)
@@ -230,8 +233,8 @@ class HomePageViewModel extends ChangeNotifier{
       if(state == Constant.BOOKING_STATE_PICKUP_SUCCESS){
         bookingState = Constant.BOOKING_PICKUP;
         setDestinationLocation(LocationData.fromMap({
-          "latitude": bookingRes.data!.destinationLat,
-          "longitude": bookingRes.data!.destinationLong,
+          "latitude": bookingRes.destinationLat,
+          "longitude": bookingRes.destinationLong,
         }));
       }else if(state == Constant.BOOKING_STATE_DONE){
         bookingState = Constant.BOOKING_SUCCESS;
@@ -248,13 +251,13 @@ class HomePageViewModel extends ChangeNotifier{
   }
 
   Future<void> acceptBooking(BuildContext context)async {
-    EventBookingRequest request = EventBookingRequest(bookingRes.data?.id, null);
+    EventBookingRequest request = EventBookingRequest(bookingRes.id, null);
     Utils.showLoading();
     _repo
         .acceptBooking(request)
         .then((value) {
         bookingState = Constant.BOOKING_ACCEPTED;
-        _setBooking(ResponseWrapper.completed(value));
+        _setBooking(value.data!);
         notifyListeners();
 
       Utils.toastSuccessMessage(value.message!);
@@ -267,7 +270,7 @@ class HomePageViewModel extends ChangeNotifier{
   }
 
   Future<void> cancelBooking(BuildContext context)async {
-    CancelBookingRequest request = CancelBookingRequest(null, bookingRes.data!.id);
+    CancelBookingRequest request = CancelBookingRequest(null, bookingRes.id);
     Utils.showLoading();
     _repo
         .cancelBooking(request)

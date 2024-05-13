@@ -9,6 +9,7 @@ import 'package:mvvm_flutter_app/data/model/api/request/event_booking_request.da
 import 'package:mvvm_flutter_app/data/model/api/request/register_request.dart';
 import 'package:mvvm_flutter_app/data/model/api/request/state_request.dart';
 import 'package:mvvm_flutter_app/data/model/api/request/update_booking_request.dart';
+import 'package:mvvm_flutter_app/data/model/api/response/activity_rate.dart';
 import 'package:mvvm_flutter_app/data/model/api/response/driver_service_response.dart';
 import 'package:mvvm_flutter_app/data/model/api/response/login_response.dart';
 import 'package:mvvm_flutter_app/data/model/api/response/current_booking.dart';
@@ -125,10 +126,10 @@ class RepositoryImpl extends Repository{
   }
 
   @override
-  Future<ResponseWrapper<CurrentBooking>> getCurrentBooking() async {
+  Future<ResponseWrapper<ResponseListWrapper<CurrentBooking>>> getCurrentBooking() async {
     try{
       dynamic res = await _apiService.get(ApiEndPoints.CURRENT_BOOKING, null);
-      final jsonData = ResponseWrapper<CurrentBooking>.fromJson(res,(p0) => CurrentBooking.fromJson(res['data']));
+      final jsonData = ResponseWrapper<ResponseListWrapper<CurrentBooking>>.fromJson(res,(p0) => ResponseListWrapper.fromJson(res['data'], (p1) => CurrentBooking.fromJson(p1)));
       return jsonData;
     }catch(e){
       log("getCurrentBooking Error: $e");
@@ -258,6 +259,18 @@ class RepositoryImpl extends Repository{
     }catch(e){
       log("getChatRoom $e");
       throw e;
+    }
+  }
+
+  @override
+  Future<ResponseWrapper<ActivityRate>> activityRate(String startD, String endD) async {
+    try{
+      dynamic res = await _apiService.get("${ApiEndPoints.ACTIVITY_RATE}?endDate=${endD ?? ''}&startDate=${startD ?? ''}", null);
+      final jsonData = ResponseWrapper<ActivityRate>.fromJson(res,(p0) => ActivityRate.fromJson(res['data']));
+      return jsonData;
+    }catch(e){
+      log("activityRate Error: $e");
+      rethrow;
     }
   }
 }

@@ -34,5 +34,7 @@ class ApiEndPoints {
 
   static const String GET_ROOM_CHAT = "v1/room/get";
 
+  static const String ACTIVITY_RATE = "v1/booking/activity-rate";
+
 }
 

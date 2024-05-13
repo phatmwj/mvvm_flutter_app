@@ -3,7 +3,10 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:mvvm_flutter_app/data/model/api/response/income_response.dart';
+import 'package:mvvm_flutter_app/res/app_context_extension.dart';
+import 'package:mvvm_flutter_app/ui/income_details/income_details_screen.dart';
 import 'package:mvvm_flutter_app/ui/navpages/income_viewmodel.dart';
+import 'package:mvvm_flutter_app/ui/widget/my_textview.dart';
 import 'package:mvvm_flutter_app/utils/utils.dart';
 import 'package:provider/provider.dart';
 
@@ -200,7 +203,7 @@ class _IncomePageState extends State<IncomePage> with AutomaticKeepAliveClientMi
 
                 Expanded(child: TextButton(
                   onPressed: () {
-                    // Xử lý khi nút được nhấn
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => IncomeDetailsScreen(vm.startD, vm.endD)));
                   },
                   child: Text(
                     "${NumberUtils.formatMoneyToString(double.parse(income.totalMoney.toStringAsFixed(0)))} đ",
@@ -248,6 +251,148 @@ class _IncomePageState extends State<IncomePage> with AutomaticKeepAliveClientMi
             ],
           ),
         ),
+
+        const SizedBox(height: 10,),
+
+        Row(
+          children: [
+
+            Expanded(child: Card(
+                surfaceTintColor: Colors.white,
+                color: Colors.white,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(10.0),
+                    topRight: Radius.circular(10.0),
+                    bottomLeft: Radius.circular(10.0),
+                    bottomRight: Radius.circular(10.0),
+                  ),
+                ),
+                elevation: 4.0,
+                child: Padding(padding: EdgeInsets.only(top: 10, bottom: 10,left: 15,right: 15),
+                  child: Column(
+                    children: [
+                      MyTextView(
+                        label: "Tổng tiền chuyến đi",
+                      ),
+                      const SizedBox(height: 7,),
+                      Text(
+                        "${NumberUtils.formatMoneyToString(double.parse(income.totalBookingMoney.toStringAsFixed(0)))} đ",
+                        style: const TextStyle(
+                            fontSize: 18,
+                            color: Color(0xFF424242),
+                            fontWeight: FontWeight.w700),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),)
+            ),),
+
+
+            Expanded(child:Card(
+                surfaceTintColor: Colors.white,
+                color: Colors.white,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(10.0),
+                    topRight: Radius.circular(10.0),
+                    bottomLeft: Radius.circular(10.0),
+                    bottomRight: Radius.circular(10.0),
+                  ),
+                ),
+                elevation: 4.0,
+                child: Padding(padding: EdgeInsets.only(top: 10, bottom: 10,left: 15,right: 15),
+                  child: Column(
+                    children: [
+                      MyTextView(
+                        label: "Thu nhập",
+                      ),
+                      const SizedBox(height: 7,),
+                      Text(
+                        "${NumberUtils.formatMoneyToString(double.parse(income.totalMoney.toStringAsFixed(0)))} đ",
+                        style: const TextStyle(
+                            fontSize: 18,
+                            color: Color(0xFF7EA567),
+                            fontWeight: FontWeight.w700),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),)
+            ),),
+
+          ],
+        ),
+
+        const SizedBox(height: 10,),
+
+        Row(
+          children: [
+
+            Expanded(child: Card(
+                surfaceTintColor: Colors.white,
+                color: Colors.white,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(10.0),
+                    topRight: Radius.circular(10.0),
+                    bottomLeft: Radius.circular(10.0),
+                    bottomRight: Radius.circular(10.0),
+                  ),
+                ),
+                elevation: 4.0,
+                child: Padding(padding: EdgeInsets.only(top: 10, bottom: 10,left: 15,right: 15),
+                  child: Column(
+                    children: [
+                      MyTextView(
+                        label: "Tiền phải trả",
+                      ),
+                      const SizedBox(height: 7,),
+                      Text(
+                        "${NumberUtils.formatMoneyToString(double.parse((income.totalBookingMoney - income.totalMoney).toStringAsFixed(0)))} đ",
+                        style: const TextStyle(
+                            fontSize: 18,
+                            color: Color(0xFF424242),
+                            fontWeight: FontWeight.w700),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),)
+            ),),
+
+
+            Expanded(child:Card(
+                surfaceTintColor: Colors.white,
+                color: Colors.white,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(10.0),
+                    topRight: Radius.circular(10.0),
+                    bottomLeft: Radius.circular(10.0),
+                    bottomRight: Radius.circular(10.0),
+                  ),
+                ),
+                elevation: 4.0,
+                child: Padding(padding: EdgeInsets.only(top: 10, bottom: 10,left: 15,right: 15),
+                  child: Column(
+                    children: [
+                      MyTextView(
+                        label: "Thuế",
+                      ),
+                      const SizedBox(height: 7,),
+                      Text(
+                        income.totalBookingCancel > 0?"${double.parse((((income.totalBookingMoney-income.totalMoney)/income.totalBookingMoney)*100).toStringAsFixed(2))} %":"0 %",
+                        style: const TextStyle(
+                            fontSize: 18,
+                            color: Colors.red,
+                            fontWeight: FontWeight.w700),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),)
+            ),),
+
+          ],
+        )
       ],
     ));
 

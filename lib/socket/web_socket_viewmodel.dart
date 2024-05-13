@@ -121,6 +121,7 @@ class WebSocketViewModel extends ChangeNotifier {
   // Gửi dữ liệu đến server
   void sendMessage(String message) {
     _channel.sink.add(message);
+    log(message);
   }
 
   // Đóng kết nối WebSocket khi không cần thiết

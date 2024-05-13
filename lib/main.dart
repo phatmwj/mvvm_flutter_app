@@ -5,6 +5,7 @@ import 'package:mvvm_flutter_app/di/locator.dart';
 import 'package:mvvm_flutter_app/socket/web_socket_viewmodel.dart';
 import 'package:mvvm_flutter_app/ui/account/account_screen.dart';
 import 'package:mvvm_flutter_app/ui/account/account_viewmodel.dart';
+import 'package:mvvm_flutter_app/ui/activity/activity_viewmodel.dart';
 import 'package:mvvm_flutter_app/ui/chat/chat_viewmodel.dart';
 import 'package:mvvm_flutter_app/ui/history/detail/history_detail_screen.dart';
 import 'package:mvvm_flutter_app/ui/history/detail/history_detail_viewmodel.dart';
@@ -12,6 +13,7 @@ import 'package:mvvm_flutter_app/ui/history/history_screen.dart';
 import 'package:mvvm_flutter_app/ui/history/history_viewmodel.dart';
 import 'package:mvvm_flutter_app/ui/home/home_screen.dart';
 import 'package:mvvm_flutter_app/ui/home/home_viewmodel.dart';
+import 'package:mvvm_flutter_app/ui/income_details/income_details_viewmodel.dart';
 import 'package:mvvm_flutter_app/ui/login/login_screen.dart';
 import 'package:mvvm_flutter_app/ui/login/login_viewmodel.dart';
 import 'package:mvvm_flutter_app/ui/navpages/account_page_viewmodel.dart';
@@ -51,6 +53,8 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(create: (_) => IncomeViewModel()),
           ChangeNotifierProvider(create: (_) => HistoryDetailViewModel()),
           ChangeNotifierProvider(create: (_) => ChatViewModel()),
+          ChangeNotifierProvider(create: (_) => ActivityViewModel()),
+          ChangeNotifierProvider(create: (_) => IncomeDetailsViewModel()),
         ],
         child: MaterialApp(
           theme: ThemeData(

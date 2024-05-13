@@ -73,7 +73,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
 
     location.onLocationChanged.listen((newLoc){
       vm.setCurrentLocation(newLoc);
-      // vm.updatePosition(context);
+      vm.updatePosition(context);
       log("Latitude: ${newLoc.latitude}, Longitude: ${newLoc.longitude}");
       // controller.animateCamera(CameraUpdate.newCameraPosition(
       //   CameraPosition(target: LatLng(newLoc.latitude!,newLoc.longitude!),
@@ -118,7 +118,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
 
     // TODO: Fetch your initial data here
     getCurrentLocation();
-    vm.getCurrentBooking(context);
+    vm.getCurrentBooking(context, wsvm);
     vm.getProfile(context);
     vm.getServiceOnline(context);
   }
@@ -269,8 +269,8 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
                             Booking booking = Booking.fromJson(wsvm.messageRes?.data);
                             vm.loadBooking(context, booking.bookingId!);
                             loadPolyline(LocationData.fromMap({
-                              "latitude": vm.bookingRes?.data?.pickupLat,
-                              "longitude": vm.bookingRes?.data?.pickupLong,
+                              "latitude": vm.bookingRes?.pickupLat,
+                              "longitude": vm.bookingRes?.pickupLong,
                             }));
                             wsvm.messageRes = null;
                             break;
@@ -313,8 +313,8 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
                               children: [
                                 ClipRRect(
                                   borderRadius:BorderRadius.circular(5.0),
-                                  child: vm.bookingRes.data?.customer?.avatar != null && vm.bookingRes.data?.customer?.avatar != ''
-                                      ? Image.network(Constant.MEDIA_URL+Constant.MEDIA_LOAD_URL+ vm.bookingRes.data!.customer!.avatar!
+                                  child: vm.bookingRes.customer?.avatar != null && vm.bookingRes.customer?.avatar != ''
+                                      ? Image.network(Constant.MEDIA_URL+Constant.MEDIA_LOAD_URL+ vm.bookingRes.customer!.avatar!
                                     ,width: 45.0,
                                     height: 45.0,
                                     fit: BoxFit.cover,
@@ -335,7 +335,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children:[
                                       MyTextView(
-                                        label: vm.bookingRes.data?.customer?.name ?? "Tên khách hàng",
+                                        label: vm.bookingRes.customer?.name ?? "Tên khách hàng",
                                         fontSize: 16,
                                         color: context.resources.color.textColorMain,),
 
@@ -356,15 +356,15 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
                                       children:[
 
                                         MyTextView(
-                                          label: vm.bookingRes.data?.money != null
-                                              ? "${NumberUtils.formatMoneyToString(vm.bookingRes.data!.money!)} đ"
+                                          label: vm.bookingRes.money != null
+                                              ? "${NumberUtils.formatMoneyToString(vm.bookingRes.money!)} đ"
                                               : 'N/A',
                                           fontSize: 16,
                                           color: context.resources.color.textColorMain,),
 
                                         MyTextView(
-                                          label: vm.bookingRes.data?.distance != null
-                                              ? "${(vm.bookingRes.data!.distance!/1000).toStringAsFixed(1)} Km"
+                                          label: vm.bookingRes.distance != null
+                                              ? "${(vm.bookingRes.distance!/1000).toStringAsFixed(1)} Km"
                                               : 'N/A',
                                           fontSize: 14,
                                           color: context.resources.color.greyColor,),
@@ -400,7 +400,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
                                           fontSize: 10,
                                           color: context.resources.color.greyColor,),
                                         MyTextView(
-                                          label: vm.bookingRes?.data?.pickupAddress ?? "Địa chỉ đón khách",
+                                          label: vm.bookingRes?.pickupAddress ?? "Địa chỉ đón khách",
                                           fontSize: 14,
                                           color: context.resources.color.textColorMain,),
                                       ]
@@ -437,7 +437,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
                                           fontSize: 10,
                                           color: context.resources.color.greyColor,),
                                         MyTextView(
-                                          label: vm.bookingRes?.data?.destinationAddress ?? "Điểm đến",
+                                          label: vm.bookingRes?.destinationAddress ?? "Điểm đến",
                                           fontSize: 14,
                                           color: context.resources.color.textColorMain,),
                                       ]
@@ -460,7 +460,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
                                   children: [
                                     InkWell(
                                       onTap: (){
-                                        Navigator.push(context, MaterialPageRoute(builder: (context)=> ChatScreen(vm.bookingRes?.data?.room?.id?? 0)));
+                                        Navigator.push(context, MaterialPageRoute(builder: (context)=> ChatScreen(vm.bookingRes?.room?.id?? 0)));
                                       },
                                       child: Row(
                                         children: [
@@ -512,7 +512,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
                                 ),
 
                                 MyTextView(
-                                  label:  vm.bookingRes.data?.customerNote ?? "Không có ghi chú",
+                                  label:  vm.bookingRes.customerNote ?? "Không có ghi chú",
                                   fontSize: 14,
                                   color: context.resources.color.textColorMain,),
                               ],
@@ -592,13 +592,13 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
                                           if(vm.bookingState == Constant.BOOKING_VISIBLE){
                                             vm.acceptBooking(context);
                                             // vm.getCurrentBooking(context);
-                                            wsvm.booking = BookingWS([vm.bookingRes!.data!.code!]);
-                                            wsvm.bookingMsg = BookingMsg(vm.bookingRes!.data!.code!);
+                                            wsvm.booking = BookingWS([vm.bookingRes!.code!]);
+                                            wsvm.bookingMsg = BookingMsg(vm.bookingRes!.code!);
                                           }else if(vm.bookingState == Constant.BOOKING_ACCEPTED){
                                             vm.updateStateBooking(context, Constant.BOOKING_STATE_PICKUP_SUCCESS);
                                             loadPolyline(LocationData.fromMap({
-                                              "latitude": vm.bookingRes.data!.destinationLat,
-                                              "longitude": vm.bookingRes.data!.destinationLong,
+                                              "latitude": vm.bookingRes.destinationLat,
+                                              "longitude": vm.bookingRes.destinationLong,
                                             }));
                                           }else if(vm.bookingState == Constant.BOOKING_PICKUP){
                                             vm.updateStateBooking(context, Constant.BOOKING_STATE_DONE);

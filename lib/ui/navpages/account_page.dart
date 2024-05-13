@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 import '../../constant/Constant.dart';
 import '../../data/local/prefs/preferences_service.dart';
 import '../account/account_screen.dart';
+import '../activity/activity_screen.dart';
 import '../service/service_screen.dart';
 
 class AccountPage extends StatefulWidget {
@@ -148,6 +149,40 @@ class _AccountPageState extends State<AccountPage> with AutomaticKeepAliveClient
                                   Expanded(
                                       child: Text(
                                         'Cấu hình dịch vụ',
+                                        style: TextStyle(
+                                            fontFamily: 'Roboto',
+                                            color: Color(0xFF424242),
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 16.0),
+                                      )),
+                                  Image(
+                                    image:
+                                    AssetImage('assets/images/icon_arrow.png'),
+                                    width: 50.0,
+                                    height: 50.0,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const Divider(
+                              color: Color(0xFFC0C0C0),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                        const ActivityScreen()));
+                              },
+                              child: const Row(
+                                children: [
+                                  SizedBox(width: 50.0,
+                                    height: 50.0,
+                                    child: Icon(Icons.aspect_ratio,color: Color(0xFF424242),),),
+                                  Expanded(
+                                      child: Text(
+                                        'Tỷ lệ hoạt động',
                                         style: TextStyle(
                                             fontFamily: 'Roboto',
                                             color: Color(0xFF424242),

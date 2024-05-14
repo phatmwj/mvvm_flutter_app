@@ -53,7 +53,7 @@ class LoginViewModel extends ChangeNotifier {
     _repo
         .login(loginRequest)
         .then((value) {
-          // Utils.dismissLoading();
+          Utils.dismissLoading();
          if(value.result!){
            Utils.toastSuccessMessage("Đăng nhập thành công");
            _setLoginRes(ResponseWrapper.completed(value));

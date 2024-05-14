@@ -24,6 +24,7 @@ import 'package:mvvm_flutter_app/ui/register/register_viewmodel.dart';
 import 'package:mvvm_flutter_app/ui/service/service_screen.dart';
 import 'package:mvvm_flutter_app/ui/service/service_viewmodel.dart';
 import 'package:mvvm_flutter_app/ui/splash/splash_screen.dart';
+import 'package:mvvm_flutter_app/ui/welcome/welcome_screen.dart';
 import 'package:mvvm_flutter_app/ui/welcome/welcome_viewmodel.dart';
 import 'package:provider/provider.dart';
 
@@ -75,7 +76,8 @@ class MyApp extends StatelessWidget {
             AccountScreen.id: (context) => const AccountScreen(),
             HistoryScreen.id:(context) => const HistoryScreen(),
             // HistoryDetailScreen.id:(context) =>  HistoryDetailScreen(),
-            ServiceScreen.id : (context) => const ServiceScreen()
+            ServiceScreen.id : (context) => const ServiceScreen(),
+            WelcomeScreen.id : (context) => const WelcomeScreen(),
 
           },
           builder: EasyLoading.init(),

@@ -36,7 +36,7 @@ class HomePageViewModel extends ChangeNotifier{
 
   ResponseWrapper<ServiceOnlineResponse> serviceOnline = ResponseWrapper.loading();
 
-  late CurrentBooking bookingRes;
+  CurrentBooking? bookingRes;
 
   LocationData? _currentLocation;
 
@@ -161,17 +161,17 @@ class HomePageViewModel extends ChangeNotifier{
       wsvm.booking = BookingWS([bookingRes!.code!]);
       wsvm.bookingMsg = BookingMsg(bookingRes!.code!);
       // Utils.dismissLoading();
-      if(bookingRes.state == Constant.BOOKING_STATE_DRIVER_ACCEPT){
+      if(bookingRes?.state == Constant.BOOKING_STATE_DRIVER_ACCEPT){
         bookingState = Constant.BOOKING_ACCEPTED;
         setDestinationLocation(LocationData.fromMap({
-          "latitude": bookingRes.pickupLat,
-          "longitude": bookingRes.pickupLong,
+          "latitude": bookingRes?.pickupLat,
+          "longitude": bookingRes?.pickupLong,
         }));
-      } else if(bookingRes.state == Constant.BOOKING_STATE_PICKUP_SUCCESS) {
+      } else if(bookingRes?.state == Constant.BOOKING_STATE_PICKUP_SUCCESS) {
         bookingState = Constant.BOOKING_PICKUP;
         setDestinationLocation(LocationData.fromMap({
-          "latitude": bookingRes.destinationLat,
-          "longitude": bookingRes.destinationLong,
+          "latitude": bookingRes?.destinationLat,
+          "longitude": bookingRes?.destinationLong,
         }));
       }
     })
@@ -190,8 +190,8 @@ class HomePageViewModel extends ChangeNotifier{
         .then((value) {
       _setBooking(value.data!);
       setDestinationLocation(LocationData.fromMap({
-        "latitude": bookingRes.pickupLat,
-        "longitude": bookingRes.pickupLong,
+        "latitude": bookingRes?.pickupLat,
+        "longitude": bookingRes?.pickupLong,
       }));
       bookingState = Constant.BOOKING_VISIBLE;
       notifyListeners();
@@ -207,7 +207,7 @@ class HomePageViewModel extends ChangeNotifier{
   }
 
   Future<void> rejectBooking(BuildContext context)async {
-    CancelBookingRequest request = CancelBookingRequest(null, bookingRes.id);
+    CancelBookingRequest request = CancelBookingRequest(null, bookingRes?.id);
     Utils.showLoading();
     _repo
         .rejectBooking(request)
@@ -225,7 +225,7 @@ class HomePageViewModel extends ChangeNotifier{
   }
 
   Future<void> updateStateBooking(BuildContext context, int state)async {
-    UpdateBookingRequest request = UpdateBookingRequest(bookingRes.id, null, state);
+    UpdateBookingRequest request = UpdateBookingRequest(bookingRes?.id, null, state);
     Utils.showLoading();
     _repo
         .updateStateBooking(request)
@@ -233,8 +233,8 @@ class HomePageViewModel extends ChangeNotifier{
       if(state == Constant.BOOKING_STATE_PICKUP_SUCCESS){
         bookingState = Constant.BOOKING_PICKUP;
         setDestinationLocation(LocationData.fromMap({
-          "latitude": bookingRes.destinationLat,
-          "longitude": bookingRes.destinationLong,
+          "latitude": bookingRes?.destinationLat,
+          "longitude": bookingRes?.destinationLong,
         }));
       }else if(state == Constant.BOOKING_STATE_DONE){
         bookingState = Constant.BOOKING_SUCCESS;
@@ -251,14 +251,14 @@ class HomePageViewModel extends ChangeNotifier{
   }
 
   Future<void> acceptBooking(BuildContext context, WebSocketViewModel wsvm)async {
-    EventBookingRequest request = EventBookingRequest(bookingRes.id, null);
+    EventBookingRequest request = EventBookingRequest(bookingRes?.id, null);
     Utils.showLoading();
     _repo
         .acceptBooking(request)
         .then((value) {
         bookingState = Constant.BOOKING_ACCEPTED;
         _setBooking(value.data!);
-        wsvm.roomId = bookingRes.room!.id!;
+        wsvm.roomId = bookingRes?.room!.id!;
         notifyListeners();
 
       Utils.toastSuccessMessage(value.message!);
@@ -271,7 +271,7 @@ class HomePageViewModel extends ChangeNotifier{
   }
 
   Future<void> cancelBooking(BuildContext context)async {
-    CancelBookingRequest request = CancelBookingRequest(null, bookingRes.id);
+    CancelBookingRequest request = CancelBookingRequest(null, bookingRes?.id);
     Utils.showLoading();
     _repo
         .cancelBooking(request)

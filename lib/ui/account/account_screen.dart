@@ -305,7 +305,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 ),
                 decoration: InputDecoration(
                   floatingLabelBehavior: FloatingLabelBehavior.always,
-                  labelText: 'Họ và tên',
+                  labelText: 'Địa chỉ',
                   labelStyle: const TextStyle(
                       fontWeight: FontWeight.w700,
                       fontSize: 20.0,

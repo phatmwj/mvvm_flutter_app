@@ -44,7 +44,6 @@ class LoginViewModel extends ChangeNotifier {
 
 // Thêm các phương thức xử lý đăng nhập, kiểm tra hợp lệ, v.v.
   Future<void> loginUser(BuildContext context) async {
-    Utils.showLoading();
     LoginRequest loginRequest = LoginRequest(phone: _phoneNumber, password: _password);
     dynamic j = loginRequest.toMap();
     final a = LoginRequest.fromJson(j);
@@ -53,7 +52,6 @@ class LoginViewModel extends ChangeNotifier {
     _repo
         .login(loginRequest)
         .then((value) {
-          Utils.dismissLoading();
          if(value.result!){
            Utils.toastSuccessMessage("Đăng nhập thành công");
            _setLoginRes(ResponseWrapper.completed(value));
@@ -68,10 +66,9 @@ class LoginViewModel extends ChangeNotifier {
          }
         })
         .onError((error, stackTrace) {
-      // Utils.dismissLoading();
           _setLoginRes(ResponseWrapper.error(error.toString()));})
         .whenComplete((){
-      Utils.dismissLoading();
+
     });
   }
 }

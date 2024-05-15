@@ -23,6 +23,7 @@ import 'package:provider/provider.dart';
 
 import '../../constant/constant.dart';
 import '../../data/model/api/response/booking.dart';
+import '../../repo/notification_api.dart';
 import '../../res/colors/app_color.dart';
 import '../chat/chat_screen.dart';
 import '../widget/my_elevated_button.dart';
@@ -268,7 +269,12 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
                         switch(wsvm.messageRes?.cmd){
                           case Command.CM_CONTACT_DRIVER:
                             Booking booking = Booking.fromJson(wsvm.messageRes?.data);
-                            vm.loadBooking(context, booking.bookingId!);
+                            vm.loadBooking(context, booking.bookingId!).then((value) =>
+                                NotificationApi().simpleNotificationShow(
+                                    "Có chuyến đi từ ${vm.bookingRes?.pickupAddress!} đến ${vm.bookingRes?.destinationAddress!}"
+                                        ".\n Nhanh tay nhận cuốc nào!"
+                                    )
+                            );
                             loadPolyline(LocationData.fromMap({
                               "latitude": vm.bookingRes?.pickupLat,
                               "longitude": vm.bookingRes?.pickupLong,

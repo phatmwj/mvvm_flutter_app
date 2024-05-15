@@ -350,8 +350,11 @@ class _AccountPageState extends State<AccountPage> with AutomaticKeepAliveClient
                           //         builder: (context) => const LoginScreen()),(route)=>false);
                           // Navigator.popUntil(context, ModalRoute.withName("LoginScreen"));
                           // Navigator.pop(super.context);
-                          // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>LoginScreen()));
-                          Navigator.pushNamed(context, LoginScreen.id);
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(builder: (context) => const LoginScreen()),
+                                (route) => false,
+                          );
 
                         },
                         style: ElevatedButton.styleFrom(

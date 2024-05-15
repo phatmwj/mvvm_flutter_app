@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:mvvm_flutter_app/di/locator.dart';
+import 'package:mvvm_flutter_app/repo/notification_api.dart';
 import 'package:mvvm_flutter_app/socket/web_socket_viewmodel.dart';
 import 'package:mvvm_flutter_app/ui/account/account_screen.dart';
 import 'package:mvvm_flutter_app/ui/account/account_viewmodel.dart';
@@ -29,6 +30,8 @@ import 'package:mvvm_flutter_app/ui/welcome/welcome_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  NotificationApi().initNotification();
   setupLocator();
   runApp(const MyApp());
   configLoading();

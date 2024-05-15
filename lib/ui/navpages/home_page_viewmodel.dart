@@ -20,6 +20,7 @@ import '../../constant/constant.dart';
 import '../../data/local/prefs/preferences_service.dart';
 import '../../data/model/api/request/position_request.dart';
 import '../../di/locator.dart';
+import '../../repo/notification_api.dart';
 import '../../repo/repository.dart';
 import '../../socket/booking.dart';
 import '../../socket/booking_msg.dart';
@@ -196,6 +197,11 @@ class HomePageViewModel extends ChangeNotifier{
       bookingState = Constant.BOOKING_VISIBLE;
       notifyListeners();
       Utils.dismissLoading();
+      NotificationApi().simpleNotificationShow(
+          "Có chuyến đi từ ${bookingRes?.pickupAddress!} đến ${bookingRes?.destinationAddress!}"
+              ".\n Nhanh tay nhận cuốc nào!"
+      );
+
     })
         .onError((error, stackTrace) {
       // _setProfileRes(ResponseWrapper.error(bookingRes.message));

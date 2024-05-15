@@ -219,7 +219,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
                   polylines: Set<Polyline>.of(polylines.values),
                 ),
                 Positioned(
-                  top: context.resources.dimension.statusBarHeight,
+                  top: 40.0,
                   left: 16.0,
                   right: 16.0,
                   child: Card(
@@ -269,12 +269,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
                         switch(wsvm.messageRes?.cmd){
                           case Command.CM_CONTACT_DRIVER:
                             Booking booking = Booking.fromJson(wsvm.messageRes?.data);
-                            vm.loadBooking(context, booking.bookingId!).then((value) =>
-                                NotificationApi().simpleNotificationShow(
-                                    "Có chuyến đi từ ${vm.bookingRes?.pickupAddress!} đến ${vm.bookingRes?.destinationAddress!}"
-                                        ".\n Nhanh tay nhận cuốc nào!"
-                                    )
-                            );
+                            vm.loadBooking(context, booking.bookingId!);
                             loadPolyline(LocationData.fromMap({
                               "latitude": vm.bookingRes?.pickupLat,
                               "longitude": vm.bookingRes?.pickupLong,

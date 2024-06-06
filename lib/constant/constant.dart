@@ -10,7 +10,7 @@ class Constant{
 
   static const String APP_NAME = "DRIVER_APP";
 
-  static const String GG_API_KEY = "AIzaSyAQWUevZCTLaVd9a1Z2WEA2_e2gO9iW8rU";
+  static const String GG_API_KEY = "AIzaSyDQFJ-AGut2GL97rVRvf2q1SJLwABJjWOU";
 
   static const int BOOKING_VISIBLE = 1;
 
